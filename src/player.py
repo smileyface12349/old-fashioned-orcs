@@ -1,4 +1,5 @@
-from .solid import *
+import src.solid as solid
+import pygame
 
 class Player(pygame.sprite.Sprite):
     # This is our player class. We derive it from pygame.sprite.Sprite in order to benefit from the group system
