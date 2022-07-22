@@ -21,12 +21,13 @@ class Player(pygame.sprite.Sprite):
         # And so adding 1 to self.rect.y will move self.rect 1 pixel downwards.
         self.x_velocity = 1
         self.y_velocity = 0
-        self.falling=True
+        self.falling = True
+
     # The two methods below move the player.
     def move_left(self):
-        self.rect.x-=self.x_velocity
+        """Moves the Player left"""
+        self.rect.x -= self.x_velocity
+
     def move_right(self):
-        self.rect.x+=self.x_velocity
-
-
-
+        """Moves the Player right"""
+        self.rect.x += self.x_velocity
