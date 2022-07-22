@@ -1,10 +1,57 @@
-# We could put everything websocket-related here (shrugs)
-import fastapi
+from database import GameDatabase
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from database import GameDatabase
+from manager import ConnectionManager
+import logging
+logging.basicConfig(
+    format='%(asctime)s - %(filename)s - %(message)s',
+    level=logging.INFO
+    )
 
-app = fastapi.FastAPI
+app = FastAPI(title='Old Fashioned Orcs')
+manager = ConnectionManager()
+db = GameDatabase()
 
 
-@app.get("/")
-async def root():
-    """Template from the fastapi docs to make the unsused imports lint pass."""
-    return {"message": "Template from the fastapi docs to make the unsused imports lint pass."}
+@app.websocket("/connect")
+async def websocket_endpoint(websocket: WebSocket):
+    """
+    This endpoint will handle the session of a player.
+    
+    Example JSON payload:
+    {
+        "method": "update",
+        "unique_id": "rfah3430243iog34gsdaf",
+        "nickname": "coolname",
+        "position_x": 150,
+        "position_y": 350,
+        "level": 1
+    }
+    :param payload: json object
+    """
+
+    await manager.connect(websocket)
+    client_ip = websocket.client.host
+    logging.info(f"New WebSocket => {client_ip}")
+
+    while True:
+        try:
+            # Read payload from client
+            payload = await manager.update(websocket)
+            
+            # TODO => Interact with the game here using the payload & create the appropriate response
+            response = {"game": "stuff"}
+
+            # Return response to the client
+            await websocket.send_json(response)
+
+        except WebSocketDisconnect:
+            logging.info(f"* WebSocket from {client_ip} dropped *")
+            manager.disconnect(websocket)
+            break
+
+        except Exception as e:
+            logging.info("error", e)
+            break
+        
+    logging.info(f"Websocket closed => {client_ip}")

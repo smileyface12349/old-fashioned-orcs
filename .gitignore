@@ -29,3 +29,5 @@ build/
 .vscode/
 # MacOS
 .DS_Store
+# Database files
+*.db
