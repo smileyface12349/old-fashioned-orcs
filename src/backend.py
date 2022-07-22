@@ -1,7 +1,6 @@
-from database import GameDatabase
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from database import GameDatabase
 from manager import ConnectionManager
+from database import GameDatabase
 import logging
 logging.basicConfig(
     format='%(asctime)s - %(filename)s - %(message)s',
@@ -17,7 +16,6 @@ db = GameDatabase()
 async def websocket_endpoint(websocket: WebSocket):
     """
     This endpoint will handle the session of a player.
-    
     Example JSON payload:
     {
         "method": "update",
