@@ -15,13 +15,16 @@ class GameDatabase:
         )
 
     async def save(self):
+        """This method saves the data using `unique_id`"""
         # TODO => Create the actual save method using unique_id (unique_id needs to be stored client-side as well)
         pass
 
     async def load(self):
+        """This method load the data using `unique_id`"""
         # TODO => Create the actual load method using unique_id (unique_id needs to be stored client-side as well)
         pass
 
     async def reset(self):
+        """This method reseets the data using `unique_id`"""
         # TODO => Create the actual reset method that will update the entry in database
         pass
