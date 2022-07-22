@@ -1,4 +1,4 @@
-import src
+import src.game
 import pygame
 
 pygame.init()  # ensuring that everything we need will be initialised before starting
@@ -8,11 +8,14 @@ pygame.init()  # ensuring that everything we need will be initialised before sta
 # allow the user to resize the window as they like. Feel free to change the resolution if you feel that it's too small
 screen = pygame.display.set_mode((160, 144), pygame.RESIZABLE | pygame.SCALED)
 
+game=src.game.Game()
+
 running = True
 
 while running:
     # We generally use a while loop when making a game. Most of the game code should go here.
     screen.fill("skyblue")
+    game.objects.draw(screen) # We draw everything here
     pygame.display.update()  # This function is called when everything render-related is done.
     # If you don't call this or pygame.display.flip, the screen won't show what you've drawn on it!
     # Events are how we manage player inputs (and others).
