@@ -1,2 +1,2 @@
-#We could put everything websocket-related here (shrugs)
-from fastapi import *
+#We could put everything websocket-related here (¯\_(ツ)_/¯)
+import fastapi as fa
