@@ -20,7 +20,11 @@ class Game:
     def __init__(self):
         self.player = player.Player(self)
         self.tiles = pygame.sprite.LayeredUpdates(
-            solid.Solid(self, (5, 6)), solid.Solid(self, (4, 7)), solid.Solid(self, (6, 7)), default_layer=0
+            solid.Solid(self, (5, 6)),
+            solid.Solid(self, (4, 7)),
+            solid.Solid(self, (6, 7)),
+            solid.Solid(self, (5, 3)),
+            default_layer=0,
         )
         self.objects = pygame.sprite.LayeredUpdates(self.player, *self.tiles)
         self.tmx_data: pytmx.TiledMap | None = None

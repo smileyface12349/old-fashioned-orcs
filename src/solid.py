@@ -31,11 +31,11 @@ class Solid(pygame.sprite.Sprite):
 
     @property
     def playerisleft(self):
-        return self.game.player.rect.right <= self.rect.x + 4
+        return self.game.player.rect.right <= self.rect.x + 2
 
     @property
     def playerisright(self):
-        return self.game.player.rect.x >= self.rect.right - 4
+        return self.game.player.rect.x >= self.rect.right - 2
 
     # Strict locating properties
     @property

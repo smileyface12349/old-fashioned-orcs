@@ -26,9 +26,18 @@ class Player(pygame.sprite.Sprite):
         self.x_velocity = 1
         self.y_velocity = 0
         self.falling = True
+        self.jumping = False
+        self.jump_distance = 0
         self.fall_delay = 0
         self.moving_right = False
         self.moving_left = False
+
+    def jump(self):
+        """Makes the Player jump."""
+        if not self.jumping and not self.falling:
+            self.jumping = True
+            self.y_velocity = 6
+            self.fall_delay = 0
 
     # The two methods below move the player.
     def move_left(self):
@@ -66,33 +75,56 @@ class Player(pygame.sprite.Sprite):
             self.move_right()
         # We update the fall sensor's position to stay underneath the player.
         self.fall_sensor.midtop = self.rect.midbottom
-        # Start falling only if there's no solid tile underneath the player and being on the same layer
-        if (not self.falling) and (
-            not pygame.sprite.spritecollide(
-                self,
-                tiles_on_same_layer,
-                False,
-                lambda spr1, spr2: spr1.fall_sensor.colliderect(spr2.rect),
-            )
-        ):
-            self.falling = True
-            self.y_velocity = 1
-        elif self.falling:
+        if not self.jumping:
+            # Start falling only if there's no solid tile underneath the player and being on the same layer
+            if (not self.falling) and (
+                not pygame.sprite.spritecollide(
+                    self,
+                    tiles_on_same_layer,
+                    False,
+                    lambda spr1, spr2: spr1.fall_sensor.colliderect(spr2.rect),
+                )
+            ):
+                self.falling = True
+                self.y_velocity = 1
+            elif self.falling:
+                self.fall_delay += dt
+                if self.fall_delay >= 18:
+                    self.fall_delay = 0
+                    self.rect.y += self.y_velocity
+                    if self.y_velocity < 6:
+                        self.y_velocity += 1
+                collisions = pygame.sprite.spritecollide(
+                    self,
+                    tiles_on_same_layer,
+                    False,
+                    lambda spr1, spr2: spr2.playerisup_strict and spr1.rect.colliderect(spr2.rect),
+                )
+                # collisions=pygame.sprite.spritecollide(self, self.game.tiles, False, lambda spr1, spr2:spr1.rect.colliderect(spr2.rect) and spr2.playerisup)
+                if collisions:
+                    self.rect.bottom = collisions[0].rect.y
+                    self.y_velocity = 0
+                    self.falling = False
+                    self.fall_delay = 1
+        else:
             self.fall_delay += dt
             if self.fall_delay >= 18:
                 self.fall_delay = 0
-                self.rect.y += self.y_velocity
-                if self.y_velocity < 6:
-                    self.y_velocity += 1
+                self.rect.y -= self.y_velocity
+                if self.y_velocity:
+                    self.y_velocity -= 1
+                else:
+                    self.jumping = False
+                    self.falling = True
             collisions = pygame.sprite.spritecollide(
                 self,
                 tiles_on_same_layer,
                 False,
-                lambda spr1, spr2: spr2.playerisup_strict and spr1.rect.colliderect(spr2.rect),
+                lambda spr1, spr2: spr2.playerisdown_strict and spr1.rect.colliderect(spr2.rect),
             )
-            # collisions=pygame.sprite.spritecollide(self, self.game.tiles, False, lambda spr1, spr2:spr1.rect.colliderect(spr2.rect) and spr2.playerisup)
             if collisions:
-                self.rect.bottom = collisions[0].rect.y
-                self.y_velocity = 0
-                self.falling = False
-                self.fall_delay = 1
+                self.rect.y = collisions[0].rect.bottom
+                self.y_velocity = 1
+                self.fall_delay = 0
+                self.jumping = False
+                self.falling = True
