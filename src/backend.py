@@ -1,7 +1,10 @@
 import logging
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from manager import ConnectionManager
+
 from database import GameDatabase
+from manager import ConnectionManager
+
 logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=logging.INFO)
 
 app = FastAPI(title="Old Fashioned Orcs")
@@ -13,6 +16,7 @@ db = GameDatabase()
 async def websocket_endpoint(websocket: WebSocket):
     """
     This endpoint will handle the session of a player.
+
     Example JSON payload:
     {
         "method": "update",
@@ -24,7 +28,6 @@ async def websocket_endpoint(websocket: WebSocket):
     }
     :param payload: json object
     """
-
     await manager.connect(websocket)
     client_ip = websocket.client.host
     logging.info(f"New WebSocket => {client_ip}")
@@ -33,9 +36,10 @@ async def websocket_endpoint(websocket: WebSocket):
         try:
             # Read payload from client
             payload = await manager.update(websocket)
-            
+
             # TODO => Interact with the game here using the payload & create the appropriate response
-            response = {"game": "stuff"}
+            # Currently just doing a pingback of the client payload for testing sake and so that the linter's happy
+            response = {"game": f"{payload}"}
 
             # Return response to the client
             await websocket.send_json(response)
@@ -48,5 +52,5 @@ async def websocket_endpoint(websocket: WebSocket):
         except Exception as e:
             logging.info("error", e)
             break
-        
+
     logging.info(f"Websocket closed => {client_ip}")
