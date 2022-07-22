@@ -10,3 +10,7 @@ black~=22.6.0
 
 # Flake8 plugins, see https://github.com/python-discord/code-jam-template/tree/main#plugin-list
 flake8-docstrings~=1.6.0
+
+#Game dependencies
+pygame~=2.1.2
+fastapi~=0.79.0
