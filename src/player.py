@@ -4,7 +4,7 @@ class Player(pygame.sprite.Sprite):
     # This is our player class. We derive it from pygame.sprite.Sprite in order to benefit from the group system
     # pygame has.
     def __init__(self):
-        super().__init__() # we need this to ensure the sprite will work correctly with groups
+        super().__init__()  # we need this to ensure the sprite will work correctly with groups
         # Surfaces are image objects. We can replace this with assets once they're made
         self.image = pygame.Surface((16, 16)).convert_alpha()
         # convert_alpha is a method to allow us to use PNG images with transparency, and also make them faster to
