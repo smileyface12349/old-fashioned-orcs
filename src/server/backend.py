@@ -1,8 +1,7 @@
 import logging
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-
 from database import GameDatabase
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from manager import ConnectionManager
 
 logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=logging.INFO)
