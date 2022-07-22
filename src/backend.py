@@ -1,13 +1,10 @@
+import logging
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from manager import ConnectionManager
 from database import GameDatabase
-import logging
-logging.basicConfig(
-    format='%(asctime)s - %(filename)s - %(message)s',
-    level=logging.INFO
-    )
+logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=logging.INFO)
 
-app = FastAPI(title='Old Fashioned Orcs')
+app = FastAPI(title="Old Fashioned Orcs")
 manager = ConnectionManager()
 db = GameDatabase()
 
