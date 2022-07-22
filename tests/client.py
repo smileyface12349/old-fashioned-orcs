@@ -1,11 +1,10 @@
-import json
 import asyncio
+import json
 import websockets
 
 
 async def test():
     """Just testing simple client connection"""
-
     uri = "ws://localhost:8000/connect"
     async with websockets.connect(uri) as websocket:
 
