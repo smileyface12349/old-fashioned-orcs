@@ -1,9 +1,12 @@
-import src.solid as solid
 import pygame
 
+
 class Player(pygame.sprite.Sprite):
-    # This is our player class. We derive it from pygame.sprite.Sprite in order to benefit from the group system
-    # pygame has.
+    """This is our player class.
+
+    We derive it from pygame.sprite.Sprite in order to benefit from the group system pygame has
+    """
+
     def __init__(self):
         super().__init__()  # we need this to ensure the sprite will work correctly with groups
         # Surfaces are image objects. We can replace this with assets once they're made
@@ -24,5 +27,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.x-=self.x_velocity
     def move_right(self):
         self.rect.x+=self.x_velocity
+
 
 
