@@ -38,6 +38,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.x_velocity
 
     def update(self, dt):
+        """Auto-update the player"""
         if self.moving_left:
             self.move_left()
         if self.moving_right:
