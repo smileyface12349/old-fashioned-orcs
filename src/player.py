@@ -1,6 +1,7 @@
 import src.solid as solid
 import pygame
 
+
 class Player(pygame.sprite.Sprite):
     # This is our player class. We derive it from pygame.sprite.Sprite in order to benefit from the group system
     # pygame has.
@@ -18,4 +19,3 @@ class Player(pygame.sprite.Sprite):
         # And so adding 1 to self.rect.y will move self.rect 1 pixel downwards.
         self.x_velocity = 1
         self.y_velocity = 1
-
