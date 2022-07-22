@@ -18,6 +18,8 @@ class Player(pygame.sprite.Sprite):
         self.image.fill("blue")  # For now, our player is just a random blue square though.
         # We make a rectangle object, which can then be used to locate the sprite on the screen.
         self.rect = self.image.get_rect(center=(80, 72))
+        # self.fall_sensor is a Rect that we use to check if the player is standing on a tile.
+        self.fall_sensor = pygame.Rect(self.rect.x, self.rect.bottom, self.rect.width, 4)
         # In Pygame, (0, 0) is the topleft corner of the screen.
         # Adding 1 to self.rect.x will move self.rect 1 pixel to the right.
         # And so adding 1 to self.rect.y will move self.rect 1 pixel downwards.
@@ -39,22 +41,58 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, dt):
         """Auto-update the player"""
+        tiles_on_same_layer = self.game.tiles.get_sprites_from_layer(0)
         if self.moving_left:
+            left_collisions = pygame.sprite.spritecollide(
+                self,
+                tiles_on_same_layer,
+                False,
+                lambda spr1, spr2: spr2.playerisright_strict and spr1.rect.colliderect(spr2.rect),
+            )
+            if left_collisions:
+                self.rect.x += 1
+            self.x_velocity = int(not left_collisions)
             self.move_left()
         if self.moving_right:
+            right_collisions = pygame.sprite.spritecollide(
+                self,
+                tiles_on_same_layer,
+                False,
+                lambda spr1, spr2: spr2.playerisleft_strict and spr1.rect.colliderect(spr2.rect),
+            )
+            if right_collisions:
+                self.rect.x -= 1
+            self.x_velocity = int(not right_collisions)
             self.move_right()
+        # We update the fall sensor's position to stay underneath the player.
         self.fall_sensor.midtop = self.rect.midbottom
         # Start falling only if there's no solid tile underneath the player and being on the same layer
         if (not self.falling) and (
             not pygame.sprite.spritecollide(
                 self,
-                self.game.tiles,
+                tiles_on_same_layer,
                 False,
-                lambda spr1, spr2: spr1.fall_sensor.colliderect(spr2.rect)
-                and not self.game.objects.get_layer_of_sprite(spr2),
+                lambda spr1, spr2: spr1.fall_sensor.colliderect(spr2.rect),
             )
         ):
             self.falling = True
             self.y_velocity = 1
         elif self.falling:
-            pass
+            self.fall_delay += dt
+            if self.fall_delay >= 18:
+                self.fall_delay = 0
+                self.rect.y += self.y_velocity
+                if self.y_velocity < 6:
+                    self.y_velocity += 1
+            collisions = pygame.sprite.spritecollide(
+                self,
+                tiles_on_same_layer,
+                False,
+                lambda spr1, spr2: spr2.playerisup_strict and spr1.rect.colliderect(spr2.rect),
+            )
+            # collisions=pygame.sprite.spritecollide(self, self.game.tiles, False, lambda spr1, spr2:spr1.rect.colliderect(spr2.rect) and spr2.playerisup)
+            if collisions:
+                self.rect.bottom = collisions[0].rect.y
+                self.y_velocity = 0
+                self.falling = False
+                self.fall_delay = 1

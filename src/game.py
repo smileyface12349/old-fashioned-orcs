@@ -18,10 +18,15 @@ class Game:
     """The Game"""
 
     def __init__(self):
-        self.player = player.Player()
-        self.tiles = pygame.sprite.LayeredUpdates(solid.Solid((8, 10)), default_layer=0)
+        self.player = player.Player(self)
+        self.tiles = pygame.sprite.LayeredUpdates(solid.Solid(self, (5, 6)),
+                                                  solid.Solid(self, (4, 7)),
+                                                  solid.Solid(self, (6, 7)), default_layer=0)
         self.objects = pygame.sprite.LayeredUpdates(self.player, *self.tiles)
+        self.tmx_data: pytmx.TiledMap | None = None
 
     def read_map(self, directory):
         """This reads the TMX Map data"""
         self.tmx_data = pytmx.TiledMap(_get_tmx_file(directory))
+        for sprite in self.tiles:
+            sprite.kill()
