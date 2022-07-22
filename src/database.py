@@ -12,7 +12,7 @@ class GameDatabase:
             CREATE TABLE IF NOT EXISTS players
             ([unique_id] TEXT, [level] INT)
             """
-            )
+        )
 
     async def save(self):
         # TODO => Create the actual save method using unique_id (unique_id needs to be stored client-side as well)
