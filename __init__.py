@@ -8,7 +8,7 @@ pygame.init()  # ensuring that everything we need will be initialised before sta
 # allow the user to resize the window as they like. Feel free to change the resolution if you feel that it's too small
 screen = pygame.display.set_mode((160, 144), pygame.RESIZABLE | pygame.SCALED)
 
-game=src.game.Game()
+game = src.game.Game()
 clock=pygame.time.Clock()  # a framerate helper object.
 
 running = True

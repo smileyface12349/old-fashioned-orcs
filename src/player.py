@@ -18,7 +18,6 @@ class Player(pygame.sprite.Sprite):
         self.image.fill("blue")  # For now, our player is just a random blue square though.
         # We make a rectangle object, which can then be used to locate the sprite on the screen.
         self.rect = self.image.get_rect(center=(80, 72))
-        self.fall_sensor=pygame.Rect(self.rect.x, self.rect.bottom, self.rect.width, 1)
         # In Pygame, (0, 0) is the topleft corner of the screen.
         # Adding 1 to self.rect.x will move self.rect 1 pixel to the right.
         # And so adding 1 to self.rect.y will move self.rect 1 pixel downwards.
@@ -30,8 +29,11 @@ class Player(pygame.sprite.Sprite):
         self.moving_left=False
     # The two methods below move the player.
     def move_left(self):
-        self.rect.x-=self.x_velocity
+        """Moves the Player left"""
+        self.rect.x -= self.x_velocity
+
     def move_right(self):
+        """Moves the Player right"""
         self.rect.x+=self.x_velocity
     def update(self, dt):
         if self.moving_left:
@@ -48,5 +50,4 @@ class Player(pygame.sprite.Sprite):
             self.y_velocity=1
         elif self.falling:
             pass
-
 
