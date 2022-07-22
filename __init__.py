@@ -1,4 +1,3 @@
-import src
 import pygame
 
 pygame.init()  # ensuring that everything we need will be initialised before starting
