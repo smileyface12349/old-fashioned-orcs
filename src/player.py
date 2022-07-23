@@ -51,6 +51,13 @@ class Player(pygame.sprite.Sprite):
     def update(self, dt):
         """Auto-update the player"""
         tiles_on_same_layer = self.game.tiles.get_sprites_from_layer(0)
+        if pygame.sprite.spritecollide(
+            self,
+            tiles_on_same_layer,
+            False,
+            lambda spr1, spr2: spr2.__class__.__name__ == "BuggyThingy" and spr1.rect.colliderect(spr2.rect),
+        ):
+            self.game.crash()
         if self.moving_left:
             left_collisions = pygame.sprite.spritecollide(
                 self,
