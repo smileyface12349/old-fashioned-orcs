@@ -36,4 +36,4 @@ class ConnectionManager:
 
     def connections(self):
         """Return a list of all currently active connections."""
-        return self.active_connections
+        return iter(self.active_connections)

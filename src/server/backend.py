@@ -28,26 +28,25 @@ async def new_game(websocket):
     game = await games.create()  # Initialize a game
     await game.add_player(websocket)
 
-    event = await manager.update(websocket)
-    assert event["unique_id"]
-    await websocket.send(json.dumps(event))
-
     # Receive and process moves from the first player.
     await play_game(websocket, game)
 
 
-async def join_game(websocket, game):
+async def join_game(websocket):
     """Handle connections from other players, joining an existing game."""
     # Find the game.
-    for game in games.active:
-        if game.players <= 2:
+    for game in games.active_games:
+        if len(game.players) <= 2:
             try:
                 await game.add_player(websocket)
                 await play_game(websocket, game)
 
             except KeyError:
                 await error(websocket, "Game not found.")
+                await game.remove_player(websocket)
                 return
+        else:
+            await new_game(websocket)
 
 
 async def play_game(websocket, game):
@@ -89,16 +88,24 @@ async def handler(websocket):
     logging.info(f"New WebSocket => {websocket.remote_address}")
     await manager.add(websocket)
 
-    if games:
+    event = await manager.update(websocket)
+    assert event["unique_id"]
+    await websocket.send(json.dumps(event))
+
+    # Clear old games if necessary
+    await games.clear()
+
+    if not games.active_games:
         # Start a new game.
         logging.info("Creating New Game!")
         await new_game(websocket)
     else:
-        logging.info("Player will join existing game!")
+        logging.info("Player will join an existing game!")
         await join_game(websocket)
 
     # Drop websocket when done
     await manager.drop(websocket)
+    await games.remove_player(websocket)
     logging.info(f"Closed WebSocket => {websocket.remote_address}")
 
 

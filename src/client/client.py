@@ -28,9 +28,20 @@ async def hello():
                 response = json.loads(response)
                 print(f"Response => {response}")
 
-                if response["type"] == "ready":
+                if response["type"] in ["init", "ready", "action"]:
                     established = True
+                    data["type"] = "ready"
+
+                    if not data["unique_id"]:
+                        # If user didnt have a unique_id, server returned him one
+                        data["unique_id"] = response["unique_id"]
+
+                    if not data["nickname"]:
+                        # If user didnt specify a nickname, server returns a random one
+                        data["nickname"] = response["nickname"]
+
                     if no_cache:
+                        # If there is no cache saved, we need to create it
                         await cache.save(response)
                         no_cache = False
 
@@ -50,6 +61,7 @@ async def hello():
                 print(f"Response => {response}")
 
             await asyncio.sleep(0.1)
+        established = False
 
 
 if __name__ == "__main__":
