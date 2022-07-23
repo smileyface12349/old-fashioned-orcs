@@ -100,7 +100,13 @@ class Player(pygame.sprite.Sprite):
                     False,
                     lambda spr1, spr2: spr2.playerisup_strict and spr1.rect.colliderect(spr2.rect),
                 )
-                # collisions=pygame.sprite.spritecollide(self, self.game.tiles, False, lambda spr1, spr2:spr1.rect.colliderect(spr2.rect) and spr2.playerisup)
+                # collisions = pygame.sprite.spritecollide(
+                #    self,
+                #    self.game.tiles,
+                #    False,
+                #    lambda spr1, spr2: spr1.rect.colliderect(spr2.rect) and spr2.playerisup,
+                # )
+
                 if collisions:
                     self.rect.bottom = collisions[0].rect.y
                     self.y_velocity = 0
