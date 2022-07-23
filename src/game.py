@@ -37,7 +37,7 @@ class Game:
         self.tmx_data: pytmx.TiledMap | None = None
 
     def crash(self):
-        """ "Crash" the game."""
+        """<<Crash>> the game."""
         self.crashing = True
         game_crash.play(-1)
 
