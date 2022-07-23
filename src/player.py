@@ -135,3 +135,10 @@ class Player(pygame.sprite.Sprite):
                 self.fall_delay = 0
                 self.jumping = False
                 self.falling = True
+
+
+class OtherPlayer(pygame.sprite.Sprite):
+    """Another player, using another session."""
+
+    def __init__(self):
+        super().__init__()
