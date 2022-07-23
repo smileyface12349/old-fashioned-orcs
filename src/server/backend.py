@@ -89,11 +89,17 @@ async def handler(websocket):
     logging.info(f"New WebSocket => {websocket.remote_address}")
     await manager.add(websocket)
 
-    # Start a new game.
-    await new_game(websocket)
+    if games:
+        # Start a new game.
+        logging.info("Creating New Game!")
+        await new_game(websocket)
+    else:
+        logging.info("Player will join existing game!")
+        await join_game(websocket)
 
     # Drop websocket when done
     await manager.drop(websocket)
+    logging.info(f"Closed WebSocket => {websocket.remote_address}")
 
 
 async def main():

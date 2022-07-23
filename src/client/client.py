@@ -18,7 +18,7 @@ async def hello():
 
     async with websockets.connect("ws://localhost:8000/") as websocket:
 
-        for _ in range(15):
+        for _ in range(1000):
             while not established:
                 payload = json.dumps(data)
                 await websocket.send(payload)
@@ -49,7 +49,7 @@ async def hello():
                 response = json.loads(response)
                 print(f"Response => {response}")
 
-            await asyncio.sleep(0.3)
+            await asyncio.sleep(0.1)
 
 
 if __name__ == "__main__":

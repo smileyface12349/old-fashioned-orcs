@@ -42,6 +42,6 @@ class GameManager:
         """Deletes a game if no players in it."""
         del self.active_games.remove[game]
 
-    def active(self):
+    def __iter__(self):
         """Return a list of all currently active games."""
-        return self.active_games
+        return iter(self.active_games)
