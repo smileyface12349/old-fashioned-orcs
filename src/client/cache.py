@@ -9,15 +9,16 @@ class CacheManager:
         """Loads cache file using pickle and returns it's contents."""
         try:
             with open("cache.dmp", "rb") as f:
-                unique_id = pickle.load(f)
+                # unique_id = pickle.load(f)
+                payload = dict(pickle.load(f))
         except FileNotFoundError:
-            unique_id = ""
-        return unique_id
+            payload = {"nickname": "", "unique_id": ""}
+        return payload
 
-    async def save(self, unique_id: str):
+    async def save(self, payload: dict):
         """Saves cache file using pickle."""
         with open("cache.dmp", "wb") as f:
-            pickle.dump(unique_id, f)
+            pickle.dump(payload, f)
 
     async def delete(self):
         """Deletes local cache for whatever reason."""
