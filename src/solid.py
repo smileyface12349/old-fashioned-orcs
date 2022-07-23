@@ -18,36 +18,7 @@ class Solid(pygame.sprite.Sprite):
         # We'll only need to multiply these coords by 16 to have the real position
         self.image = pygame.Surface((16, 16)).convert_alpha()
         self.image.fill("green")
-        self.alphaing = False
-        self.dealphaing = False
-        self.alpha = 255
-        self.alpha_delay = 0
         self.rect = self.image.get_rect(topleft=tuple(map(lambda x: x * 16, self.tile_pos)))
-
-    def update(self, dt):
-        if self.alphaing:
-            self.alpha_delay += dt
-            if self.alpha_delay >= 36:
-                self.alpha -= 15
-                self.alpha_delay = 0
-                if self.alpha <= 125:
-                    self.alphaing = False
-        if self.dealphaing:
-            self.alpha_delay += dt
-            if self.alpha_delay >= 36:
-                self.alpha_delay = 0
-                self.alpha += 15
-                if self.alpha == 255:
-                    self.dealphaing = False
-        if self.layer and pygame.sprite.spritecollide(self.game.player, [self], False):
-            if not self.alphaing and self.alpha > 125:
-                self.alphaing = True
-                self.dealphaing = False
-        else:
-            if not self.dealphaing and self.alpha < 255:
-                self.dealphaing = True
-                self.alphaing = False
-        self.image.set_alpha(self.alpha)
 
     # Basic player-locating properties, used for collisions
     @property
