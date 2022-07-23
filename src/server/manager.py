@@ -1,3 +1,4 @@
+import json
 import uuid
 from typing import List
 
@@ -12,7 +13,6 @@ class ConnectionManager:
 
     async def connect(self, websocket: WebSocket):
         """Accepts a new Player's websocket and adds it to the list."""
-        await websocket.accept()
         self.active_connections.append(websocket)
 
     def disconnect(self, websocket: WebSocket):
@@ -21,7 +21,9 @@ class ConnectionManager:
 
     async def update(self, websocket: WebSocket):
         """Receives JSON payload from a websocket and updates client's unique_id if required."""
-        payload = await websocket.receive_json()
+        payload = await websocket.recv()
+        payload = json.loads(payload)
+
         if not payload["unique_id"]:
             # Generate client's unique ID
             payload["unique_id"] = uuid.uuid4().hex
