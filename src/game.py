@@ -26,10 +26,10 @@ class Game:
     def __init__(self):
         self.player = player.Player(self)
         self.tiles = pygame.sprite.LayeredUpdates(
-            solid.Solid(self, (5, 6)),
-            solid.Solid(self, (4, 7)),
-            solid.Solid(self, (6, 7)),
-            solid.Solid(self, (5, 3)),
+            solid.Solid(self, (5, 6), 0),
+            solid.Solid(self, (4, 7), 0),
+            solid.Solid(self, (6, 7), 0),
+            solid.Solid(self, (5, 3), 0),
             default_layer=0,
         )
         self.objects = pygame.sprite.LayeredUpdates(self.player, *self.tiles)
@@ -37,7 +37,7 @@ class Game:
         self.tmx_data: pytmx.TiledMap | None = None
 
     def crash(self):
-        """Crash the game."""
+        """ "Crash" the game."""
         self.crashing = True
         game_crash.play(-1)
 
@@ -56,9 +56,9 @@ class Game:
                         continue
                     if not tile["id"]:
                         # Solid tile
-                        self.tiles.add(solid.Solid(self, (tile_x, tile_y)), layer=layer)
+                        self.tiles.add(solid.Solid(self, (tile_x, tile_y), layer), layer=layer)
                     elif tile["id"] == 1:
                         # "Glitchy" tile (starts a pseudo-crash upon contact)
-                        self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y)), layer=layer)
+                        self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer)
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
