@@ -31,6 +31,8 @@ class Game:
 
     def read_map(self, directory):
         """This reads the TMX Map data"""
+        # TMX is a variant of the XML format, used by the map editor Tiled.
+        # Said maps use tilesets, stored in TSX files (which are also based on the XML format).
         self.tmx_data = pytmx.TiledMap(_get_tmx_file(directory))
         for sprite in self.tiles:
             sprite.kill()
