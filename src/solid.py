@@ -15,7 +15,7 @@ class Solid(pygame.sprite.Sprite):
         # tile_pos is a tuple of integers representing a tile's topleft corner coordinates
         self.tile_pos = tile_pos
         # We'll only need to multiply these coords by 16 to have the real position
-        self.image = pygame.Surface((16, 16))
+        self.image = pygame.Surface((16, 16)).convert_alpha()
         self.image.fill("green")
         self.rect = self.image.get_rect(topleft=tuple(map(lambda x: x * 16, self.tile_pos)))
 
@@ -60,3 +60,9 @@ class Solid(pygame.sprite.Sprite):
     def playerisright_strict(self):
         """Returns True if the player is right of left of the Solid Tile, False otherwise."""
         return self.playerisright and not (self.playerisup or self.playerisdown)
+
+
+class BuggyThingy(Solid):
+    def __init__(self, game, tile_pos: tuple):
+        super().__init__(game, tile_pos)
+        self.image.fill("red")

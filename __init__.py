@@ -18,7 +18,8 @@ while running:
     # We generally use a while loop when making a game. Most of the game code should go here.
     screen.fill("skyblue")
     dt = clock.tick(60)  # this ensures that the game cannot run higher that 60FPS. We also get a delta time in ms.
-    game.objects.update(dt)  # Auto update for every sprite
+    if not game.crashing:
+        game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
     game.objects.draw(screen)  # We draw everything here
     pygame.display.update()  # This function is called when everything render-related is done.
     # If you don't call this or pygame.display.flip, the screen won't show what you've drawn on it!
@@ -36,6 +37,8 @@ while running:
                 game.player.moving_right = True
             elif event.key == pygame.K_SPACE:
                 game.player.jump()
+            elif event.key==pygame.K_m:
+                game.read_map("maps/test.tmx")
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 game.player.moving_left = False

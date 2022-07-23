@@ -33,7 +33,13 @@ class Game:
             default_layer=0,
         )
         self.objects = pygame.sprite.LayeredUpdates(self.player, *self.tiles)
+        self.crashing = False
         self.tmx_data: pytmx.TiledMap | None = None
+
+    def crash(self):
+        """ "Crash" the game."""
+        self.crashing = True
+        game_crash.play(-1)
 
     def read_map(self, directory):
         """This reads the TMX Map data"""
@@ -42,25 +48,17 @@ class Game:
         self.tmx_data = pytmx.TiledMap(_resource_path(directory))
         for sprite in self.tiles:
             sprite.kill()
-        tile_x = 0
-        tile_y = 0
-        for i, layer in enumerate(
-            filter(lambda layers: isinstance(layers, pytmx.TiledTileLayer), self.tmx_data.layers)
-        ):
-            for row in layer.data:
-                if not any(row):
-                    tile_y += 1
-                    tile_x = 0
-                    continue
-                for tile in row:
-                    # A value of 0 means that the tile is empty.
-                    if tile == 1:
+        for l in range(len(list(self.tmx_data.visible_tile_layers))):
+            for tile_y in range(self.tmx_data.height):
+                for tile_x in range(self.tmx_data.width):
+                    tile=self.tmx_data.get_tile_properties(tile_x, tile_y, l)
+                    if tile is None:
+                        continue
+                    if not tile["id"]:
                         # Solid tile
-                        self.tiles.add(solid.Solid(self, (tile_x, tile_y)), layer=i)
-                    elif tile == 2:
+                        self.tiles.add(solid.Solid(self, (tile_x, tile_y)), layer=l)
+                    elif tile["id"] == 1:
                         # "Glitchy" tile (starts a pseudo-crash upon contact)
-                        # TODO: implement these.
-                        pass
-                    tile_x += 1
-                tile_y += 1
-                tile_x = 0
+                        self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y)), layer=l)
+        for sprite in self.tiles:
+            self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
