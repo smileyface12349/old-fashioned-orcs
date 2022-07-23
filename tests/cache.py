@@ -16,7 +16,7 @@ class CacheManager:
 
     async def save(self, unique_id: str):
         """Saves cache file using pickle."""
-        with open("cache.dump", "wb") as f:
+        with open("cache.dmp", "wb") as f:
             pickle.dump(unique_id, f)
 
     async def delete(self):
