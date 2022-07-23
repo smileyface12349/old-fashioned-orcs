@@ -63,6 +63,8 @@ class Solid(pygame.sprite.Sprite):
 
 
 class BuggyThingy(Solid):
+    """BuggyThingy class - Fix me"""
+
     def __init__(self, game, tile_pos: tuple):
         super().__init__(game, tile_pos)
         self.image.fill("red")

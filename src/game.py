@@ -37,7 +37,7 @@ class Game:
         self.tmx_data: pytmx.TiledMap | None = None
 
     def crash(self):
-        """ "Crash" the game."""
+        """Crash the game."""
         self.crashing = True
         game_crash.play(-1)
 
@@ -48,17 +48,17 @@ class Game:
         self.tmx_data = pytmx.TiledMap(_resource_path(directory))
         for sprite in self.tiles:
             sprite.kill()
-        for l in range(len(list(self.tmx_data.visible_tile_layers))):
+        for layer in range(len(list(self.tmx_data.visible_tile_layers))):
             for tile_y in range(self.tmx_data.height):
                 for tile_x in range(self.tmx_data.width):
-                    tile = self.tmx_data.get_tile_properties(tile_x, tile_y, l)
+                    tile = self.tmx_data.get_tile_properties(tile_x, tile_y, layer)
                     if tile is None:
                         continue
                     if not tile["id"]:
                         # Solid tile
-                        self.tiles.add(solid.Solid(self, (tile_x, tile_y)), layer=l)
+                        self.tiles.add(solid.Solid(self, (tile_x, tile_y)), layer=layer)
                     elif tile["id"] == 1:
                         # "Glitchy" tile (starts a pseudo-crash upon contact)
-                        self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y)), layer=l)
+                        self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y)), layer=layer)
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
