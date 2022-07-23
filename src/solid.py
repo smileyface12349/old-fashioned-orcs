@@ -18,7 +18,6 @@ class Solid(pygame.sprite.Sprite):
         self.image = pygame.Surface((16, 16))
         self.image.fill("green")
         self.rect = self.image.get_rect(topleft=tuple(map(lambda x: x * 16, self.tile_pos)))
-        print(self.rect)
 
     # Basic player-locating properties, used for collisions
     @property
