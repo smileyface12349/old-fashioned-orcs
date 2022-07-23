@@ -67,6 +67,7 @@ async def play_game(websocket, game):
         # Send an "action" event back
         event = {
             "type": "action",
+            "game_id": game.id,
             "position": position,
             "level": 0,
         }
