@@ -51,7 +51,7 @@ class Game:
         for l in range(len(list(self.tmx_data.visible_tile_layers))):
             for tile_y in range(self.tmx_data.height):
                 for tile_x in range(self.tmx_data.width):
-                    tile=self.tmx_data.get_tile_properties(tile_x, tile_y, l)
+                    tile = self.tmx_data.get_tile_properties(tile_x, tile_y, l)
                     if tile is None:
                         continue
                     if not tile["id"]:
