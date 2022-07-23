@@ -32,4 +32,4 @@ build/
 # Database files
 *.db
 # Cache file
-cache.dump
+cache.dmp
