@@ -31,3 +31,5 @@ build/
 .DS_Store
 # Database files
 *.db
+# Cache file
+cache.dump

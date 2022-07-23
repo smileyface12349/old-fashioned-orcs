@@ -11,21 +11,20 @@ class ConnectionManager:
         self.active_connections: List[WebSocket] = []
 
     async def connect(self, websocket: WebSocket):
-        """Accept an incomming Player websocket and connect to it."""
+        """Accepts a new Player's websocket and adds it to the list."""
         await websocket.accept()
         self.active_connections.append(websocket)
 
-        # Generate client's unique ID
-        unique_id = uuid.uuid4().hex
-        return {"unique_id": unique_id}
-
     def disconnect(self, websocket: WebSocket):
-        """Disconnect a Player websocket."""
+        """Handles proper disconnect of a Player and removes websocket from the list."""
         self.active_connections.remove(websocket)
 
     async def update(self, websocket: WebSocket):
-        """Recieve JSON data from a websocket."""
+        """Receives JSON payload from a websocket and updates client's unique_id if required."""
         payload = await websocket.receive_json()
+        if not payload["unique_id"]:
+            # Generate client's unique ID
+            payload["unique_id"] = uuid.uuid4().hex
         return payload
 
     def connections(self):

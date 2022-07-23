@@ -18,8 +18,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
     Example JSON payload:
     {
-        "method": "update",
-        "unique_id": "rfah3430243iog34gsdaf",
+        "unique_id": "",
         "nickname": "coolname",
         "position_x": 150,
         "position_y": 350,
@@ -38,10 +37,9 @@ async def websocket_endpoint(websocket: WebSocket):
 
             # TODO => Interact with the game here using the payload & create the appropriate response
             # Currently just doing a pingback of the client payload for testing sake and so that the linter's happy
-            response = {"game": f"{payload}"}
 
             # Return response to the client
-            await websocket.send_json(response)
+            await websocket.send_json(payload)
 
         except WebSocketDisconnect:
             logging.info(f"* WebSocket from {client_ip} dropped *")
