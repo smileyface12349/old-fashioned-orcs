@@ -2,6 +2,7 @@ import asyncio
 import json
 
 import websockets
+
 from .cache import CacheManager  # relative import otherwise it doesn't work
 
 cache = CacheManager()
@@ -51,8 +52,8 @@ class Client:
             raise Exception("Invalid type in response")
 
     async def play(self, payload):
-        """TODO => actually play"""
-        print("=> Playing..")
+        """Play loop"""
+        print("=->  Playing  <-=")
         while True:
             loop = asyncio.get_event_loop()
             payload = await loop.run_in_executor(None, self.sync_game)
@@ -81,9 +82,3 @@ class Client:
             self.payload = await self._hello(cache_data)
             # Now play the game
             await self.play(self.payload)
-
-
-if __name__ == "__main__":
-    # DON'T RUN THAT! IT DOESN'T WORK ANYMORE IN STANDALONE!
-    client = Client()
-    asyncio.run(client.run())
