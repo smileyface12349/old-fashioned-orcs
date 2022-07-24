@@ -15,30 +15,32 @@ class GameDatabase:
         )
         self.con.commit()
 
-    async def save(self, unique_id: str, level: int):
+    async def save(self, player):
         """This method saves player's progress using `unique_id`"""
-        self.cur.execute(f"SELECT * FROM players WHERE unique_id = '{unique_id}'")
+        self.cur.execute(f"SELECT * FROM players WHERE unique_id = '{player.unique_id}'")
         list = [list for list in self.cur.fetchall()]
         if not list:
-            self.cur.execute("INSERT INTO players (unique_id,level) VALUES (?, ?)", (unique_id, level))
+            self.cur.execute("INSERT INTO players (unique_id,level) VALUES (?, ?)", (player.unique_id, player.level))
             self.con.commit()
         else:
             # Entry already in database.
             for i in list:
                 old_level = int(i[1])
-            if old_level < level:
-                self.cur.execute(f"DELETE FROM players WHERE unique_id IN ('{unique_id}')")
-                self.cur.execute("INSERT INTO players (unique_id,level) VALUES (?, ?)", (unique_id, level))
+            if old_level < player.level:
+                self.cur.execute(f"DELETE FROM players WHERE unique_id IN ('{player.unique_id}')")
+                self.cur.execute(
+                    "INSERT INTO players (unique_id,level) VALUES (?, ?)", (player.unique_id, player.level)
+                )
                 self.con.commit()
 
-    async def load(self, unique_id: str):
+    async def load(self, player):
         """This method load player's level using `unique_id`"""
-        self.cur.execute(f"SELECT level FROM players WHERE unique_id = '{unique_id}'")
+        self.cur.execute(f"SELECT level FROM players WHERE unique_id = '{player.unique_id}'")
         return self.cur
 
-    async def delete(self, unique_id: str):
+    async def delete(self, player):
         """This method resets player's level using `unique_id`"""
-        self.cur.execute(f"DELETE FROM players WHERE unique_id IN ('{unique_id}')")
+        self.cur.execute(f"DELETE FROM players WHERE unique_id IN ('{player.unique_id}')")
         self.con.commit()
 
     async def show_all(self):

@@ -83,7 +83,10 @@ async def handler(websocket):
 
     # Clear old games if necessary
     await games.clear()
+    # Create new player session
     player = PlayerSession(websocket, event["unique_id"], event["nickname"])
+    # Load progress of player, if any
+    player.level = await db.load(player)
 
     if not games.active_games:
         # Start a new game.
@@ -94,6 +97,7 @@ async def handler(websocket):
         await join_game(player)
 
     # Drop websocket when done
+    await db.save(player)
     await manager.drop(websocket)
     await games.remove_player(player)
     logging.info(f"Closed WebSocket => {websocket.remote_address}")
