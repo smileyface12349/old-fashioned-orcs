@@ -66,16 +66,16 @@ class Game:
         """Adds a player that joined the game online."""
         if pos is None:
             pos = [0, 0]
-        new_player=player.OtherPlayer(nickname, uuid)
+        new_player = player.OtherPlayer(nickname, uuid)
         self.other_players.add(new_player)
         self.objects.add(new_player, layer=0)
-        new_player.rect.topleft=tuple(pos)
+        new_player.rect.topleft = tuple(pos)
 
     def update_player(self, nickname, pos=None):
         if pos is None:
             pos = [0, 0]
-        if not any(player for player in self.other_players if player.nickname==nickname):
+        if not any(player for player in self.other_players if player.nickname == nickname):
             raise Exception(f"invalid player : {nickname}")
         for player in self.other_players:
-            if player.nickname==nickname:
-                player.rect.topleft=tuple(pos)
+            if player.nickname == nickname:
+                player.rect.topleft = tuple(pos)

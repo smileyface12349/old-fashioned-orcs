@@ -8,7 +8,8 @@ from .cache import CacheManager  # relative import otherwise it doesn't work
 
 cache = CacheManager()
 
-player_nickname=itemgetter("nickname")
+player_nickname = itemgetter("nickname")
+
 
 class Client:
     """Client class that handles the connection with the server."""
@@ -70,10 +71,10 @@ class Client:
             response = json.loads(response)
             print(f"Response => {response}")
             for player in response["players"]:
-                nick=player_nickname(player)
-                if nick==self.payload["nickname"]:
+                nick = player_nickname(player)
+                if nick == self.payload["nickname"]:
                     continue
-                if not any(ply for ply in self.game.other_players if ply.nickname==nick):
+                if not any(ply for ply in self.game.other_players if ply.nickname == nick):
                     self.game.add_player(nick, player["unique_id"], player["position"])
                     continue
                 self.game.update_player(nick, player["position"])
