@@ -27,6 +27,7 @@ class Game:
     def __init__(self):
         self.player = player.Player(self)
         self.tiles = pygame.sprite.LayeredUpdates()
+        self.other_players = pygame.sprite.Group()
         self.objects = pygame.sprite.LayeredUpdates(self.player)
         self.crashing = False
         self.tmx_data: pytmx.TiledMap | None = None
@@ -60,3 +61,21 @@ class Game:
                         self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer)
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
+
+    def add_player(self, nickname, uuid, pos=None):
+        """Adds a player that joined the game online."""
+        if pos is None:
+            pos = [0, 0]
+        new_player=player.OtherPlayer(nickname, uuid)
+        self.other_players.add(new_player)
+        self.objects.add(new_player, layer=0)
+        new_player.rect.topleft=tuple(pos)
+
+    def update_player(self, nickname, pos=None):
+        if pos is None:
+            pos = [0, 0]
+        if not any(player for player in self.other_players if player.nickname==nickname):
+            raise Exception(f"invalid player : {nickname}")
+        for player in self.other_players:
+            if player.nickname==nickname:
+                player.rect.topleft=tuple(pos)

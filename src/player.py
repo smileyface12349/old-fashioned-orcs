@@ -140,5 +140,10 @@ class Player(pygame.sprite.Sprite):
 class OtherPlayer(pygame.sprite.Sprite):
     """Another player, using another session."""
 
-    def __init__(self):
+    def __init__(self, nickname, uuid):
         super().__init__()
+        self.nickname = nickname
+        self.uuid=uuid
+        self.image=pygame.Surface((16, 16)).convert_alpha()
+        self.image.fill("yellow")
+        self.rect=self.image.get_rect()
