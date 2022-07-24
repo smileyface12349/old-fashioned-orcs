@@ -36,7 +36,9 @@ class GameDatabase:
     async def load(self, player):
         """This method load player's level using `unique_id`"""
         self.cur.execute(f"SELECT level FROM players WHERE unique_id = '{player.unique_id}'")
-        return self.cur
+        list = [list for list in self.cur.fetchall()]
+        for i in list:
+            return i[0]
 
     async def delete(self, player):
         """This method resets player's level using `unique_id`"""

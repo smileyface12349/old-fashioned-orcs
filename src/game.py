@@ -4,6 +4,7 @@ import pathlib
 import pygame
 import pytmx
 
+import src.client.client as client
 import src.player as player
 import src.solid as solid
 
@@ -29,6 +30,7 @@ class Game:
         self.objects = pygame.sprite.LayeredUpdates(self.player)
         self.crashing = False
         self.tmx_data: pytmx.TiledMap | None = None
+        self.client = client.Client(self)
         self.level = -1  # Value for the test map.
         self.read_map("maps/test.tmx")
 

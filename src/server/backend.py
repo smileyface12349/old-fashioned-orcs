@@ -54,8 +54,13 @@ async def play_game(player, game):
     async for message in player.websocket:
         # Parse a "play" event from the client.
         event = json.loads(message)
+
         assert event["type"] == "play"
         assert event["unique_id"] == player.unique_id
+
+        player.position = event["position"]
+        player.level = event["level"]
+
         # Send an "update" event back
         event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
         # Send the event to everyone after removing the id
@@ -74,33 +79,38 @@ async def handler(websocket):
     }
     :param payload: json object
     """
-    logging.info(f"New WebSocket => {websocket.remote_address}")
-    await manager.add(websocket)
+    try:
+        logging.info(f"New WebSocket => {websocket.remote_address}")
+        await manager.add(websocket)
 
-    event = await manager.update(websocket)
-    assert event["unique_id"]
-    await websocket.send(json.dumps(event))
+        event = await manager.update(websocket)
+        assert event["unique_id"]
+        await websocket.send(json.dumps(event))
 
-    # Clear old games if necessary
-    await games.clear()
-    # Create new player session
-    player = PlayerSession(websocket, event["unique_id"], event["nickname"])
-    # Load progress of player, if any
-    player.level = await db.load(player)
+        # Clear old games if necessary
+        await games.clear()
+        # Create new player session
+        player = PlayerSession(websocket, event["unique_id"], event["nickname"])
+        # Load progress of player, if any
+        player.level = await db.load(player)
 
-    if not games.active_games:
-        # Start a new game.
-        logging.info("Creating New Game!")
-        await new_game(player)
-    else:
-        logging.info("Player will join an existing game!")
-        await join_game(player)
+        if not games.active_games:
+            # Start a new game.
+            logging.info("Creating New Game!")
+            await new_game(player)
+        else:
+            logging.info("Player will join an existing game!")
+            await join_game(player)
 
-    # Drop websocket when done
-    await db.save(player)
-    await manager.drop(websocket)
-    await games.remove_player(player)
-    logging.info(f"Closed WebSocket => {websocket.remote_address}")
+    except websockets.exceptions.ConnectionClosedError:
+        logging.info(f"ConnectionClosedError on WebSocket => {websocket.remote_address}")
+
+    finally:
+        # Drop websocket when done
+        await db.save(player)
+        await manager.drop(websocket)
+        await games.remove_player(player)
+        logging.info(f"Closed WebSocket => {websocket.remote_address}")
 
 
 async def main():

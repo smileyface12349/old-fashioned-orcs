@@ -12,7 +12,7 @@ class PlayerSession:
         self.position = [0, 0]
 
     def data(self):
-        """Returns all public data for a Player (position, nickname)"""
+        """Returns all public data for a Player (position, nickname, level)"""
         return {"nickname": self.nickname, "position": self.position, "level": self.level}
 
 
