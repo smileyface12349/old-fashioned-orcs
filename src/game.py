@@ -18,7 +18,7 @@ def _resource_path(file: str):
 
 
 game_crash = pygame.mixer.Sound(_resource_path("assets/game_crash.wav"))
-game_crash.set_volume(0.5)  # We don't want players to get their eardrums destroyed
+game_crash.set_volume(0.35)  # We don't want players to get their eardrums destroyed
 
 
 class Game:
@@ -72,10 +72,11 @@ class Game:
         new_player.rect.topleft = tuple(pos)
 
     def update_player(self, nickname, pos=None):
+        """Update players movement"""
         if pos is None:
             pos = [0, 0]
-        if not any(player for player in self.other_players if player.nickname == nickname):
+        if not any(other_player for other_player in self.other_players if other_player.nickname == nickname):
             raise Exception(f"invalid player : {nickname}")
-        for player in self.other_players:
-            if player.nickname == nickname:
-                player.rect.topleft = tuple(pos)
+        for other_player in self.other_players:
+            if other_player.nickname == nickname:
+                other_player.rect.topleft = tuple(pos)
