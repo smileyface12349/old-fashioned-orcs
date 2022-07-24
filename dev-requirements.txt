@@ -15,3 +15,4 @@ flake8-docstrings~=1.6.0
 pygame~=2.1.2
 fastapi~=0.79.0
 PyTMX~=3.31
+Pillow~=9.2.0
