@@ -88,7 +88,7 @@ class Client:
         if not cache_data["nickname"]:
             cache_data["nickname"] = input("Enter a nickname: ")
 
-        async with websockets.connect("ws://134.255.220.44:9876/") as self.websocket:
+        async with websockets.connect("ws://134.255.220.44:9876/", ping_interval=None) as self.websocket:
             # Send the first data to initialize the connection
             self.payload = await self._hello(cache_data)
             # Now play the game
