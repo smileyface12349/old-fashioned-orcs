@@ -75,7 +75,7 @@ class Client:
                 if nick == self.payload["nickname"]:
                     continue
                 if not any(ply for ply in self.game.other_players if ply.nickname == nick):
-                    self.game.add_player(nick, player["unique_id"], player["position"])
+                    self.game.add_player(nick, player["position"])
                     continue
                 self.game.update_player(nick, player["position"])
             await asyncio.sleep(0.2)

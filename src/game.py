@@ -62,11 +62,11 @@ class Game:
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
 
-    def add_player(self, nickname, uuid, pos=None):
+    def add_player(self, nickname, pos=None):
         """Adds a player that joined the game online."""
         if pos is None:
             pos = [0, 0]
-        new_player = player.OtherPlayer(nickname, uuid)
+        new_player = player.OtherPlayer(nickname)
         self.other_players.add(new_player)
         self.objects.add(new_player, layer=0)
         new_player.rect.topleft = tuple(pos)
