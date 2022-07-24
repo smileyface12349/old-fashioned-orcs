@@ -1,13 +1,12 @@
 import asyncio
 import json
+from operator import itemgetter
 
 import websockets
-from operator import itemgetter
 
 from .cache import CacheManager  # relative import otherwise it doesn't work
 
 cache = CacheManager()
-
 player_nickname = itemgetter("nickname")
 
 
@@ -78,7 +77,7 @@ class Client:
                     self.game.add_player(nick, player["position"])
                     continue
                 self.game.update_player(nick, player["position"])
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(0.05)
 
     async def run(self):
         """Typical client connection"""
