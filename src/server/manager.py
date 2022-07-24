@@ -10,6 +10,7 @@ class ConnectionManager:
 
     def __init__(self):
         self.active_connections: set[WebSocket] = set()
+        self.active_nicknames = []
 
     async def add(self, websocket: WebSocket):
         """Accepts a new Player's websocket and adds it to the list."""
@@ -28,9 +29,14 @@ class ConnectionManager:
             # Generate client's unique ID
             payload["unique_id"] = uuid.uuid4().hex
 
-        if not payload["nickname"]:
-            # Check if a nickname was given
-            payload["nickname"] = f"Guest{random.randint(10000, 20000)}"
+        if not payload["nickname"] or len(payload["nickname"]) > 12:
+            # If a nickname wasnt given, generate a random one
+            random_nickname = f"Guest{random.randint(1000, 2000)}"
+            while True:
+                if random_nickname not in self.active_nicknames:
+                    payload["nickname"] = random_nickname
+                    self.active_nicknames.append(random_nickname)
+                    break
 
         return payload
 

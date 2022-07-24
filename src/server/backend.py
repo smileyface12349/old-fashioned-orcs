@@ -55,14 +55,10 @@ async def play_game(player, game):
         # Parse a "play" event from the client.
         event = json.loads(message)
         assert event["type"] == "play"
-
+        assert event["unique_id"] == player.unique_id
         # Send an "update" event back
-        event = {
-            "type": "update",
-            "game_id": game.id,
-            "players": [p.data() for p in game.players],
-            "level": -1,
-        }
+        event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
+        # Send the event to everyone after removing the id
         websockets.broadcast(game.iter_websockets(), json.dumps(event))
 
 
