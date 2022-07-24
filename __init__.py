@@ -16,6 +16,26 @@ game = src.game.Game()
 clock = pygame.time.Clock()  # a framerate helper object.
 
 
+class StoppableThread(threading.Thread):
+    """
+    Thread class with a stop() method.
+
+    The thread itself has to check regularly for the stopped() condition.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(StoppableThread, self).__init__(*args, **kwargs)
+        self._stop_event = threading.Event()
+
+    def stop(self):
+        """Stop the running thread."""
+        self._stop_event.set()
+
+    def stopped(self):
+        """Return is_set() response of thread."""
+        return self._stop_event.is_set()
+
+
 def echo_runner():
     """
     This function solely exists for the purpose of the threading.
@@ -25,7 +45,7 @@ def echo_runner():
     asyncio.run(game.client.run())
 
 
-comm_thread = threading.Thread(target=echo_runner, daemon=True)  # The connection thread.
+comm_thread = StoppableThread(target=echo_runner, daemon=True)  # The connection thread.
 # We make it "daemon" so that the full process stops when the window is closed.
 # (If the thread is not daemon, we get a RuntimeError upon closing the window.)
 
@@ -64,6 +84,7 @@ while running:
 
 
 try:
+    comm_thread.stop()
     exit(0)
 except NameError:
     raise SystemExit(0)
