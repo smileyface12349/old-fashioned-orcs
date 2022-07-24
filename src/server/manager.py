@@ -31,8 +31,8 @@ class ConnectionManager:
 
         if not payload["nickname"] or len(payload["nickname"]) > 12:
             # If a nickname wasnt given, generate a random one
-            random_nickname = f"Guest{random.randint(1000, 2000)}"
             while True:
+                random_nickname = f"Guest{random.randint(1000, 2000)}"
                 if random_nickname not in self.active_nicknames:
                     payload["nickname"] = random_nickname
                     self.active_nicknames.append(random_nickname)
