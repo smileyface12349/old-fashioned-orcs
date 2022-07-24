@@ -12,10 +12,10 @@ class Player(pygame.sprite.Sprite):
         # This is the game object. We need it for collisions.
         self.game = game
         # Surfaces are image objects. We can replace this with assets once they're made
-        self.image = pygame.Surface((16, 16)).convert_alpha()
+        self.image = pygame.image.load("assets\player.png").convert_alpha()
         # convert_alpha is a method to allow us to use PNG images with transparency, and also make them faster to
         # render on-screen
-        self.image.fill("blue")  # For now, our player is just a random blue square though.
+        #self.image.fill("blue")  # For now, our player is just a random blue square though.
         # We make a rectangle object, which can then be used to locate the sprite on the screen.
         self.rect = self.image.get_rect(center=(80, 72))
         # self.fall_sensor is a Rect that we use to check if the player is standing on a tile.
