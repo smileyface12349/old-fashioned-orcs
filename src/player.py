@@ -140,7 +140,7 @@ class Player(pygame.sprite.Sprite):
 class OtherPlayer(pygame.sprite.Sprite):
     """Another player, using another session."""
 
-    def __init__(self, nickname, uuid):
+    def __init__(self, nickname):
         super().__init__()
         self.nickname = nickname
         self.uuid = uuid
