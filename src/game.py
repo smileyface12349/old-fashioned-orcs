@@ -25,16 +25,12 @@ class Game:
 
     def __init__(self):
         self.player = player.Player(self)
-        self.tiles = pygame.sprite.LayeredUpdates(
-            solid.Solid(self, (5, 6), 0),
-            solid.Solid(self, (4, 7), 0),
-            solid.Solid(self, (6, 7), 0),
-            solid.Solid(self, (5, 3), 0),
-            default_layer=0,
-        )
-        self.objects = pygame.sprite.LayeredUpdates(self.player, *self.tiles)
+        self.tiles = pygame.sprite.LayeredUpdates()
+        self.objects = pygame.sprite.LayeredUpdates(self.player)
         self.crashing = False
         self.tmx_data: pytmx.TiledMap | None = None
+        self.level = -1  # Value for the test map.
+        self.read_map("maps/test.tmx")
 
     def crash(self):
         """<<Crash>> the game."""

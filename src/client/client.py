@@ -50,7 +50,7 @@ async def hello():
                 print("=> Playing..")
 
                 data["position"] = 0, 0
-                data["level"] = 0
+                data["level"] = -1
 
                 payload = json.dumps(data)
                 await websocket.send(payload)

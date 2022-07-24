@@ -37,8 +37,6 @@ while running:
                 game.player.moving_right = True
             elif event.key == pygame.K_SPACE:
                 game.player.jump()
-            elif event.key == pygame.K_m:
-                game.read_map("maps/test.tmx")
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 game.player.moving_left = False

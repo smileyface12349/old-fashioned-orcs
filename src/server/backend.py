@@ -69,7 +69,7 @@ async def play_game(websocket, game):
             "type": "action",
             "game_id": game.id,
             "position": position,
-            "level": 0,
+            "level": -1,
         }
         websockets.broadcast(game.players, json.dumps(event))
 
