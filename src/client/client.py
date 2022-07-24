@@ -2,7 +2,7 @@ import asyncio
 import json
 
 import websockets
-from cache import CacheManager
+from .cache import CacheManager  # relative import otherwise it doesn't work
 
 cache = CacheManager()
 
@@ -10,14 +10,14 @@ cache = CacheManager()
 class Client:
     """Client class that handles the connection with the server."""
 
-    def __init__(self):
+    def __init__(self, game):
         self.websocket = None
+        self.game = game  # the game object is needed to check the player's position and level
         self.payload = {}
 
     def sync_game(self):
         """Sync real game data to send back to the server!"""
-        payload = {"type": "play", "position": [0, 0], "level": -1}
-        # TODO => create the real communication with the engine
+        payload = {"type": "play", "position": list(self.game.player.rect.topleft), "level": -1}
         return payload
 
     async def _hello(self, cache_data):
@@ -84,5 +84,6 @@ class Client:
 
 
 if __name__ == "__main__":
+    # DON'T RUN THAT! IT DOESN'T WORK ANYMORE IN STANDALONE!
     client = Client()
     asyncio.run(client.run())

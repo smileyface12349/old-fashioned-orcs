@@ -1,4 +1,6 @@
 import pygame
+import threading
+import asyncio
 
 import src.game
 
@@ -12,7 +14,20 @@ screen = pygame.display.set_mode((160, 144), pygame.RESIZABLE | pygame.SCALED)
 game = src.game.Game()
 clock = pygame.time.Clock()  # a framerate helper object.
 
+
+def echo_runner():
+    # This function solely exists for the purpose of the threading.
+    # We ensure that the engine runs in parallel to the websocket.
+    asyncio.run(game.client.run())
+
+
+comm_thread = threading.Thread(target=echo_runner, daemon=True)  # The connection thread.
+# We make it "daemon" so that the full process stops when the window is closed.
+# (If the thread is not daemon, we get a RuntimeError upon closing the window.)
+
 running = True
+
+comm_thread.start()  # Once we start the thread, it'll run as long as the game exists.
 
 while running:
     # We generally use a while loop when making a game. Most of the game code should go here.
