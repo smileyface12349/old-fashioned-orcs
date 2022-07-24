@@ -4,9 +4,9 @@ import pathlib
 import pygame
 import pytmx
 
+import src.client.client as client
 import src.player as player
 import src.solid as solid
-import src.client.client as client
 
 pygame.mixer.init()
 
