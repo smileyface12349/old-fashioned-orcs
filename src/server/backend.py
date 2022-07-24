@@ -4,7 +4,7 @@ import logging
 
 import websockets
 from database import GameDatabase
-from instances import GameManager
+from instances import GameManager, PlayerSession
 from manager import ConnectionManager
 
 logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=logging.INFO)
@@ -23,55 +23,47 @@ async def error(websocket, message):
     await websocket.send(json.dumps(event))
 
 
-async def new_game(websocket):
+async def new_game(player):
     """Handles a connection from the first player: start a new game."""
     game = await games.create()  # Initialize a game
-    await game.add_player(websocket)
+    await game.add_player(player)
 
     # Receive and process moves from the first player.
-    await play_game(websocket, game)
+    await play_game(player, game)
 
 
-async def join_game(websocket):
+async def join_game(player):
     """Handle connections from other players, joining an existing game."""
     # Find the game.
     for game in games.active_games:
         if len(game.players) <= 2:
             try:
-                await game.add_player(websocket)
-                await play_game(websocket, game)
+                await game.add_player(player)
+                await play_game(player, game)
 
             except KeyError:
-                await error(websocket, "Game not found.")
-                await game.remove_player(websocket)
+                await error(player.websocket, "Game not found.")
+                await game.remove_player(player)
                 return
         else:
-            await new_game(websocket)
+            await new_game(player)
 
 
-async def play_game(websocket, game):
+async def play_game(player, game):
     """Receive and process moves from players."""
-    async for message in websocket:
-        # Parse a "ready" event from the client.
+    async for message in player.websocket:
+        # Parse a "play" event from the client.
         event = json.loads(message)
-        assert event["type"] == "ready"
+        assert event["type"] == "play"
 
-        try:
-            # TODO => Actually play with the engine
-            position = 0, 0
-        except RuntimeError as e:
-            # Send an "error" event if the move was illegal.
-            await error(websocket, str(e))
-            continue
-
-        # Send an "action" event back
+        # Send an "update" event back
         event = {
-            "type": "action",
+            "type": "update",
             "game_id": game.id,
-            "position": position,
+            "players": [p.data() for p in game.players],
             "level": -1,
         }
-        websockets.broadcast(game.players, json.dumps(event))
+        websockets.broadcast(game.iter_websockets(), json.dumps(event))
 
 
 async def handler(websocket):
@@ -95,18 +87,19 @@ async def handler(websocket):
 
     # Clear old games if necessary
     await games.clear()
+    player = PlayerSession(websocket, event["unique_id"], event["nickname"])
 
     if not games.active_games:
         # Start a new game.
         logging.info("Creating New Game!")
-        await new_game(websocket)
+        await new_game(player)
     else:
         logging.info("Player will join an existing game!")
-        await join_game(websocket)
+        await join_game(player)
 
     # Drop websocket when done
     await manager.drop(websocket)
-    await games.remove_player(websocket)
+    await games.remove_player(player)
     logging.info(f"Closed WebSocket => {websocket.remote_address}")
 
 

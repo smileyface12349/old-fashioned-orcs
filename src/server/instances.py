@@ -1,28 +1,46 @@
 import uuid
 
 
+class PlayerSession:
+    """Logical Player to keep track of its players data"""
+
+    def __init__(self, websocket, unique_id, nickname):
+        self.websocket = websocket
+        self.unique_id = unique_id
+        self.nickname = nickname
+        self.level = -1
+        self.position = [0, 0]
+
+    def data(self):
+        """Returns all public data for a Player (position, nickname)"""
+        return {"nickname": self.nickname, "position": self.position, "level": self.level}
+
+
 class GameInstance:
     """Logical Game Instance"""
 
     def __init__(self, game_id):
         self.id = game_id
         self.players = []
-
-    def id(self):
-        """Returns Game's unique id."""
-        return self.id
+        self.sockets = []
 
     async def add_player(self, player):
         """Add a player to an existing game"""
         self.players.append(player)
+        self.sockets.append(player.websocket)
 
     async def remove_player(self, player):
         """Remove player from an existing game"""
         self.players.remove(player)
+        self.sockets.remove(player.websocket)
 
-    def players(self):
+    def iter_players(self):
         """Returns a list of players"""
         return iter(self.players)
+
+    def iter_websockets(self):
+        """Returns a list of players"""
+        return iter(self.sockets)
 
 
 class GameManager:
@@ -34,9 +52,9 @@ class GameManager:
     async def create(self):
         """Creates a logical new game."""
         game_id = uuid.uuid4().hex
-        game = GameInstance(game_id)
-        self.active_games.append(game)
-        return game
+        new_game = GameInstance(game_id)
+        self.active_games.append(new_game)
+        return new_game
 
     async def delete(self, game: GameInstance):
         """Deletes a game if no players in it."""
