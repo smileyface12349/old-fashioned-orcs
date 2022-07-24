@@ -1,6 +1,7 @@
-import pygame
-import threading
 import asyncio
+import threading
+
+import pygame
 
 import src.game
 
@@ -16,8 +17,11 @@ clock = pygame.time.Clock()  # a framerate helper object.
 
 
 def echo_runner():
-    # This function solely exists for the purpose of the threading.
-    # We ensure that the engine runs in parallel to the websocket.
+    """
+    This function solely exists for the purpose of the threading.
+
+    We ensure that the engine runs in parallel to the websocket.
+    """
     asyncio.run(game.client.run())
 
 
