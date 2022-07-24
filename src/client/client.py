@@ -77,7 +77,7 @@ class Client:
                     self.game.add_player(nick, player["position"])
                     continue
                 self.game.update_player(nick, player["position"])
-            await asyncio.sleep(0.05)
+            await asyncio.sleep(0.025)
 
     async def run(self):
         """Typical client connection"""
