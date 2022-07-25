@@ -3,14 +3,15 @@ import threading
 
 import pygame
 
-import src.game
-
 pygame.init()  # ensuring that everything we need will be initialised before starting
 
 # Here we create the game window. The first argument is the native resolution the game runs at, and you can then add
 # flags after that. The ones I put here allow us to have a bigger window without needing to scale everything up, and
 # allow the user to resize the window as they like. Feel free to change the resolution if you feel that it's too small
 screen = pygame.display.set_mode((160, 144), pygame.RESIZABLE | pygame.SCALED)
+
+import src.game  # Screw PEP 8 for this one. We need this import to be here, as convert_alpha needs an open window
+
 
 game = src.game.Game()
 clock = pygame.time.Clock()  # a framerate helper object.

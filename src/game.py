@@ -10,11 +10,7 @@ import src.solid as solid
 
 pygame.mixer.init()
 
-
-def _resource_path(file: str):
-    """Return the absolute path for a file."""
-    pathobj = pathlib.Path(file).absolute()
-    return path.join(*pathobj.parts)
+_resource_path = player._resource_path
 
 
 game_crash = pygame.mixer.Sound(_resource_path("assets/game_crash.wav"))

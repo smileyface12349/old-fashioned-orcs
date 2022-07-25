@@ -1,4 +1,18 @@
 import pygame
+import pathlib
+import os.path as path
+
+
+def _resource_path(file: str):
+    """Return the absolute path for a file."""
+    pathobj = pathlib.Path(file).absolute()
+    return path.join(*pathobj.parts)
+
+
+player_right = pygame.image.load(_resource_path("assets/player.png")).convert_alpha()
+# convert_alpha is a method to allow us to use PNG images with transparency, and also make them faster to
+# render on-screen
+player_left = pygame.transform.flip(player_right, True, False)
 
 
 class Player(pygame.sprite.Sprite):
@@ -11,11 +25,8 @@ class Player(pygame.sprite.Sprite):
         super().__init__()  # we need this to ensure the sprite will work correctly with groups
         # This is the game object. We need it for collisions.
         self.game = game
-        # Surfaces are image objects. We can replace this with assets once they're made
-        self.image = pygame.image.load("assets\player.png").convert_alpha()
-        # convert_alpha is a method to allow us to use PNG images with transparency, and also make them faster to
-        # render on-screen
-        #self.image.fill("blue")  # For now, our player is just a random blue square though.
+        self.image = player_right
+        self.direction = "r"
         # We make a rectangle object, which can then be used to locate the sprite on the screen.
         self.rect = self.image.get_rect(center=(80, 72))
         # self.fall_sensor is a Rect that we use to check if the player is standing on a tile.
@@ -31,6 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.fall_delay = 0
         self.moving_right = False
         self.moving_left = False
+        self.mask = pygame.mask.from_surface(self.image)
 
     def jump(self):
         """Makes the Player jump."""
@@ -43,13 +55,19 @@ class Player(pygame.sprite.Sprite):
     def move_left(self):
         """Moves the Player left"""
         self.rect.x -= self.x_velocity
+        self.direction = "l"
 
     def move_right(self):
         """Moves the Player right"""
         self.rect.x += self.x_velocity
+        self.direction = "r"
 
     def update(self, dt):
         """Auto-update the player"""
+        if self.direction == "r":
+            self.image = player_right
+        else:
+            self.image = player_left
         tiles_on_same_layer = self.game.tiles.get_sprites_from_layer(0)
         if pygame.sprite.spritecollide(
             self,
