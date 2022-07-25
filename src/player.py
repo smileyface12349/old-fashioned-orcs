@@ -19,6 +19,7 @@ pygame.transform.threshold(
 )  # if inverse_set were False, all pixels in player_right that were NOT set to a colour of #4A4AFF would be replaced
 other_player_left = pygame.transform.flip(other_player_right, True, False)
 
+
 class Player(pygame.sprite.Sprite):
     """This is our player class.
 
@@ -170,7 +171,7 @@ class OtherPlayer(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
     def update(self, *args, **kwargs):
-        if self.direction=="r":
-            self.image=other_player_right
+        if self.direction == "r":
+            self.image = other_player_right
         else:
-            self.image=other_player_left
+            self.image = other_player_left
