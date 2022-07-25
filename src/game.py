@@ -116,16 +116,16 @@ class Game:
                 img = solid.side_single
         tile.image = img
 
-    def add_player(self, nickname, pos=None):
+    def add_player(self, nickname, direction, pos=None):
         """Adds a player that joined the game online."""
         if pos is None:
             pos = [0, 0]
-        new_player = player.OtherPlayer(nickname)
+        new_player = player.OtherPlayer(nickname, direction)
         self.other_players.add(new_player)
         self.objects.add(new_player, layer=0)
         new_player.rect.topleft = tuple(pos)
 
-    def update_player(self, nickname, pos=None):
+    def update_player(self, nickname, direction, pos=None):
         """Update players movement"""
         if pos is None:
             pos = [0, 0]
@@ -134,3 +134,4 @@ class Game:
         for other_player in self.other_players:
             if other_player.nickname == nickname:
                 other_player.rect.topleft = tuple(pos)
+                other_player.direction = direction

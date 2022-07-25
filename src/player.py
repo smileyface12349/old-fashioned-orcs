@@ -13,7 +13,11 @@ player_right = pygame.image.load(_resource_path("assets/player.png")).convert_al
 # convert_alpha is a method to allow us to use PNG images with transparency, and also make them faster to
 # render on-screen
 player_left = pygame.transform.flip(player_right, True, False)
-
+other_player_right = player_right.copy()
+pygame.transform.threshold(
+    other_player_right, player_right, pygame.Color("#4A4AFF"), set_color=(~pygame.Color("#4A4AFF")), inverse_set=True
+)  # if inverse_set were False, all pixels in player_right that were NOT set to a colour of #4A4AFF would be replaced
+other_player_left = pygame.transform.flip(other_player_right, True, False)
 
 class Player(pygame.sprite.Sprite):
     """This is our player class.
@@ -158,9 +162,15 @@ class Player(pygame.sprite.Sprite):
 class OtherPlayer(pygame.sprite.Sprite):
     """Another player, using another session."""
 
-    def __init__(self, nickname):
+    def __init__(self, nickname, direction):
         super().__init__()
         self.nickname = nickname
-        self.image = pygame.Surface((16, 16)).convert_alpha()
-        self.image.fill("yellow")
+        self.image = player_right
+        self.direction = direction
         self.rect = self.image.get_rect()
+
+    def update(self, *args, **kwargs):
+        if self.direction=="r":
+            self.image=other_player_right
+        else:
+            self.image=other_player_left

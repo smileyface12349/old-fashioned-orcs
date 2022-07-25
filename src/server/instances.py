@@ -10,10 +10,11 @@ class PlayerSession:
         self.nickname = nickname
         self.level = -1
         self.position = [0, 0]
+        self.direction = "r"
 
     def data(self):
         """Returns all public data for a Player (position, nickname, level)"""
-        return {"nickname": self.nickname, "position": self.position, "level": self.level}
+        return {"nickname": self.nickname, "position": self.position, "level": self.level, "direction": self.direction}
 
 
 class GameInstance:
