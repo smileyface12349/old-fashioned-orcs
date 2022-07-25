@@ -16,3 +16,4 @@ pygame~=2.1.2
 fastapi~=0.79.0
 PyTMX~=3.31
 Pillow~=9.2.0
+websockets~=10.3
