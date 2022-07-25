@@ -11,9 +11,9 @@ class CacheManager:
             with open("cache.dmp", "rb") as f:
                 payload = dict(pickle.load(f))
                 payload["type"] = "ready"
-                payload["direction"]="r"
+                payload["direction"] = "r"
         except FileNotFoundError:
-            payload = {"type": "init", "unique_id": "", "nickname": "", "direction":"r"}
+            payload = {"type": "init", "unique_id": "", "nickname": "", "direction": "r"}
         return payload
 
     async def save(self, payload: dict):

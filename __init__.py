@@ -8,7 +8,7 @@ if pygame.vernum[0] < 2:
 
 import src.game  # Screw PEP 8 for this one. We need this import to be here, as convert_alpha needs an open window
 
-screen=src.game.screen
+screen = src.game.screen
 
 game = src.game.Game()
 clock = pygame.time.Clock()  # a framerate helper object.

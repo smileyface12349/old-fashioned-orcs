@@ -9,6 +9,7 @@ pygame.init()  # ensuring that everything we need will be initialised before sta
 # allow the user to resize the window as they like. Feel free to change the resolution if you feel that it's too small
 screen = pygame.display.set_mode((160, 144), pygame.RESIZABLE | pygame.SCALED)
 
+
 def _resource_path(file: str):
     """Return the absolute path for a file."""
     pathobj = pathlib.Path(file).absolute()

@@ -60,7 +60,7 @@ async def play_game(player, game):
 
         player.position = event["position"]
         player.level = event["level"]
-        player.direction=event["direction"]
+        player.direction = event["direction"]
 
         # Send an "update" event back
         event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
