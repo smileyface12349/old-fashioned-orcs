@@ -43,20 +43,78 @@ class Game:
         self.tmx_data = pytmx.TiledMap(_resource_path(directory))
         for sprite in self.tiles:
             sprite.kill()
+        with open(_resource_path(directory)) as file:
+            content = file.read()
         for layer in range(len(list(self.tmx_data.visible_tile_layers))):
+            raw_tile_layer = list(
+                map(
+                    lambda string: string.split(",")[:-1] if string.count(",") == 16 else string.split(","),
+                    content.split("""<data encoding="csv">""")[1 + layer].split("</data>")[0].splitlines(),
+                )
+            )[1:]
             for tile_y in range(self.tmx_data.height):
                 for tile_x in range(self.tmx_data.width):
+                    gid = int(raw_tile_layer[tile_y][tile_x])
+                    flipped_tile = gid & 0x80000000
                     tile = self.tmx_data.get_tile_properties(tile_x, tile_y, layer)
                     if tile is None:
                         continue
-                    if not tile["id"]:
+                    if tile["id"] != 1:
                         # Solid tile
-                        self.tiles.add(solid.Solid(self, (tile_x, tile_y), layer), layer=layer)
-                    elif tile["id"] == 1:
+                        new_spr = solid.Solid(self, (tile_x, tile_y), layer)
+                        self._select_solid_image(new_spr, tile["type"], flipped_tile)
+                        self.tiles.add(new_spr, layer=layer)
+                    else:
                         # "Glitchy" tile (starts a pseudo-crash upon contact)
                         self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer)
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
+
+    @staticmethod
+    def _select_solid_image(tile, type, flipped):
+        """Decide which image to use for this solid.
+        PRIVATE USE ONLY
+
+        :param tile: The solid tile impacted by this method.
+        :param type: The solid's type, main image selection factor.
+        :param flipped: This can change an image's orientation depending on whether this is true or false."""
+        # We might have to extend that in the future when we encounter more tiling situations.
+        match type:
+            case 0 | 13:
+                img = solid.normal_gd
+            case 1:
+                img = solid.bottom_corner_r if not flipped else solid.bottom_corner_l
+            case 2:
+                img = solid.bottom_corner_dual
+            case 3:
+                img = solid.bottom_corner_single
+            case 4:
+                img = solid.bottom_gd
+            case 5:
+                img = solid.deep_gd
+            case 6:
+                img = solid.inward_bottom_corner_r if not flipped else solid.inward_bottom_corner_l
+            case 7:
+                img = solid.inward_bottom_corner_single
+            case 8:
+                img = solid.inward_corner_r if not flipped else solid.inward_corner_l
+            case 9:
+                img = solid.inward_corner_single
+            case 10:
+                img = solid.side_gd_r if not flipped else solid.side_gd_l
+            case 11:
+                img = solid.side_gd_single
+            case 12:
+                img = solid.single_gd
+            case 14:
+                img = solid.upper_corner_r if not flipped else solid.upper_corner_l
+            case 15:
+                img = solid.upper_corner_single
+            case 16:
+                img = solid.side_end_r if not flipped else solid.side_end_l
+            case 17:
+                img = solid.side_single
+        tile.image = img
 
     def add_player(self, nickname, pos=None):
         """Adds a player that joined the game online."""

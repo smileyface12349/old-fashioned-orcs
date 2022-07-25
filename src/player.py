@@ -73,7 +73,7 @@ class Player(pygame.sprite.Sprite):
             self,
             tiles_on_same_layer,
             False,
-            lambda spr1, spr2: spr2.__class__.__name__ == "BuggyThingy" and spr1.rect.colliderect(spr2.rect),
+            lambda spr1, spr2: spr2.__class__.__name__ == "BuggyThingy" and pygame.sprite.collide_mask(spr1, spr2),
         ):
             self.game.crash()
         if self.moving_left:

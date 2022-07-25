@@ -3,6 +3,9 @@ import threading
 
 import pygame
 
+if pygame.vernum[0] < 2:
+    raise RuntimeError("Your version of Pygame is too old. Please install pygame 2.0.0 or higher to run the game")
+
 pygame.init()  # ensuring that everything we need will be initialised before starting
 
 # Here we create the game window. The first argument is the native resolution the game runs at, and you can then add
