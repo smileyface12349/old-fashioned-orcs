@@ -112,9 +112,9 @@ class Client:
             if nick == self.payload["nickname"]:
                 continue
             if not any(ply for ply in self.game.other_players if ply.nickname == nick):
-                self.game.add_player(nick, player["position"])
+                self.game.add_player(nick, player["direction"], player["position"])
                 continue
-            self.game.update_player(nick, player["position"])
+            self.game.update_player(nick, player["direction"], player["position"])
 
     async def _play(self, payload):
         """Play loop"""
