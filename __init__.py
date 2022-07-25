@@ -40,22 +40,9 @@ class StoppableThread(threading.Thread):
         return self._stop_event.is_set()
 
 
-def echo_runner():
-    """
-    This function solely exists for the purpose of the threading.
-
-    We ensure that the engine runs in parallel to the websocket.
-    """
-    asyncio.run(game.client.run())
-
-
-comm_thread = StoppableThread(target=echo_runner, daemon=True)  # The connection thread.
-# We make it "daemon" so that the full process stops when the window is closed.
-# (If the thread is not daemon, we get a RuntimeError upon closing the window.)
-
 running = True
 
-comm_thread.start()  # Once we start the thread, it'll run as long as the game exists.
+game.client.start()  # Once we start the thread, it'll run as long as the game exists.
 
 while running:
     # We generally use a while loop when making a game. Most of the game code should go here.
@@ -87,9 +74,6 @@ while running:
                 game.player.moving_right = False
 
 
-# we stop it before we return an exit code, outside of the try block, to ensure the thread terminates in every case
-# (Some implementations of Python might not define the "exit" builtin, hence this try-except clause.)
-comm_thread.stop()
 try:
     exit(0)
 except NameError:
