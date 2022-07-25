@@ -8,6 +8,8 @@ import src.client.client as client
 import src.player as player
 import src.solid as solid
 
+screen=player.screen
+
 pygame.mixer.init()
 
 _resource_path = player._resource_path
