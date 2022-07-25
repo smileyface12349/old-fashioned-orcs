@@ -84,8 +84,10 @@ while running:
                 game.player.moving_right = False
 
 
+# we stop it before we return an exit code, outside of the try block, to ensure the thread terminates in every case
+# (Some implementations of Python might not define the "exit" builtin, hence this try-except clause.)
+comm_thread.stop()
 try:
-    comm_thread.stop()
     exit(0)
 except NameError:
     raise SystemExit(0)
