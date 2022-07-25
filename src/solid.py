@@ -109,5 +109,5 @@ class BuggyThingy(Solid):
 
     def __init__(self, game, tile_pos: tuple, layer: int):
         super().__init__(game, tile_pos, layer)
-        self.image = pygame.image.load("assets\\stone.png").convert_alpha()
+        self.image = pygame.image.load(_resource_path("assets/stone.png")).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
