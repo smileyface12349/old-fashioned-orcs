@@ -22,6 +22,7 @@ side_end_l = pygame.transform.flip(side_end_r, True, False)
 side_single = pygame.image.load(_resource_path("assets/side_single.png")).convert_alpha()
 bottom_corner_r = pygame.image.load(_resource_path("assets/bottom_corner.png")).convert_alpha()
 bottom_corner_l = pygame.transform.flip(bottom_corner_r, True, False)
+bottom_corner_platform = pygame.image.load(_resource_path("assets/bottom_corner_platform.png")).convert_alpha()
 single_gd = pygame.image.load(_resource_path("assets/single_gd.png")).convert_alpha()
 bottom_corner_dual = pygame.image.load(_resource_path("assets/bottom_corner_dual.png")).convert_alpha()
 bottom_corner_single = pygame.image.load(_resource_path("assets/bottom_corner_single.png")).convert_alpha()
@@ -34,6 +35,7 @@ inward_bottom_corner_single = pygame.image.load(
 inward_corner_r = pygame.image.load(_resource_path("assets/inward_corner.png")).convert_alpha()
 inward_corner_l = pygame.transform.flip(inward_corner_r, True, False)
 inward_corner_single = pygame.image.load(_resource_path("assets/inward_corner_single.png")).convert_alpha()
+bricks = pygame.image.load(_resource_path("assets/bricks.png")).convert_alpha()
 
 
 class Solid(pygame.sprite.Sprite):
@@ -110,4 +112,15 @@ class BuggyThingy(Solid):
     def __init__(self, game, tile_pos: tuple, layer: int):
         super().__init__(game, tile_pos, layer)
         self.image = pygame.image.load(_resource_path("assets/stone.png")).convert_alpha()
+        self.mask = pygame.mask.from_surface(self.image)
+
+
+class Ending(pygame.sprite.Sprite):
+    """Upon colliding with this sprite, the player will be teleported into the next level."""
+
+    def __init__(self, tile_pos):
+        super().__init__()
+        self.tile_pos = tile_pos
+        self.image = pygame.image.load(_resource_path("assets/end.png"))
+        self.rect = self.image.get_rect(topleft=tuple(item * 16 for item in self.tile_pos))
         self.mask = pygame.mask.from_surface(self.image)

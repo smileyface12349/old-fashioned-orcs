@@ -86,50 +86,58 @@ class Client:
 
     async def _broadcast(self):
         """Listener for game broadcasts."""
-        waved = False
+        init = False
         # Wait for the response/update and process it
-        async with websockets.connect("ws://134.255.220.44:8000/") as self.broadcast:
+        async with websockets.connect("ws://oldfashionedorcs.servegame.com:8000/") as self.broadcast:
             while True:
+                # Make sure main thread actually initialized
                 if not self.unique_id:
                     await asyncio.sleep(0.1)
                     continue
-
-                if not waved:
+                # First payload on this websocket needs to include unique_id
+                # So that the server can identify it and assign the socket to the same player
+                if not init:
                     await self.broadcast.send(json.dumps({"type": "broadcast", "unique_id": self.unique_id}))
-                    waved = True
-
+                    init = True
+                # Now that we have initiliased, wait for actual updates/pings!
                 response = await self.broadcast.recv()
                 response = json.loads(response)
-                print(f"Public Broadcast => {response}")
-
                 if response["type"] == "update":
+                    print(f"Public Broadcast => {response}")
                     await self._sync_players(response)
+                elif response["type"] == "ping":
+                    print(f"Private Ping Broadcast => {response}")
 
     async def _sync_players(self, response):
         """Update OtherPlayers from broadcasts!"""
+        nicknames = []
         for player in response["players"]:
             nick = player_nickname(player)
+            nicknames.append(nick)
             if nick == self.payload["nickname"]:
                 continue
             if not any(ply for ply in self.game.other_players if ply.nickname == nick):
                 self.game.add_player(nick, player["direction"], player["position"])
                 continue
             self.game.update_player(nick, player["direction"], player["position"])
+        self.game.check_who_left(nicknames)
 
     async def _play(self, payload):
         """Play loop"""
-        print("=->  Playing  <-=")
-        history = ""
+        history = {"position": [0, 0], "level": -100}
         while True:
             payload = await self._sync_engine()
             self.payload.update(payload)
-            if self.payload["position"] != history:
-                # When moving send it back to the server!
-                history = self.payload["position"]
+
+            # When moving & on spawn inform the server!
+            if self.payload["position"] != history["position"] or self.payload["level"] != history["level"]:
+                # Update history dict
+                history["position"] = self.payload["position"]
+                history["level"] = self.payload["level"]
+                # Send the payload
                 print(f"Payload => {self.payload}")
                 await self.websocket.send(json.dumps(self.payload))
-
-                # Wait for the response/update and process it
+                # Wait for the check
                 response = await self.websocket.recv()
                 response = json.loads(response)
                 print(f"Private Response => {response}")
@@ -142,7 +150,7 @@ class Client:
         if not cache_data["nickname"]:
             cache_data["nickname"] = input("Enter a nickname: ")
 
-        async with websockets.connect("ws://134.255.220.44:8000/") as self.websocket:
+        async with websockets.connect("ws://oldfashionedorcs.servegame.com:8000/") as self.websocket:
             # Send the first data to initialize the connection
             self.payload = await self._hello(cache_data)
             # Now play the game

@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import time
 
 import websockets
 from database import GameDatabase
@@ -12,6 +13,7 @@ logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=log
 games = GameManager()
 manager = ConnectionManager()
 db = GameDatabase()
+players = set()
 
 
 async def error(websocket, message):
@@ -49,14 +51,27 @@ async def join_game(player):
             await new_game(player)
 
 
-async def keep_broadcast_alive(websocket):
+async def ping_pong(websocket):
     """Trying to keep broadcast alive."""
     while True:
-        message = await websocket.recv()
-        message = json.loads(message)
-        assert message["type"] == "broadcast"
-        await websocket.send(json.dumps({"type": "broadcast"}))
-        await asyncio.sleep(5)
+
+        t0 = time.perf_counter()
+        pong_waiter = await websocket.ping()
+        await pong_waiter
+        t1 = time.perf_counter()
+        latency = f"{t1-t0:.2f}"
+        message = json.dumps({"type": "ping", "latency": latency})
+        await websocket.send(message)
+        await asyncio.sleep(15)
+
+
+async def broadcast_leave(player, game):
+    """Public broadcast that someone left."""
+    event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
+
+    # Send the "update" event to everyone in the current game but exclude the player that left.
+    other_players = [p.broadcast for p in game.iter_players() if p.broadcast is not None]
+    websockets.broadcast(other_players, json.dumps(event))
 
 
 async def play_game(player, game):
@@ -74,12 +89,10 @@ async def play_game(player, game):
 
         event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
         # Send the "update" event to everyone in the current game but exclude the current player!
-        other_players = [player.broadcast for player in game.iter_players() if player.unique_id != request_id]
-        if other_players[0] is not None:
-            websockets.broadcast(other_players, json.dumps(event))
-
-
-players = set()
+        other_players = [
+            p.broadcast for p in game.iter_players() if p.unique_id != request_id and p.broadcast is not None
+        ]
+        websockets.broadcast(other_players, json.dumps(event))
 
 
 async def handler(websocket):
@@ -107,7 +120,6 @@ async def handler(websocket):
                 event = await manager.update(event)
                 assert event["unique_id"]
 
-                logging.info("init or ready")
                 await manager.add_main(websocket)
                 event = await manager.update(event)
                 assert event["unique_id"]
@@ -138,7 +150,7 @@ async def handler(websocket):
                     break
 
             await websocket.send(json.dumps({"type": "broadcast"}))
-            await keep_broadcast_alive(websocket)
+            await ping_pong(websocket)
 
     except websockets.exceptions.ConnectionClosedError:
         logging.info(f"ConnectionClosedError from => {websocket.remote_address}")
