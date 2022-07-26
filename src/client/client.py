@@ -130,8 +130,7 @@ class Client:
             self.payload.update(payload)
 
             # When moving & on spawn inform the server!
-            if self.payload["position"] != history["position"] \
-                or self.payload["level"] != history["level"]:
+            if self.payload["position"] != history["position"] or self.payload["level"] != history["level"]:
                 # Update history dict
                 history["position"] = self.payload["position"]
                 history["level"] = self.payload["level"]
