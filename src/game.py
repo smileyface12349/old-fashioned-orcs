@@ -1,5 +1,4 @@
 import os.path as path
-import pathlib
 
 import pygame
 import pytmx
@@ -19,12 +18,13 @@ game_crash.set_volume(0.35)  # We don't want players to get their eardrums destr
 
 
 def complex_camera(camera, target_rect):
-    l, t, _, _ = target_rect
+    """Compute Camera position."""
+    l, t, _, _ = target_rect  # noqa: E741
     _, _, w, h = camera
-    l, t, _, _ = -l + 80, -t + 72, w, h  # center player
+    l, t, _, _ = -l + 80, -t + 72, w, h  # noqa: E741 # center player
 
-    l = min(0, l)  # stop scrolling at the left edge
-    l = max(-(camera.width - 160), l)  # stop scrolling at the right edge
+    l = min(0, l)  # noqa: E741 # stop scrolling at the left edge
+    l = max(-(camera.width - 160), l)  # noqa: E741 # stop scrolling at the right edge
     t = max(-(camera.height - 144), t)  # stop scrolling at the bottom
     t = min(0, t)  # stop scrolling at the top
 
@@ -39,8 +39,7 @@ class Camera(object):
         self.state = pygame.Rect(0, 0, width, height)
 
     def apply(self, target):
-        """Return a copy of the target's rectangle which is positioned
-        according to the current centered sprite."""
+        """Return a copy of the target's rectangle which is positioned according to the current centered sprite."""
         return target.rect.move(self.state.topleft)
 
     def update(self, target):
@@ -74,6 +73,7 @@ class Game:
         self.read_map("maps/tutorial.tmx")  # we'll need to change that depending on the player's level
 
     def start(self):
+        """Start the game."""
         self.showing_gui = False
         self.client.start()
 

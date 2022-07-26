@@ -1,8 +1,9 @@
+import os.path as path
+import pathlib
+from typing import Callable
+
 import pygame
 import pygame.freetype  # needs to be imported explicitly
-import pathlib
-import os.path as path
-from typing import Callable
 
 pygame.freetype.init()  # must also be initialised explicitly and separately from the remainder of pygame
 
@@ -18,6 +19,8 @@ button_clicked = pygame.image.load(_resource_path("assets/button_clicked.png")).
 
 
 class Button(pygame.sprite.Sprite):
+    """A clickable button meant for GUI elements."""
+
     _font = pygame.freetype.Font(_resource_path("assets/scj2022.ttf"), 10)
     _font.fgcolor = pygame.Color("white")
 
@@ -32,13 +35,16 @@ class Button(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
 
     def update(self, *args, **kwargs):
+        """Update the currently showing Image, based on if the button is pressed."""
         self.image = self._img_list[self.clicked]
 
     @property
     def clicked(self):
+        """Return if the button is currently clicked."""
         return pygame.mouse.get_pressed()[0] and self.rect.collidepoint(pygame.mouse.get_pos())
 
     def click(self):
+        """Actually activate the button press."""
         self.func()
 
     def _init_img_list(self):
