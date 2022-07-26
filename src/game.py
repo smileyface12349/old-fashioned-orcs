@@ -140,5 +140,4 @@ class Game:
         """Check who left!"""
         for player in self.other_players:
             if player.nickname not in active_nicknames:
-                self.other_players.remove(player)
-                self.objects.remove(player, layer=0)
+                player.kill()
