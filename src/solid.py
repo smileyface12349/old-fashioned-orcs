@@ -1,12 +1,27 @@
 import pygame
 import pathlib
 import os.path as path
+from PIL import GifImagePlugin, ImageSequence
 
 
 def _resource_path(file: str):
     """Return the absolute path for a file."""
     pathobj = pathlib.Path(file).absolute()
     return path.join(*pathobj.parts)
+
+
+def _load_gif(file: str):
+    """Load an animated GIF."""
+    img=GifImagePlugin.GifImageFile(_resource_path(file))
+    size=img.size
+    first_frame=pygame.image.load(_resource_path(file)).convert_alpha()
+    frames=[first_frame]
+    for index, frame in enumerate(ImageSequence.Iterator(img)):
+        if not index:
+            continue
+        data=frame.tobytes()
+        frames.append(pygame.image.fromstring(data, size, img.mode).convert_alpha())
+    return frames
 
 
 normal_gd = pygame.image.load(_resource_path("assets/tile.png")).convert_alpha()
@@ -36,6 +51,7 @@ inward_corner_r = pygame.image.load(_resource_path("assets/inward_corner.png")).
 inward_corner_l = pygame.transform.flip(inward_corner_r, True, False)
 inward_corner_single = pygame.image.load(_resource_path("assets/inward_corner_single.png")).convert_alpha()
 bricks = pygame.image.load(_resource_path("assets/bricks.png")).convert_alpha()
+shiny_flag=_load_gif("assets/shiny_flag.gif")
 
 
 class Solid(pygame.sprite.Sprite):
@@ -124,3 +140,22 @@ class Ending(pygame.sprite.Sprite):
         self.image = pygame.image.load(_resource_path("assets/end.png"))
         self.rect = self.image.get_rect(topleft=tuple(item * 16 for item in self.tile_pos))
         self.mask = pygame.mask.from_surface(self.image)
+
+
+class ShinyFlag(pygame.sprite.Sprite):
+    """A shiny flag"""
+    def __init__(self, tile_pos):
+        super().__init__()
+        self.tile_pos = tile_pos
+        self.frame=1
+        self.frame_delay=0
+        self.image=shiny_flag[self.frame-1]
+        self.rect=self.image.get_rect(topleft=tuple(item*16 for item in self.tile_pos))
+    def update(self, dt):
+        self.image=shiny_flag[self.frame-1]
+        self.frame_delay+=dt
+        if self.frame_delay>=16:
+            self.frame+=1
+            if self.frame>len(shiny_flag):
+                self.frame=1
+            self.frame_delay=0
