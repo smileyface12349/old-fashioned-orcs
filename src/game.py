@@ -7,6 +7,7 @@ import pytmx
 import src.client.client as client
 import src.player as player
 import src.solid as solid
+import src.gui as gui
 
 pygame.mixer.init()
 
@@ -46,9 +47,10 @@ class Camera(object):
         """Update the camera to follow a certain sprite for this frame."""
         self.state = self.camera_func(self.state, target.rect)
 
-    def change_settings(self, width, height):
+    def change_settings(self, width, height, x=0, y=0):
         """Change the size of the screen covered by the camera."""
         self.state.size = width, height
+        self.state.topleft = x, y
 
 
 class Game:
@@ -64,9 +66,13 @@ class Game:
         self.client = client.Client(self)
         self.level = -1  # Value for the test map.
         self.camera = Camera(complex_camera, 160, 144)
-        self.gui = pygame.sprite.Group()
+        self.gui = pygame.sprite.Group(gui.Button((80, 72), "Play", self.start))
         self.showing_gui = True
         self.read_map("maps/tutorial.tmx")  # we'll need to change that depending on the player's level
+
+    def start(self):
+        self.showing_gui = False
+        self.client.start()
 
     def crash(self):
         """<<Crash>> the game."""
@@ -176,6 +182,8 @@ class Game:
                 img = solid.bottom_corner_platform
             case 19:
                 img = solid.bricks
+            case 20:
+                img = solid.shovel
         tile.image = img
 
     def add_player(self, nickname, direction, pos=None):

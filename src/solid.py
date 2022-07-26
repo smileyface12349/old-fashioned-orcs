@@ -52,6 +52,7 @@ inward_corner_l = pygame.transform.flip(inward_corner_r, True, False)
 inward_corner_single = pygame.image.load(_resource_path("assets/inward_corner_single.png")).convert_alpha()
 bricks = pygame.image.load(_resource_path("assets/bricks.png")).convert_alpha()
 shiny_flag = _load_gif("assets/shiny_flag.gif")
+shovel = pygame.image.load(_resource_path("assets/shovel.png")).convert_alpha()
 
 
 class Solid(pygame.sprite.Sprite):

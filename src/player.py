@@ -64,12 +64,14 @@ class Player(pygame.sprite.Sprite):
     # The two methods below move the player.
     def move_left(self):
         """Moves the Player left"""
-        self.rect.x -= self.x_velocity
+        if self.rect.x > 0:
+            self.rect.x -= self.x_velocity
         self.direction = "l"
 
     def move_right(self):
         """Moves the Player right"""
-        self.rect.x += self.x_velocity
+        if self.rect.right < self.game.tmx_data.width * 16:
+            self.rect.x += self.x_velocity
         self.direction = "r"
 
     def update(self, dt):

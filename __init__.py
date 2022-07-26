@@ -20,15 +20,18 @@ game = src.game.Game()
 clock = pygame.time.Clock()  # a framerate helper object.
 running = True
 
-game.client.start()  # Once we start the thread, it'll run as long as the game exists.
 
 while running:
     # We generally use a while loop when making a game. Most of the game code should go here.
     screen.fill("skyblue")
     dt = clock.tick(60)  # this ensures that the game cannot run higher that 60FPS. We also get a delta time in ms.
-    if not game.crashing:
-        game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
-    game.draw_objects(screen)  # We draw everything here
+    if game.showing_gui:
+        game.gui.update(dt)
+        game.gui.draw(screen)
+    else:
+        if not game.crashing:
+            game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
+        game.draw_objects(screen)  # We draw everything here
     pygame.display.update()  # This function is called when everything render-related is done.
     # If you don't call this or pygame.display.flip, the screen won't show what you've drawn on it!
     # Events are how we manage player inputs (and others).
@@ -38,21 +41,27 @@ while running:
             # Generally we just close the window when we get an event of that type.
             running = False
             pygame.quit()
-        elif event.type == pygame.KEYDOWN:
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            for btn in game.gui:
+                if isinstance(btn, src.game.gui.Button) and btn.rect.collidepoint(event.pos):
+                    btn.click()
+        elif event.type == pygame.KEYDOWN and not game.showing_gui:
             if event.key == pygame.K_LEFT:
                 game.player.moving_left = True
             elif event.key == pygame.K_RIGHT:
                 game.player.moving_right = True
             elif event.key == pygame.K_SPACE:
                 game.player.jump()
-        elif event.type == pygame.KEYUP:
+        elif event.type == pygame.KEYUP and not game.showing_gui:
             if event.key == pygame.K_LEFT:
                 game.player.moving_left = False
             elif event.key == pygame.K_RIGHT:
                 game.player.moving_right = False
 
-
-game.client.stop()
+try:
+    game.client.stop()
+except AttributeError:
+    pass
 try:
     exit(0)
 except NameError:
