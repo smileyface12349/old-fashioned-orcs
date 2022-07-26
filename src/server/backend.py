@@ -74,9 +74,10 @@ async def play_game(player, game):
 
         event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
         # Send the "update" event to everyone in the current game but exclude the current player!
-        other_players = [player.broadcast for player in game.iter_players() if player.unique_id != request_id]
-        if other_players[0] is not None:
-            websockets.broadcast(other_players, json.dumps(event))
+        other_players = [
+            player.broadcast for player in game.iter_players() \
+                if player.unique_id != request_id and player.broadcast is not None]
+        websockets.broadcast(other_players, json.dumps(event))
 
 
 players = set()
@@ -107,7 +108,6 @@ async def handler(websocket):
                 event = await manager.update(event)
                 assert event["unique_id"]
 
-                logging.info("init or ready")
                 await manager.add_main(websocket)
                 event = await manager.update(event)
                 assert event["unique_id"]
