@@ -156,7 +156,7 @@ class ShinyFlag(pygame.sprite.Sprite):
     def update(self, dt):
         self.image = shiny_flag[self.frame - 1]
         self.frame_delay += dt
-        if self.frame_delay >= 16:
+        if self.frame_delay >= 36:
             self.frame += 1
             if self.frame > len(shiny_flag):
                 self.frame = 1
