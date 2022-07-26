@@ -65,8 +65,8 @@ class Game:
         self.client = client.Client(self)
         self.level = -1  # Value for the test map.
         self.camera = Camera(complex_camera, 160, 144)
-        self.gui=pygame.sprite.Group()
-        self.showing_gui=True
+        self.gui = pygame.sprite.Group()
+        self.showing_gui = True
         self.read_map("maps/test.tmx")  # we'll need to change that depending on the player's level
 
     def crash(self):
