@@ -1,6 +1,7 @@
-import pygame
-import pathlib
 import os.path as path
+import pathlib
+
+import pygame
 from PIL import GifImagePlugin, ImageSequence
 
 
@@ -53,7 +54,7 @@ inward_corner_single = pygame.image.load(_resource_path("assets/inward_corner_si
 bricks = pygame.image.load(_resource_path("assets/bricks.png")).convert_alpha()
 shiny_flag = _load_gif("assets/shiny_flag.gif")
 shovel = pygame.image.load(_resource_path("assets/shovel.png")).convert_alpha()
-stone_block=pygame.image.load(_resource_path("assets/stone_block.png")).convert_alpha()
+stone_block = pygame.image.load(_resource_path("assets/stone_block.png")).convert_alpha()
 
 
 class Solid(pygame.sprite.Sprite):
@@ -156,6 +157,7 @@ class ShinyFlag(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=tuple(item * 16 for item in self.tile_pos))
 
     def update(self, dt):
+        """Update the Shiny flag"""
         self.image = shiny_flag[self.frame - 1]
         self.frame_delay += dt
         if self.frame_delay >= 36:
