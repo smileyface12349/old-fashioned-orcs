@@ -1,6 +1,7 @@
-import pygame
-import pathlib
 import os.path as path
+import pathlib
+
+import pygame
 
 
 def _resource_path(file: str):
@@ -184,6 +185,7 @@ class OtherPlayer(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
     def update(self, *args, **kwargs):
+        """Updates image of player depending on its facing direction"""
         if self.direction == "r":
             self.image = other_player_right
         else:
