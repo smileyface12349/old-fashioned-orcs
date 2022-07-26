@@ -99,7 +99,7 @@ class Game:
                     if tile is None:
                         continue
                     tile_id = tile["id"]
-                    if tile_id not in [1, 20]:
+                    if tile_id not in [1, 20, 22]:
                         # Solid tile
                         new_spr = solid.Solid(self, (tile_x, tile_y), layer)
                         self._select_solid_image(new_spr, tile["type"], flipped_tile)
@@ -107,6 +107,9 @@ class Game:
                     elif tile_id == 20:
                         # Level end tile.
                         pass
+                    elif tile_id == 22:
+                        # Shiny flag (tutorial tile)
+                        self.tiles.add(solid.ShinyFlag((tile_x, tile_y)), layer=layer)
                     else:
                         # "Glitchy" tile (starts a pseudo-crash upon contact)
                         self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer)
