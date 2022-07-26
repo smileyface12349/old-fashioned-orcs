@@ -31,8 +31,7 @@ def complex_camera(camera, target_rect):
 
 
 class Camera(object):
-    """Special camera object allowing us to keep the local player on-screen at all times
-    no matter the level's size."""
+    """Special camera object allowing us to keep the local player on-screen at all times no matter the level's size."""
 
     def __init__(self, camera_func, width, height):
         self.camera_func = camera_func
@@ -67,7 +66,7 @@ class Game:
         self.camera = Camera(complex_camera, 160, 144)
         self.gui = pygame.sprite.Group()
         self.showing_gui = True
-        self.read_map("maps/test.tmx")  # we'll need to change that depending on the player's level
+        self.read_map("maps/tutorial.tmx")  # we'll need to change that depending on the player's level
 
     def crash(self):
         """<<Crash>> the game."""
@@ -117,8 +116,11 @@ class Game:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
 
     def draw_objects(self, screen):
-        """Replacement for self.objects.draw.
-        Designed to take the camera into account."""
+        """
+        Replacement for self.objects.draw.
+
+        Designed to take the camera into account.
+        """
         self.camera.update(self.player)
         for layer in self.objects.layers():
             sprites = self.objects.get_sprites_from_layer(layer)
@@ -127,12 +129,13 @@ class Game:
 
     @staticmethod
     def _select_solid_image(tile, type, flipped):
-        """Decide which image to use for this solid.
-        PRIVATE USE ONLY
+        """
+        Decide which image to use for this solid. * PRIVATE USE ONLY *
 
         :param tile: The solid tile impacted by this method.
         :param type: The solid's type, main image selection factor.
-        :param flipped: This can change an image's orientation depending on whether this is true or false."""
+        :param flipped: This can change an image's orientation depending on whether this is true or false.
+        """
         # We might have to extend that in the future when we encounter more tiling situations.
         match type:
             case 0 | 13:
