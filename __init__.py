@@ -11,7 +11,9 @@ pygame.init()  # ensuring that everything we need will be initialised before sta
 screen = pygame.display.set_mode((160, 144), pygame.RESIZABLE | pygame.SCALED)
 pygame.display.set_caption("A Totally Generic Platformer by the Old-Fashioned Orcs")
 
-import src.game  # Screw PEP 8 for this one. We need this import to be here, as convert_alpha needs an open window
+import src.game  # noqa: E402
+
+# Screw PEP 8 for this one. We need this import to be here, as convert_alpha needs an open window
 
 
 game = src.game.Game()
