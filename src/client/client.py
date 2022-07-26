@@ -90,14 +90,16 @@ class Client:
         # Wait for the response/update and process it
         async with websockets.connect("ws://134.255.220.44:8000/") as self.broadcast:
             while True:
+                # Make sure main thread actually initialized
                 if not self.unique_id:
                     await asyncio.sleep(0.1)
                     continue
-
+                # First payload on this websocket needs to include unique_id
+                # So that the server can identify it and assign it to the same player
                 if not waved:
                     await self.broadcast.send(json.dumps({"type": "broadcast", "unique_id": self.unique_id}))
                     waved = True
-
+                # Now that we have initiliased, wait for actual updates!
                 response = await self.broadcast.recv()
                 response = json.loads(response)
                 print(f"Public Broadcast => {response}")
@@ -118,20 +120,17 @@ class Client:
 
     async def _play(self, payload):
         """Play loop"""
-        spawned = False
-        history = {"position": [0, 0], "level": -1}
+        history = {"position": [0, 0], "level": -100}
         while True:
             payload = await self._sync_engine()
             self.payload.update(payload)
 
             # When moving & on spawn inform the server!
             if self.payload["position"] != history["position"] \
-                or self.payload["level"] != history["level"] \
-                    or not spawned:
+                or self.payload["level"] != history["level"]:
                 # Update history dict
-                spawned = True
                 history["position"] = self.payload["position"]
-                history["level"] = self.payload["position"]
+                history["level"] = self.payload["level"]
                 # Send the payload
                 print(f"Payload => {self.payload}")
                 await self.websocket.send(json.dumps(self.payload))
