@@ -112,24 +112,30 @@ class Client:
             if nick == self.payload["nickname"]:
                 continue
             if not any(ply for ply in self.game.other_players if ply.nickname == nick):
-                self.game.add_player(nick, player["position"])
+                self.game.add_player(nick, player["direction"], player["position"])
                 continue
-            self.game.update_player(nick, player["position"])
+            self.game.update_player(nick, player["direction"], player["position"])
 
     async def _play(self, payload):
         """Play loop"""
-        print("=->  Playing  <-=")
-        history = ""
+        spawned = False
+        history = {"position": [0, 0], "level": -1}
         while True:
             payload = await self._sync_engine()
             self.payload.update(payload)
-            if self.payload["position"] != history:
-                # When moving send it back to the server!
-                history = self.payload["position"]
+
+            # When moving & on spawn inform the server!
+            if self.payload["position"] != history["position"] \
+                or self.payload["level"] != history["level"] \
+                    or not spawned:
+                # Update history dict
+                spawned = True
+                history["position"] = self.payload["position"]
+                history["level"] = self.payload["position"]
+                # Send the payload
                 print(f"Payload => {self.payload}")
                 await self.websocket.send(json.dumps(self.payload))
-
-                # Wait for the response/update and process it
+                # Wait for the check
                 response = await self.websocket.recv()
                 response = json.loads(response)
                 print(f"Private Response => {response}")
