@@ -106,18 +106,21 @@ class Client:
                     print(f"Public Broadcast => {response}")
                     await self._sync_players(response)
                 elif response["type"] == "ping":
-                    print(f'Ping: {response["latency"]}')
+                    print(f"Private Ping Broadcast => {response}")
 
     async def _sync_players(self, response):
         """Update OtherPlayers from broadcasts!"""
+        nicknames = []
         for player in response["players"]:
             nick = player_nickname(player)
+            nicknames.append(nick)
             if nick == self.payload["nickname"]:
                 continue
             if not any(ply for ply in self.game.other_players if ply.nickname == nick):
                 self.game.add_player(nick, player["direction"], player["position"])
                 continue
             self.game.update_player(nick, player["direction"], player["position"])
+        self.game.check_who_left(nicknames)
 
     async def _play(self, payload):
         """Play loop"""

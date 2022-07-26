@@ -135,3 +135,10 @@ class Game:
             if other_player.nickname == nickname:
                 other_player.rect.topleft = tuple(pos)
                 other_player.direction = direction
+
+    def check_who_left(self, active_nicknames):
+        """Check who left!"""
+        for player in self.other_players:
+            if player.nickname not in active_nicknames:
+                self.other_players.remove(player)
+                self.objects.remove(player, layer=0)
