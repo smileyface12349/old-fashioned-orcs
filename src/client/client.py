@@ -86,7 +86,7 @@ class Client:
 
     async def _broadcast(self):
         """Listener for game broadcasts."""
-        waved = False
+        init = False
         # Wait for the response/update and process it
         async with websockets.connect("ws://134.255.220.44:8000/") as self.broadcast:
             while True:
@@ -95,17 +95,18 @@ class Client:
                     await asyncio.sleep(0.1)
                     continue
                 # First payload on this websocket needs to include unique_id
-                # So that the server can identify it and assign it to the same player
-                if not waved:
+                # So that the server can identify it and assign the socket to the same player
+                if not init:
                     await self.broadcast.send(json.dumps({"type": "broadcast", "unique_id": self.unique_id}))
-                    waved = True
-                # Now that we have initiliased, wait for actual updates!
+                    init = True
+                # Now that we have initiliased, wait for actual updates/pings!
                 response = await self.broadcast.recv()
                 response = json.loads(response)
                 print(f"Public Broadcast => {response}")
-
                 if response["type"] == "update":
                     await self._sync_players(response)
+                elif response["type"] == "ping":
+                    await self.broadcast.send(json.dumps({"type": "pong"}))
 
     async def _sync_players(self, response):
         """Update OtherPlayers from broadcasts!"""

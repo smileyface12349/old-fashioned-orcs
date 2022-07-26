@@ -12,6 +12,7 @@ logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=log
 games = GameManager()
 manager = ConnectionManager()
 db = GameDatabase()
+players = set()
 
 
 async def error(websocket, message):
@@ -49,14 +50,14 @@ async def join_game(player):
             await new_game(player)
 
 
-async def keep_broadcast_alive(websocket):
+async def ping_pong(websocket):
     """Trying to keep broadcast alive."""
     while True:
+        await asyncio.sleep(30)
+        await websocket.send(json.dumps({"type": "ping"}))
         message = await websocket.recv()
         message = json.loads(message)
-        assert message["type"] == "broadcast"
-        await websocket.send(json.dumps({"type": "broadcast"}))
-        await asyncio.sleep(5)
+        assert message["type"] == "pong"
 
 
 async def play_game(player, game):
@@ -78,9 +79,6 @@ async def play_game(player, game):
             p.broadcast for p in game.iter_players() \
                 if p.unique_id != request_id and p.broadcast is not None]
         websockets.broadcast(other_players, json.dumps(event))
-
-
-players = set()
 
 
 async def handler(websocket):
@@ -138,7 +136,7 @@ async def handler(websocket):
                     break
 
             await websocket.send(json.dumps({"type": "broadcast"}))
-            await keep_broadcast_alive(websocket)
+            await ping_pong(websocket)
 
     except websockets.exceptions.ConnectionClosedError:
         logging.info(f"ConnectionClosedError from => {websocket.remote_address}")
