@@ -79,6 +79,7 @@ class GameManager:
                 if player == local_player:
                     await game.remove_player(player)
                     from backend import broadcast_leave
+
                     await broadcast_leave(player, game)
 
     def __iter__(self):

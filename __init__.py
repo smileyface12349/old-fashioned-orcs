@@ -19,28 +19,6 @@ import src.game  # Screw PEP 8 for this one. We need this import to be here, as 
 
 game = src.game.Game()
 clock = pygame.time.Clock()  # a framerate helper object.
-
-
-class StoppableThread(threading.Thread):
-    """
-    Thread class with a stop() method.
-
-    The thread itself has to check regularly for the stopped() condition.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super(StoppableThread, self).__init__(*args, **kwargs)
-        self._stop_event = threading.Event()
-
-    def stop(self):
-        """Stop the running thread."""
-        self._stop_event.set()
-
-    def stopped(self):
-        """Return is_set() response of thread."""
-        return self._stop_event.is_set()
-
-
 running = True
 
 game.client.start()  # Once we start the thread, it'll run as long as the game exists.
