@@ -65,7 +65,7 @@ async def ping_pong(websocket):
         await asyncio.sleep(15)
 
 
-async def broadcast_leave(player, game):
+async def broadcast_update(game):
     """Public broadcast that someone left."""
     event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
 
@@ -76,6 +76,7 @@ async def broadcast_leave(player, game):
 
 async def play_game(player, game):
     """Receive and process moves from players."""
+    await broadcast_update(game)
     async for message in player.websocket:
         # Parse a "play" event from the client.
         event = json.loads(message)

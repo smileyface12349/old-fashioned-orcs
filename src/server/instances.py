@@ -78,9 +78,9 @@ class GameManager:
             for local_player in game.players:
                 if player == local_player:
                     await game.remove_player(player)
-                    from backend import broadcast_leave
+                    from backend import broadcast_update
 
-                    await broadcast_leave(player, game)
+                    await broadcast_update(game)
 
     def __iter__(self):
         """Iterates over active games."""
