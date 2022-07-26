@@ -1,6 +1,3 @@
-import asyncio
-import threading
-
 import pygame
 
 if pygame.vernum[0] < 2:
@@ -53,6 +50,7 @@ while running:
                 game.player.moving_right = False
 
 
+game.client.stop()
 try:
     exit(0)
 except NameError:
