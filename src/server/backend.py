@@ -65,6 +65,15 @@ async def ping_pong(websocket):
         await asyncio.sleep(15)
 
 
+async def broadcast_leave(player, game):
+    """Public broadcast that someone left."""
+    event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
+    
+    # Send the "update" event to everyone in the current game but exclude the player that left.
+    other_players = [p.broadcast for p in game.iter_players() if p.broadcast is not None]
+    websockets.broadcast(other_players, json.dumps(event))
+
+
 async def play_game(player, game):
     """Receive and process moves from players."""
     async for message in player.websocket:
