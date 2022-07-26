@@ -52,6 +52,10 @@ class Camera(object):
         self.state.size = width, height
         self.state.topleft = x, y
 
+SPECIAL_LEVEL_MAPS={
+    "test":-1,
+    "tutorial":0
+}
 
 class Game:
     """The Game"""
@@ -84,6 +88,10 @@ class Game:
         # TMX is a variant of the XML format, used by the map editor Tiled.
         # Said maps use tilesets, stored in TSX files (which are also based on the XML format).
         self.tmx_data = pytmx.TiledMap(_resource_path(directory))
+        if any(key in directory for key in SPECIAL_LEVEL_MAPS):
+            self.level=SPECIAL_LEVEL_MAPS[list(key in directory for key in SPECIAL_LEVEL_MAPS)[0]]
+        else:
+            self.level=int(path.split(directory)[1].removesuffix(".tmx")[5:])
         self.camera.change_settings(self.tmx_data.width * 16, self.tmx_data.height * 16)
         for sprite in self.tiles:
             sprite.kill()
@@ -104,7 +112,7 @@ class Game:
                     if tile is None:
                         continue
                     tile_id = tile["id"]
-                    if tile_id not in [1, 20, 22]:
+                    if tile_id not in [1, 20, 22, 25]:
                         # Solid tile
                         new_spr = solid.Solid(self, (tile_x, tile_y), layer)
                         self._select_solid_image(new_spr, tile["type"], flipped_tile)
@@ -115,6 +123,9 @@ class Game:
                     elif tile_id == 22:
                         # Shiny flag (tutorial tile)
                         self.tiles.add(solid.ShinyFlag((tile_x, tile_y)), layer=layer)
+                    elif tile_id==25:
+                        # Switch (can be pressed by the player)
+                        pass
                     else:
                         # "Glitchy" tile (starts a pseudo-crash upon contact)
                         self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer)
@@ -184,6 +195,8 @@ class Game:
                 img = solid.bricks
             case 20:
                 img = solid.shovel
+            case 21:
+                img=solid.stone_block
         tile.image = img
 
     def add_player(self, nickname, direction, pos=None):

@@ -46,7 +46,7 @@ class Client:
         payload = {
             "type": "play",
             "position": list(self.game.player.rect.topleft),
-            "level": -1,
+            "level": self.game.level,
             "direction": self.game.player.direction,
         }
 

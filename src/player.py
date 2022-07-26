@@ -96,7 +96,7 @@ class Player(pygame.sprite.Sprite):
             lambda spr1, spr2: spr2.__class__.__name__ == "Ending" and pygame.sprite.collide_mask(spr1, spr2),
         ):
             # Go to next level - behaviour undefined for now
-            pass
+            self.game.read_map(f"maps/level{self.game.level+1}.tmx")
         if self.moving_left:
             left_collisions = pygame.sprite.spritecollide(
                 self,
