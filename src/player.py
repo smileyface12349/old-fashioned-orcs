@@ -73,9 +73,8 @@ class Player(pygame.sprite.Sprite):
             self.image = player_right
         else:
             self.image = player_left
-        tiles_on_same_layer = list(
-            tile for tile in self.game.tiles.get_sprites_from_layer(0) if tile.__class__.__name__ == "Solid"
-        )
+        tiles_on_same_layer = self.game.tiles.get_sprites_from_layer(0)
+        solids_on_same_layer = [tile for tile in tiles_on_same_layer if tile.__class__.__name__ == "Solid"]
         if pygame.sprite.spritecollide(
             self,
             tiles_on_same_layer,
@@ -86,7 +85,7 @@ class Player(pygame.sprite.Sprite):
         if self.moving_left:
             left_collisions = pygame.sprite.spritecollide(
                 self,
-                tiles_on_same_layer,
+                solids_on_same_layer,
                 False,
                 lambda spr1, spr2: spr2.playerisright_strict and spr1.rect.colliderect(spr2.rect),
             )
@@ -97,7 +96,7 @@ class Player(pygame.sprite.Sprite):
         if self.moving_right:
             right_collisions = pygame.sprite.spritecollide(
                 self,
-                tiles_on_same_layer,
+                solids_on_same_layer,
                 False,
                 lambda spr1, spr2: spr2.playerisleft_strict and spr1.rect.colliderect(spr2.rect),
             )
@@ -112,7 +111,7 @@ class Player(pygame.sprite.Sprite):
             if (not self.falling) and (
                 not pygame.sprite.spritecollide(
                     self,
-                    tiles_on_same_layer,
+                    solids_on_same_layer,
                     False,
                     lambda spr1, spr2: spr1.fall_sensor.colliderect(spr2.rect),
                 )
@@ -128,7 +127,7 @@ class Player(pygame.sprite.Sprite):
                         self.y_velocity += 1
                 collisions = pygame.sprite.spritecollide(
                     self,
-                    tiles_on_same_layer,
+                    solids_on_same_layer,
                     False,
                     lambda spr1, spr2: spr2.playerisup_strict and spr1.rect.colliderect(spr2.rect),
                 )
@@ -150,7 +149,7 @@ class Player(pygame.sprite.Sprite):
                     self.falling = True
             collisions = pygame.sprite.spritecollide(
                 self,
-                tiles_on_same_layer,
+                solids_on_same_layer,
                 False,
                 lambda spr1, spr2: spr2.playerisdown_strict and spr1.rect.colliderect(spr2.rect),
             )
