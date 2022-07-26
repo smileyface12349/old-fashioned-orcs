@@ -5,9 +5,9 @@ import pygame
 import pytmx
 
 import src.client.client as client
+import src.gui as gui
 import src.player as player
 import src.solid as solid
-import src.gui as gui
 
 pygame.mixer.init()
 
@@ -52,10 +52,9 @@ class Camera(object):
         self.state.size = width, height
         self.state.topleft = x, y
 
-SPECIAL_LEVEL_MAPS={
-    "test":-1,
-    "tutorial":0
-}
+
+SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
+
 
 class Game:
     """The Game"""
@@ -88,10 +87,10 @@ class Game:
         # TMX is a variant of the XML format, used by the map editor Tiled.
         # Said maps use tilesets, stored in TSX files (which are also based on the XML format).
         self.tmx_data = pytmx.TiledMap(_resource_path(directory))
-        if any(key in directory for key in SPECIAL_LEVEL_MAPS):
-            self.level=SPECIAL_LEVEL_MAPS[list(key in directory for key in SPECIAL_LEVEL_MAPS)[0]]
+        if any(key for key in SPECIAL_LEVEL_MAPS if key in directory):
+            self.level = SPECIAL_LEVEL_MAPS[list(key for key in SPECIAL_LEVEL_MAPS if key in directory)[0]]
         else:
-            self.level=int(path.split(directory)[1].removesuffix(".tmx")[5:])
+            self.level = int(path.split(directory)[1].removesuffix(".tmx")[5:])
         self.camera.change_settings(self.tmx_data.width * 16, self.tmx_data.height * 16)
         for sprite in self.tiles:
             sprite.kill()
@@ -123,7 +122,7 @@ class Game:
                     elif tile_id == 22:
                         # Shiny flag (tutorial tile)
                         self.tiles.add(solid.ShinyFlag((tile_x, tile_y)), layer=layer)
-                    elif tile_id==25:
+                    elif tile_id == 25:
                         # Switch (can be pressed by the player)
                         pass
                     else:
@@ -196,7 +195,7 @@ class Game:
             case 20:
                 img = solid.shovel
             case 21:
-                img=solid.stone_block
+                img = solid.stone_block
         tile.image = img
 
     def add_player(self, nickname, direction, pos=None):
