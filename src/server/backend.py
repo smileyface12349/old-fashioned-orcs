@@ -38,7 +38,7 @@ async def join_game(player):
     """Handle connections from other players, joining an existing game."""
     # Find the game.
     for game in games.active_games:
-        if len(game.players) <= 2:
+        if len(game.players) <= 4:
             try:
                 await game.add_player(player)
                 await play_game(player, game)
