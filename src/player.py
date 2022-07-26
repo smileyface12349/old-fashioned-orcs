@@ -73,7 +73,9 @@ class Player(pygame.sprite.Sprite):
             self.image = player_right
         else:
             self.image = player_left
-        tiles_on_same_layer = self.game.tiles.get_sprites_from_layer(0)
+        tiles_on_same_layer = list(
+            tile for tile in self.game.tiles.get_sprites_from_layer(0) if tile.__class__.__name__ == "Solid"
+        )
         if pygame.sprite.spritecollide(
             self,
             tiles_on_same_layer,

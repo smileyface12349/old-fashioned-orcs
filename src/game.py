@@ -114,6 +114,8 @@ class Game:
                 img = solid.side_end_r if not flipped else solid.side_end_l
             case 17:
                 img = solid.side_single
+            case 18:
+                img = solid.bottom_corner_platform
         tile.image = img
 
     def add_player(self, nickname, direction, pos=None):

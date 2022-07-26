@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.0" name="Summer Code Jam 2022 - Old-Fashioned Orcs" tilewidth="16" tileheight="16" tilecount="19" columns="0">
+<tileset version="1.9" tiledversion="1.9.0" name="Summer Code Jam 2022 - Old-Fashioned Orcs" tilewidth="16" tileheight="16" tilecount="20" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <transformations hflip="1" vflip="0" rotate="0" preferuntransformed="0"/>
  <tile id="0">
@@ -133,5 +133,12 @@
    <property name="type" type="int" value="17"/>
   </properties>
   <image width="16" height="16" source="side_single.png"/>
+ </tile>
+ <tile id="19">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="18"/>
+  </properties>
+  <image width="16" height="16" source="bottom_corner_platform.png"/>
  </tile>
 </tileset>
