@@ -12,6 +12,7 @@ pygame.init()  # ensuring that everything we need will be initialised before sta
 # flags after that. The ones I put here allow us to have a bigger window without needing to scale everything up, and
 # allow the user to resize the window as they like. Feel free to change the resolution if you feel that it's too small
 screen = pygame.display.set_mode((160, 144), pygame.RESIZABLE | pygame.SCALED)
+pygame.display.set_caption("A Totally Generic Platformer by the Old-Fashioned Orcs")
 
 import src.game  # Screw PEP 8 for this one. We need this import to be here, as convert_alpha needs an open window
 
@@ -50,7 +51,7 @@ while running:
     dt = clock.tick(60)  # this ensures that the game cannot run higher that 60FPS. We also get a delta time in ms.
     if not game.crashing:
         game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
-    game.objects.draw(screen)  # We draw everything here
+    game.draw_objects(screen)  # We draw everything here
     pygame.display.update()  # This function is called when everything render-related is done.
     # If you don't call this or pygame.display.flip, the screen won't show what you've drawn on it!
     # Events are how we manage player inputs (and others).

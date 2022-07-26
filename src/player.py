@@ -15,7 +15,11 @@ player_right = pygame.image.load(_resource_path("assets/player.png")).convert_al
 player_left = pygame.transform.flip(player_right, True, False)
 other_player_right = player_right.copy()
 pygame.transform.threshold(
-    other_player_right, player_right, pygame.Color("#4A4AFF"), set_color=(~pygame.Color("#4A4AFF")), inverse_set=True
+    other_player_right,
+    player_right,
+    pygame.Color("#4A4AFF"),
+    set_color=(~pygame.Color("#4A4AFF")),
+    inverse_set=True,
 )  # if inverse_set were False, all pixels in player_right that were NOT set to a colour of #4A4AFF would be replaced
 other_player_left = pygame.transform.flip(other_player_right, True, False)
 
@@ -82,6 +86,14 @@ class Player(pygame.sprite.Sprite):
             lambda spr1, spr2: spr2.__class__.__name__ == "BuggyThingy" and pygame.sprite.collide_mask(spr1, spr2),
         ):
             self.game.crash()
+        if pygame.sprite.spritecollide(
+            self,
+            tiles_on_same_layer,
+            False,
+            lambda spr1, spr2: spr2.__class__.__name__ == "Ending" and pygame.sprite.collide_mask(spr1, spr2),
+        ):
+            # Go to next level - behaviour undefined for now
+            pass
         if self.moving_left:
             left_collisions = pygame.sprite.spritecollide(
                 self,

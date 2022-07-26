@@ -17,6 +17,41 @@ game_crash = pygame.mixer.Sound(_resource_path("assets/game_crash.wav"))
 game_crash.set_volume(0.35)  # We don't want players to get their eardrums destroyed
 
 
+def complex_camera(camera, target_rect):
+    l, t, _, _ = target_rect
+    _, _, w, h = camera
+    l, t, _, _ = -l + 80, -t + 72, w, h  # center player
+
+    l = min(0, l)  # stop scrolling at the left edge
+    l = max(-(camera.width - 160), l)  # stop scrolling at the right edge
+    t = max(-(camera.height - 144), t)  # stop scrolling at the bottom
+    t = min(0, t)  # stop scrolling at the top
+
+    return pygame.Rect(l, t, w, h)
+
+
+class Camera(object):
+    """Special camera object allowing us to keep the local player on-screen at all times
+    no matter the level's size."""
+
+    def __init__(self, camera_func, width, height):
+        self.camera_func = camera_func
+        self.state = pygame.Rect(0, 0, width, height)
+
+    def apply(self, target):
+        """Return a copy of the target's rectangle which is positioned
+        according to the current centered sprite."""
+        return target.rect.move(self.state.topleft)
+
+    def update(self, target):
+        """Update the camera to follow a certain sprite for this frame."""
+        self.state = self.camera_func(self.state, target.rect)
+
+    def change_settings(self, width, height):
+        """Change the size of the screen covered by the camera."""
+        self.state.size = width, height
+
+
 class Game:
     """The Game"""
 
@@ -29,7 +64,8 @@ class Game:
         self.tmx_data: pytmx.TiledMap | None = None
         self.client = client.Client(self)
         self.level = -1  # Value for the test map.
-        self.read_map("maps/test.tmx")
+        self.camera = Camera(complex_camera, 160, 144)
+        self.read_map("maps/test.tmx")  # we'll need to change that depending on the player's level
 
     def crash(self):
         """<<Crash>> the game."""
@@ -41,6 +77,7 @@ class Game:
         # TMX is a variant of the XML format, used by the map editor Tiled.
         # Said maps use tilesets, stored in TSX files (which are also based on the XML format).
         self.tmx_data = pytmx.TiledMap(_resource_path(directory))
+        self.camera.change_settings(self.tmx_data.width * 16, self.tmx_data.height * 16)
         for sprite in self.tiles:
             sprite.kill()
         with open(_resource_path(directory)) as file:
@@ -59,16 +96,29 @@ class Game:
                     tile = self.tmx_data.get_tile_properties(tile_x, tile_y, layer)
                     if tile is None:
                         continue
-                    if tile["id"] != 1:
+                    tile_id = tile["id"]
+                    if tile_id not in [1, 20]:
                         # Solid tile
                         new_spr = solid.Solid(self, (tile_x, tile_y), layer)
                         self._select_solid_image(new_spr, tile["type"], flipped_tile)
                         self.tiles.add(new_spr, layer=layer)
+                    elif tile_id == 20:
+                        # Level end tile.
+                        pass
                     else:
                         # "Glitchy" tile (starts a pseudo-crash upon contact)
                         self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer)
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
+
+    def draw_objects(self, screen):
+        """Replacement for self.objects.draw.
+        Designed to take the camera into account."""
+        self.camera.update(self.player)
+        for layer in self.objects.layers():
+            sprites = self.objects.get_sprites_from_layer(layer)
+            for sprite in sprites:
+                screen.blit(sprite.image, self.camera.apply(sprite))
 
     @staticmethod
     def _select_solid_image(tile, type, flipped):
@@ -116,6 +166,8 @@ class Game:
                 img = solid.side_single
             case 18:
                 img = solid.bottom_corner_platform
+            case 19:
+                img = solid.bricks
         tile.image = img
 
     def add_player(self, nickname, direction, pos=None):
@@ -140,6 +192,6 @@ class Game:
 
     def check_who_left(self, active_nicknames):
         """Check who left!"""
-        for player in self.other_players:
-            if player.nickname not in active_nicknames:
-                player.kill()
+        for ply in self.other_players:
+            if ply.nickname not in active_nicknames:
+                ply.kill()
