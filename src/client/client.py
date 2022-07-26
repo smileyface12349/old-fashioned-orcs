@@ -102,11 +102,11 @@ class Client:
                 # Now that we have initiliased, wait for actual updates/pings!
                 response = await self.broadcast.recv()
                 response = json.loads(response)
-                print(f"Public Broadcast => {response}")
                 if response["type"] == "update":
+                    print(f"Public Broadcast => {response}")
                     await self._sync_players(response)
                 elif response["type"] == "ping":
-                    await self.broadcast.send(json.dumps({"type": "pong"}))
+                    print(f'Ping: {response["latency"]}')
 
     async def _sync_players(self, response):
         """Update OtherPlayers from broadcasts!"""

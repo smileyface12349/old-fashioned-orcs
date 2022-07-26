@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import time
 
 import websockets
 from database import GameDatabase
@@ -53,11 +54,15 @@ async def join_game(player):
 async def ping_pong(websocket):
     """Trying to keep broadcast alive."""
     while True:
-        await asyncio.sleep(30)
-        await websocket.send(json.dumps({"type": "ping"}))
-        message = await websocket.recv()
-        message = json.loads(message)
-        assert message["type"] == "pong"
+
+        t0 = time.perf_counter()
+        pong_waiter = await websocket.ping()
+        await pong_waiter
+        t1 = time.perf_counter()
+        latency = f"{t1-t0:.2f}"
+        message = json.dumps({"type": "ping", "latency": latency})
+        await websocket.send(message)
+        await asyncio.sleep(15)
 
 
 async def play_game(player, game):
