@@ -40,6 +40,7 @@ class Client:
         self.game = game  # the game object is needed to check the player's position and level
         self.payload = {}
         self.unique_id = None
+        self.running = False
 
     async def _sync_engine(self):
         """Sync real game data to send back to the server!"""
@@ -89,7 +90,7 @@ class Client:
         init = False
         # Wait for the response/update and process it
         async with websockets.connect("ws://oldfashionedorcs.servegame.com:8000/") as self.broadcast:
-            while True:
+            while self.running:
                 # Make sure main thread actually initialized
                 if not self.unique_id:
                     await asyncio.sleep(0.1)
@@ -125,7 +126,7 @@ class Client:
     async def _play(self, payload):
         """Play loop"""
         history = {"position": [0, 0], "level": -100}
-        while True:
+        while self.running:
             payload = await self._sync_engine()
             self.payload.update(payload)
 
@@ -158,6 +159,7 @@ class Client:
 
     def start(self):
         """Starts the listen/receive threads."""
+        self.running = True
         # The main thread.
         self.main_thread = StoppableThread(target=self._main_start, daemon=True)
         # Broadcast listener thread
@@ -169,8 +171,11 @@ class Client:
 
     def stop(self):
         """Stops the listen/receive threads."""
+        print("Exiting Main Thread")
         self.main_thread.stop()
+        print("Exiting Recv Thread")
         self.recv_thread.stop()
+        self.running = False
 
     def _main_start(self):
         """Thread for receiving broadcasts."""

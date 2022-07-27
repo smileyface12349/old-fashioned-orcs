@@ -45,6 +45,7 @@ while running:
             for btn in game.gui:
                 if isinstance(btn, src.game.gui.Button) and btn.rect.collidepoint(event.pos):
                     btn.click()
+
         elif event.type == pygame.KEYDOWN and not game.showing_gui:
             if event.key == pygame.K_LEFT:
                 game.player.moving_left = True
@@ -52,16 +53,27 @@ while running:
                 game.player.moving_right = True
             elif event.key == pygame.K_SPACE:
                 game.player.jump()
+            elif event.key == pygame.K_ESCAPE:
+                game.showing_gui = True
+                game.client.stop()
+                break
+                
+        elif event.type == pygame.KEYDOWN and game.showing_gui:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+                pygame.quit()
+
         elif event.type == pygame.KEYUP and not game.showing_gui:
             if event.key == pygame.K_LEFT:
                 game.player.moving_left = False
             elif event.key == pygame.K_RIGHT:
                 game.player.moving_right = False
 
-try:
-    game.client.stop()
-except AttributeError:
-    pass
+if game.client.running:
+    try:
+        game.client.stop()
+    except AttributeError:
+        pass
 try:
     exit(0)
 except NameError:
