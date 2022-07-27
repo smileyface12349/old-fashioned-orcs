@@ -112,12 +112,14 @@ class TextInput(GUIItem):
         self.update()
 
     def kill(self):
+        """Kills the input box."""
         super().kill()
         pygame.key.stop_text_input()
         self.game.nickname = self.text
         self.game.inputting_nickname = False
 
     def update(self, *args, **kwargs):
+        """Updates the input box."""
         self.image = nickname_input.copy()
         txt = self.font.render(self.text)
         txt[1].center = (self.image.get_width() // 2, self.image.get_height() // 2)
@@ -143,6 +145,7 @@ class TextBox(GUIItem):
         self.rect = self.image.get_rect()
 
     def render(self):
+        """Renders the text box."""
         self.image = text_box.copy()
         lines_to_render = self.parts_list[self.part_index]
         if self.character is not None:
@@ -151,11 +154,11 @@ class TextBox(GUIItem):
             self.font.render_to(self.image, rect, line)
 
     def update(self, *args, **kwargs):
+        """Updates the text box."""
         self.render()
 
     def _init_part_list(self):
-        """Divide the text into batches of 5 lines.
-        PRIVATE USE ONLY!"""
+        """Divide the text into batches of 5 lines. PRIVATE USE ONLY!"""
         words = self.text.split()
         line_length = 0
         line_list = []

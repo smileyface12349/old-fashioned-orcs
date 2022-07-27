@@ -78,6 +78,9 @@ while running:
                                 if game.trigger_man.current_trigger is not None:
                                     game.trigger_man.current_trigger.update_evt()
             else:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                    pygame.quit()
                 if game.inputting_nickname:
                     if event.key == pygame.K_BACKSPACE:
                         inpt = list(spr for spr in game.gui if isinstance(spr, src.game.gui.TextInput))[0]
@@ -104,10 +107,6 @@ while running:
             elif event.key == pygame.K_RIGHT:
                 game.player.moving_right = False
 
-        if event.type == pygame.KEYDOWN and game.showing_gui:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-                pygame.quit()
 
 if game.client.running:
     try:
