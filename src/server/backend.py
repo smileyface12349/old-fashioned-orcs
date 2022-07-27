@@ -55,8 +55,7 @@ async def join_game(player):
 
 async def ping_pong(websocket):
     """Trying to keep broadcast alive."""
-    while True:
-
+    while websocket:
         t0 = time.perf_counter()
         pong_waiter = await websocket.ping()
         await pong_waiter
@@ -64,7 +63,7 @@ async def ping_pong(websocket):
         latency = f"{t1-t0:.2f}"
         message = json.dumps({"type": "ping", "latency": latency})
         await websocket.send(message)
-        await asyncio.sleep(15)
+        await asyncio.sleep(1)
 
 
 async def broadcast_update(game):
@@ -179,7 +178,7 @@ async def handler(websocket):
 
 async def main():
     """Main function that starts the server."""
-    async with websockets.serve(handler, "134.255.220.44", 8000, ping_interval=None):
+    async with websockets.serve(handler, "134.255.220.44", 8000, ping_interval=None, close_timeout=1):
         await asyncio.Future()  # run forever
 
 
