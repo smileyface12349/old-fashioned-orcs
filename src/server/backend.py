@@ -41,6 +41,8 @@ async def join_game(player):
         if len(game.players) <= 4:
             try:
                 await game.add_player(player)
+                await asyncio.sleep(1)
+                await broadcast_update(game)
                 await play_game(player, game)
 
             except KeyError:
@@ -66,17 +68,14 @@ async def ping_pong(websocket):
 
 
 async def broadcast_update(game):
-    """Public broadcast that someone left."""
+    """Send an "update" event to everyone in the current game."""
     event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
-
-    # Send the "update" event to everyone in the current game but exclude the player that left.
-    other_players = [p.broadcast for p in game.iter_players() if p.broadcast is not None]
-    websockets.broadcast(other_players, json.dumps(event))
+    players = [p.broadcast for p in game.iter_players() if p.broadcast is not None]
+    websockets.broadcast(players, json.dumps(event))
 
 
 async def play_game(player, game):
     """Receive and process moves from players."""
-    await broadcast_update(game)
     async for message in player.websocket:
         # Parse a "play" event from the client.
         event = json.loads(message)
@@ -86,6 +85,7 @@ async def play_game(player, game):
 
         player.position = event["position"]
         player.level = event["level"]
+        player.direction = event["direction"]
         request_id = event["unique_id"]
 
         event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}

@@ -57,7 +57,7 @@ while running:
                 game.showing_gui = True
                 game.client.stop()
                 break
-                
+
         elif event.type == pygame.KEYDOWN and game.showing_gui:
             if event.key == pygame.K_ESCAPE:
                 running = False

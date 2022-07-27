@@ -50,7 +50,6 @@ class Client:
             "level": self.game.level,
             "direction": self.game.player.direction,
         }
-
         return payload
 
     async def _hello(self, cache_data):
@@ -82,8 +81,6 @@ class Client:
 
             self.unique_id = cache_data["unique_id"]
             return cache_data
-        else:
-            raise Exception("Invalid type in response")
 
     async def _broadcast(self):
         """Listener for game broadcasts."""
