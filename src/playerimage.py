@@ -7,6 +7,7 @@ class PlayerImage:
         self.color = color_tuple  # tuple containing new color for the plyer image
 
     def newimage(self):
+        """creates the player image with a given color"""
         img = Image.open("old-fashioned-orcs\\assets\player_base.png")  # path to open image
         img = img.convert("RGBA")  # convert image to RGBA format
 
