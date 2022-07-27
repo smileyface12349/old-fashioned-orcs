@@ -85,7 +85,7 @@ class Client:
         """Listener for game broadcasts."""
         init = False
         # Wait for the response/update and process it
-        async with websockets.connect("ws://oldfashionedorcs.servegame.com:8000/") as self.broadcast:
+        async with websockets.connect("ws://oldfashionedorcs.servegame.com:8000/", close_timeout=1) as self.broadcast:
             while self.running:
                 # Make sure main thread actually initialized
                 if not self.unique_id:
@@ -146,7 +146,7 @@ class Client:
         if not cache_data["nickname"]:
             cache_data["nickname"] = self.game.nickname
 
-        async with websockets.connect("ws://oldfashionedorcs.servegame.com:8000/") as self.websocket:
+        async with websockets.connect("ws://oldfashionedorcs.servegame.com:8000/", close_timeout=1) as self.websocket:
             # Send the first data to initialize the connection
             self.payload = await self._hello(cache_data)
             # Now play the game
