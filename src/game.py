@@ -253,7 +253,7 @@ class Game:
             case 32:
                 img = solid.cave_side_gd_r
             case 33:
-                img = solid.cave_side_end_r if not flipped else cave_side_end_l
+                img = solid.cave_side_end_r if not flipped else solid.cave_side_end_l
             case 34:
                 img = solid.cave_side_single
             case 35:
