@@ -16,6 +16,7 @@ def _resource_path(file: str):
 
 button = pygame.image.load(_resource_path("assets/button.png")).convert_alpha()
 button_clicked = pygame.image.load(_resource_path("assets/button_clicked.png")).convert_alpha()
+nickname_input = pygame.image.load(_resource_path("assets/nickname_input.png")).convert_alpha()
 
 
 class Button(pygame.sprite.Sprite):
@@ -84,3 +85,38 @@ class Button(pygame.sprite.Sprite):
                 array[width - 4 : width - 2, 15] = blank
         self._img_list.append(img)
         self._img_list.append(img2)
+
+
+class TextInput(pygame.sprite.Sprite):
+    """Nickname text input"""
+
+    _font = pygame.freetype.Font(_resource_path("assets/scj2022.ttf"), 10)
+    _font.fgcolor = pygame.Color("white")
+    _font.fgcolor.a = 255
+    _input_rect = pygame.Rect(12, 66, 136, 12)
+
+    def __init__(self, game):
+        super().__init__()
+        self.game = game
+        self.image = nickname_input
+        self.text = ""
+        self.rect = self.image.get_rect(center=(160 // 2, 144 // 2))
+        pygame.key.start_text_input()
+        pygame.key.set_text_input_rect(self._input_rect)
+
+    def fetch(self, text):
+        """Update the text to display."""
+        self.text += text
+        self.update()
+
+    def kill(self):
+        super().kill()
+        pygame.key.stop_text_input()
+        self.game.nickname = self.text
+        self.game.inputting_nickname = False
+
+    def update(self, *args, **kwargs):
+        self.image = nickname_input.copy()
+        txt = self._font.render(self.text)
+        txt[1].center = (self.image.get_width() // 2, self.image.get_height() // 2)
+        self.image.blit(*txt)

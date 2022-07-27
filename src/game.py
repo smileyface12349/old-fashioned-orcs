@@ -64,6 +64,8 @@ class Game:
         self.other_players = pygame.sprite.Group()
         self.objects = pygame.sprite.LayeredUpdates(self.player)
         self.crashing = False
+        self.inputting_nickname = False
+        self.nickname = ""
         self.tmx_data: pytmx.TiledMap | None = None
         self.client = client.Client(self)
         self.level = -1  # Value for the test map.
@@ -75,7 +77,18 @@ class Game:
     def start(self):
         """Start the game."""
         self.showing_gui = False
-        self.client.start()
+        nick = client.cache.get_nickname()
+        if nick:
+            self.client.start()
+        else:
+            self.show_input()
+
+    def show_input(self):
+        """Show the nickname text input."""
+        self.showing_gui = True
+        self.gui.empty()
+        self.inputting_nickname = True
+        self.gui.add(gui.TextInput(self))
 
     def crash(self):
         """<<Crash>> the game."""

@@ -71,8 +71,7 @@ class Client:
                 cache_data["unique_id"] = response["unique_id"]
 
             if not cache_data["nickname"]:
-                # If user didnt specify a nickname, server returns a random one
-                cache_data["nickname"] = response["nickname"]
+                cache_data["nickname"] = self.game.nickname
 
             if no_cache:
                 # If there is no cache saved, we need to create it
@@ -144,9 +143,8 @@ class Client:
         """Main client websocket"""
         cache_data = await cache.load()
 
-        # TODO => Fix temp nickname
         if not cache_data["nickname"]:
-            cache_data["nickname"] = input("Enter a nickname: ")
+            cache_data["nickname"] = self.game.nickname
 
         async with websockets.connect("ws://oldfashionedorcs.servegame.com:8000/") as self.websocket:
             # Send the first data to initialize the connection

@@ -46,17 +46,38 @@ while running:
                 if isinstance(btn, src.game.gui.Button) and btn.rect.collidepoint(event.pos):
                     btn.click()
 
-        elif event.type == pygame.KEYDOWN and not game.showing_gui:
-            if event.key == pygame.K_LEFT:
-                game.player.moving_left = True
-            elif event.key == pygame.K_RIGHT:
-                game.player.moving_right = True
-            elif event.key == pygame.K_SPACE:
-                game.player.jump()
-            elif event.key == pygame.K_ESCAPE:
-                game.showing_gui = True
-                game.client.stop()
-                break
+        elif event.type == pygame.KEYDOWN:
+            if not game.showing_gui:
+                if event.key == pygame.K_LEFT:
+                    game.player.moving_left = True
+                elif event.key == pygame.K_RIGHT:
+                    game.player.moving_right = True
+                elif event.key == pygame.K_SPACE:
+                    game.player.jump()
+                elif event.key == pygame.K_ESCAPE:
+                    game.showing_gui = True
+                    game.client.stop()
+                    break
+            else:
+                if game.inputting_nickname:
+                    if event.key == pygame.K_BACKSPACE:
+                        inpt = list(spr for spr in game.gui if isinstance(spr, src.game.gui.TextInput))[0]
+                        if inpt.text:
+                            inpt.text = inpt.text[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        for i in game.gui:
+                            if i.text:
+                                i.kill()
+                            else:
+                                break
+                        game.inputting_nickname = False
+                        game.showing_gui = False
+                        game.client.start()
+                        break
+        elif event.type in [pygame.TEXTEDITING, pygame.TEXTINPUT] and game.inputting_nickname:
+            print(event.text)
+            for i in game.gui:
+                i.fetch(event.text)
 
         elif event.type == pygame.KEYDOWN and game.showing_gui:
             if event.key == pygame.K_ESCAPE:
