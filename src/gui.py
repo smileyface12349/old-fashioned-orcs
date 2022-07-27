@@ -17,6 +17,7 @@ def _resource_path(file: str):
 button = pygame.image.load(_resource_path("assets/button.png")).convert_alpha()
 button_clicked = pygame.image.load(_resource_path("assets/button_clicked.png")).convert_alpha()
 nickname_input = pygame.image.load(_resource_path("assets/nickname_input.png")).convert_alpha()
+text_box = pygame.image.load(_resource_path("assets/textbox.png")).convert_alpha()
 
 
 class GUIItem(pygame.sprite.Sprite):
@@ -121,3 +122,58 @@ class TextInput(GUIItem):
         txt = self.font.render(self.text)
         txt[1].center = (self.image.get_width() // 2, self.image.get_height() // 2)
         self.image.blit(*txt)
+
+
+class TextBox(GUIItem):
+    """A text box to display, uh, some text"""
+
+    character_rect=pygame.Rect(16, 8, 128, 8)
+    line_rects=tuple(pygame.Rect(8, y, 144, 16) for y in range(24, 121, 24))
+
+    def __init__(self, text: str, character=None):
+        super().__init__()
+        self.text = text.strip()
+        self.character = character
+        self.parts_list = []
+        self.part_index = 0
+        self._init_part_list()
+        self.image=text_box
+        self.rect=self.image.get_rect()
+
+    def render(self):
+        self.image=text_box.copy()
+        lines_to_render=self.parts_list[self.part_index]
+        if self.character is not None:
+            self.font.render_to(self.image, self.character_rect, self.character)
+        for line, rect in zip(lines_to_render, self.line_rects):
+            self.font.render_to(self.image, rect, line)
+
+    def update(self, *args, **kwargs):
+        self.render()
+
+    def _init_part_list(self):
+        """Divide the text into batches of 5 lines.
+        PRIVATE USE ONLY!"""
+        words = self.text.split()
+        line_length = 0
+        line_list = []
+        while words:
+            sentence = ""
+            while line_length <= 144:
+                if not words:
+                    break
+                sentence += words[0] + " "
+                line_length = self.font.render(sentence.rstrip())[1].width
+                words = words[1:]
+                if line_length > 144:
+                    word = sentence.split()[-1]
+                    sentence = " ".join(part for part in sentence.split()[:-1])
+                    words.reverse()
+                    words.append(word)
+                    words.reverse()
+            sentence = sentence.rstrip()
+            line_list.append(sentence)
+            line_length = 0
+            if len(line_list) == 5 or not words:
+                self.parts_list.append(line_list.copy())
+                line_list.clear()

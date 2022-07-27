@@ -71,6 +71,7 @@ class EventTrigger:
         self.type = arg_list[0]
         self.trigger_delay = 0
         self.trigger_max = self.arg_list[2]
+        self.dialogues=self.mgr.dialogues[self.id]
 
     def update(self, dt):
         """Can be used in cases where the current trigger should be enabled after a certain period of time."""
@@ -123,11 +124,15 @@ class EventTriggerManager:
         self.triggers = {}
         self.delay = 0
         self.dialogues = {}
-        self.trigger_objs = []
+        self.triggering_sth = False
+        self.trigger_objs: list[EventTrigger] = []
 
     def check_triggers(self):
         """Enable triggers if there are some."""
-        pass
+        for trigger in self.trigger_objs:
+            if trigger.can_be_triggered():
+                trigger.triggered=True
+                self.triggering_sth=True
 
     def set_triggers(self, level: int | str):
         """Set up triggers for this level."""
@@ -150,7 +155,6 @@ class Game:
         self.tiles = pygame.sprite.LayeredUpdates()
         self.other_players = pygame.sprite.Group()
         self.objects = pygame.sprite.LayeredUpdates(self.player)
-        self.player_can_move = False
         self.crashing = False
         self.inputting_nickname = False
         self.nickname = ""
@@ -235,6 +239,7 @@ class Game:
                         self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer)
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
+        self.trigger_man.set_triggers(self.level)
 
     def draw_objects(self, screen):
         """
