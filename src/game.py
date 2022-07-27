@@ -53,7 +53,69 @@ class Camera(object):
         self.state.topleft = x, y
 
 
+TYPE_MAPPINGS: dict[str, type] = {
+    "flag": solid.ShinyFlag,
+}
+
+
+class EventTrigger:
+    """Event trigger object"""
+
+    def __init__(self, mgr, id, arg_list):
+        self.mgr = mgr
+        self.game = mgr.game
+        self.id = id
+        self.arg_list = arg_list
+        self.triggered = False
+        self.trigger_duration_reached = False
+        self.type = arg_list[0]
+        self.trigger_delay = 0
+        self.trigger_max = self.arg_list[2]
+
+    def update(self, dt):
+        """Can be used in cases where the current trigger should be enabled after a certain period of time."""
+        if self.trigger_max and self.trigger_condition():
+            self.trigger_delay += dt
+            if self.trigger_delay >= self.trigger_max:
+                self.trigger_duration_reached = True
+                self.trigger_delay = 0
+        else:
+            self.trigger_duration_reached = False
+            self.trigger_delay = 0
+
+    def can_be_triggered(self):
+        """Check if the trigger can be enabled."""
+        return (
+            self.trigger_condition()
+            if not self.trigger_max
+            else self.trigger_condition() and self.trigger_duration_reached
+        )
+
+    def trigger_condition(self):
+        """The trigger's main requirement. This does not rely on the maximum delay before enabling if there is one."""
+        tiles_on_same_layer = self.game.tiles.get_sprites_from_layer(0)
+        val = False
+        match self.type:
+            case "start":
+                val = True
+            case "touch":
+                val = bool(
+                    pygame.sprite.spritecollide(
+                        self.game.player,
+                        tiles_on_same_layer,
+                        False,
+                        lambda spr1, spr2: pygame.sprite.collide_mask(spr1, spr2)
+                        and isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1]]),
+                    )
+                )
+            case "left":
+                val = self.game.player.rect.x <= self.arg_list[1]
+        return val and not self.triggered
+
+
 class EventTriggerManager:
+    """The event trigger manager."""
+
     def __init__(self, game):
         self.game = game
         with open(_resource_path("maps/levels.json"), "r", encoding="utf-8") as file:
@@ -61,11 +123,20 @@ class EventTriggerManager:
         self.triggers = {}
         self.delay = 0
         self.dialogues = {}
+        self.trigger_objs = []
+
+    def check_triggers(self):
+        """Enable triggers if there are some."""
+        pass
 
     def set_triggers(self, level: int | str):
+        """Set up triggers for this level."""
+        self.trigger_objs.clear()
         data = self.level_data[str(level)]
         self.triggers = data["events"]
         self.dialogues = data["dialogue"]
+        for item in self.triggers.items():
+            self.trigger_objs.append(EventTrigger(self, *item))
 
 
 SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
