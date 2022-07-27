@@ -164,8 +164,8 @@ class Game:
         self.camera = Camera(complex_camera, 160, 144)
         self.gui = pygame.sprite.Group(gui.Button((80, 72), "Play", self.start))
         self.showing_gui = True
-        self.read_map("maps/level0.tmx")  # we'll need to change that depending on the player's level
         self.trigger_man = EventTriggerManager(self)
+        self.read_map("maps/level0.tmx")  # we'll need to change that depending on the player's level
 
     def start(self):
         """Start the game."""
