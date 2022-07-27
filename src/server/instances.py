@@ -2,10 +2,11 @@ import uuid
 
 
 class PlayerSession:
-    """Logical Player to keep track of its players data"""
+    """Logical Player to keep track of its data"""
 
     def __init__(self, websocket, unique_id, nickname):
         self.websocket = websocket
+        self.broadcast = None
         self.unique_id = unique_id
         self.nickname = nickname
         self.level = -1
@@ -15,6 +16,10 @@ class PlayerSession:
     def data(self):
         """Returns all public data for a Player (position, nickname, level)"""
         return {"nickname": self.nickname, "position": self.position, "level": self.level, "direction": self.direction}
+
+    def attach_broadcast(self, websocket):
+        """Adds second websocket in Player"""
+        self.broadcast = websocket
 
 
 class GameInstance:
@@ -73,6 +78,9 @@ class GameManager:
             for local_player in game.players:
                 if player == local_player:
                     await game.remove_player(player)
+                    from backend import broadcast_update
+
+                    await broadcast_update(game)
 
     def __iter__(self):
         """Iterates over active games."""

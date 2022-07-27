@@ -1,6 +1,7 @@
-import pygame
-import pathlib
 import os.path as path
+import pathlib
+
+import pygame
 
 
 def _resource_path(file: str):
@@ -15,7 +16,11 @@ player_right = pygame.image.load(_resource_path("assets/player.png")).convert_al
 player_left = pygame.transform.flip(player_right, True, False)
 other_player_right = player_right.copy()
 pygame.transform.threshold(
-    other_player_right, player_right, pygame.Color("#4A4AFF"), set_color=(~pygame.Color("#4A4AFF")), inverse_set=True
+    other_player_right,
+    player_right,
+    pygame.Color("#4A4AFF"),
+    set_color=(~pygame.Color("#4A4AFF")),
+    inverse_set=True,
 )  # if inverse_set were False, all pixels in player_right that were NOT set to a colour of #4A4AFF would be replaced
 other_player_left = pygame.transform.flip(other_player_right, True, False)
 
@@ -59,12 +64,14 @@ class Player(pygame.sprite.Sprite):
     # The two methods below move the player.
     def move_left(self):
         """Moves the Player left"""
-        self.rect.x -= self.x_velocity
+        if self.rect.x > 0:
+            self.rect.x -= self.x_velocity
         self.direction = "l"
 
     def move_right(self):
         """Moves the Player right"""
-        self.rect.x += self.x_velocity
+        if self.rect.right < self.game.tmx_data.width * 16:
+            self.rect.x += self.x_velocity
         self.direction = "r"
 
     def update(self, dt):
@@ -74,6 +81,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = player_left
         tiles_on_same_layer = self.game.tiles.get_sprites_from_layer(0)
+        solids_on_same_layer = [tile for tile in tiles_on_same_layer if tile.__class__.__name__ == "Solid"]
         if pygame.sprite.spritecollide(
             self,
             tiles_on_same_layer,
@@ -81,10 +89,18 @@ class Player(pygame.sprite.Sprite):
             lambda spr1, spr2: spr2.__class__.__name__ == "BuggyThingy" and pygame.sprite.collide_mask(spr1, spr2),
         ):
             self.game.crash()
+        if pygame.sprite.spritecollide(
+            self,
+            tiles_on_same_layer,
+            False,
+            lambda spr1, spr2: spr2.__class__.__name__ == "Ending" and pygame.sprite.collide_mask(spr1, spr2),
+        ):
+            # Go to next level - behaviour undefined for now
+            pass
         if self.moving_left:
             left_collisions = pygame.sprite.spritecollide(
                 self,
-                tiles_on_same_layer,
+                solids_on_same_layer,
                 False,
                 lambda spr1, spr2: spr2.playerisright_strict and spr1.rect.colliderect(spr2.rect),
             )
@@ -95,7 +111,7 @@ class Player(pygame.sprite.Sprite):
         if self.moving_right:
             right_collisions = pygame.sprite.spritecollide(
                 self,
-                tiles_on_same_layer,
+                solids_on_same_layer,
                 False,
                 lambda spr1, spr2: spr2.playerisleft_strict and spr1.rect.colliderect(spr2.rect),
             )
@@ -110,7 +126,7 @@ class Player(pygame.sprite.Sprite):
             if (not self.falling) and (
                 not pygame.sprite.spritecollide(
                     self,
-                    tiles_on_same_layer,
+                    solids_on_same_layer,
                     False,
                     lambda spr1, spr2: spr1.fall_sensor.colliderect(spr2.rect),
                 )
@@ -126,7 +142,7 @@ class Player(pygame.sprite.Sprite):
                         self.y_velocity += 1
                 collisions = pygame.sprite.spritecollide(
                     self,
-                    tiles_on_same_layer,
+                    solids_on_same_layer,
                     False,
                     lambda spr1, spr2: spr2.playerisup_strict and spr1.rect.colliderect(spr2.rect),
                 )
@@ -148,7 +164,7 @@ class Player(pygame.sprite.Sprite):
                     self.falling = True
             collisions = pygame.sprite.spritecollide(
                 self,
-                tiles_on_same_layer,
+                solids_on_same_layer,
                 False,
                 lambda spr1, spr2: spr2.playerisdown_strict and spr1.rect.colliderect(spr2.rect),
             )
@@ -171,6 +187,7 @@ class OtherPlayer(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
     def update(self, *args, **kwargs):
+        """Updates image of player depending on its facing direction"""
         if self.direction == "r":
             self.image = other_player_right
         else:

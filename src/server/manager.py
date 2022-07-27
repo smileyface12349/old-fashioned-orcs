@@ -1,4 +1,3 @@
-import json
 import random
 import uuid
 
@@ -10,21 +9,27 @@ class ConnectionManager:
 
     def __init__(self):
         self.active_connections: set[WebSocket] = set()
+        self.active_broadcasts: set[WebSocket] = set()
         self.active_nicknames = []
 
-    async def add(self, websocket: WebSocket):
+    async def add_main(self, websocket: WebSocket):
         """Accepts a new Player's websocket and adds it to the list."""
         self.active_connections.add(websocket)
 
-    async def drop(self, websocket: WebSocket):
+    async def drop_main(self, websocket: WebSocket):
         """Handles proper disconnect of a Player and removes websocket from the list."""
         self.active_connections.remove(websocket)
 
-    async def update(self, websocket: WebSocket):
-        """Receives JSON payload from a websocket and updates client's unique_id if required."""
-        payload = await websocket.recv()
-        payload = json.loads(payload)
+    async def add_broadcast(self, websocket: WebSocket):
+        """Accepts a new Player's websocket and adds it to the list."""
+        self.active_broadcasts.add(websocket)
 
+    async def drop_broadcast(self, websocket: WebSocket):
+        """Handles proper disconnect of a Player and removes websocket from the list."""
+        self.active_broadcasts.remove(websocket)
+
+    async def update(self, payload):
+        """Receives JSON payload from a websocket and updates client's unique_id if required."""
         if not payload["unique_id"]:
             # Generate client's unique ID
             payload["unique_id"] = uuid.uuid4().hex
@@ -37,9 +42,12 @@ class ConnectionManager:
                     payload["nickname"] = random_nickname
                     self.active_nicknames.append(random_nickname)
                     break
-
         return payload
 
     def connections(self):
         """Return a list of all currently active connections."""
         return iter(self.active_connections)
+
+    def broadcasts(self):
+        """Return a list of all currently active connections."""
+        return iter(self.active_broadcasts)

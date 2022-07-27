@@ -1,12 +1,28 @@
-import pygame
-import pathlib
 import os.path as path
+import pathlib
+
+import pygame
+from PIL import GifImagePlugin, ImageSequence
 
 
 def _resource_path(file: str):
     """Return the absolute path for a file."""
     pathobj = pathlib.Path(file).absolute()
     return path.join(*pathobj.parts)
+
+
+def _load_gif(file: str):
+    """Load an animated GIF."""
+    img = GifImagePlugin.GifImageFile(_resource_path(file))
+    size = img.size
+    first_frame = pygame.image.load(_resource_path(file)).convert_alpha()
+    frames = [first_frame]
+    for index, frame in enumerate(ImageSequence.Iterator(img)):
+        if not index:
+            continue
+        data = frame.tobytes()
+        frames.append(pygame.image.fromstring(data, size, img.mode).convert_alpha())
+    return frames
 
 
 normal_gd = pygame.image.load(_resource_path("assets/tile.png")).convert_alpha()
@@ -22,6 +38,7 @@ side_end_l = pygame.transform.flip(side_end_r, True, False)
 side_single = pygame.image.load(_resource_path("assets/side_single.png")).convert_alpha()
 bottom_corner_r = pygame.image.load(_resource_path("assets/bottom_corner.png")).convert_alpha()
 bottom_corner_l = pygame.transform.flip(bottom_corner_r, True, False)
+bottom_corner_platform = pygame.image.load(_resource_path("assets/bottom_corner_platform.png")).convert_alpha()
 single_gd = pygame.image.load(_resource_path("assets/single_gd.png")).convert_alpha()
 bottom_corner_dual = pygame.image.load(_resource_path("assets/bottom_corner_dual.png")).convert_alpha()
 bottom_corner_single = pygame.image.load(_resource_path("assets/bottom_corner_single.png")).convert_alpha()
@@ -34,6 +51,10 @@ inward_bottom_corner_single = pygame.image.load(
 inward_corner_r = pygame.image.load(_resource_path("assets/inward_corner.png")).convert_alpha()
 inward_corner_l = pygame.transform.flip(inward_corner_r, True, False)
 inward_corner_single = pygame.image.load(_resource_path("assets/inward_corner_single.png")).convert_alpha()
+bricks = pygame.image.load(_resource_path("assets/bricks.png")).convert_alpha()
+shiny_flag = _load_gif("assets/shiny_flag.gif")
+shovel = pygame.image.load(_resource_path("assets/shovel.png")).convert_alpha()
+stone_block = pygame.image.load(_resource_path("assets/stone_block.png")).convert_alpha()
 
 
 class Solid(pygame.sprite.Sprite):
@@ -109,5 +130,38 @@ class BuggyThingy(Solid):
 
     def __init__(self, game, tile_pos: tuple, layer: int):
         super().__init__(game, tile_pos, layer)
-        self.image = pygame.image.load("assets\\stone.png").convert_alpha()
+        self.image = pygame.image.load(_resource_path("assets/stone.png")).convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
+
+
+class Ending(pygame.sprite.Sprite):
+    """Upon colliding with this sprite, the player will be teleported into the next level."""
+
+    def __init__(self, tile_pos):
+        super().__init__()
+        self.tile_pos = tile_pos
+        self.image = pygame.image.load(_resource_path("assets/end.png"))
+        self.rect = self.image.get_rect(topleft=tuple(item * 16 for item in self.tile_pos))
+        self.mask = pygame.mask.from_surface(self.image)
+
+
+class ShinyFlag(pygame.sprite.Sprite):
+    """A shiny flag"""
+
+    def __init__(self, tile_pos):
+        super().__init__()
+        self.tile_pos = tile_pos
+        self.frame = 1
+        self.frame_delay = 0
+        self.image = shiny_flag[self.frame - 1]
+        self.rect = self.image.get_rect(topleft=tuple(item * 16 for item in self.tile_pos))
+
+    def update(self, dt):
+        """Update the Shiny flag"""
+        self.image = shiny_flag[self.frame - 1]
+        self.frame_delay += dt
+        if self.frame_delay >= 36:
+            self.frame += 1
+            if self.frame > len(shiny_flag):
+                self.frame = 1
+            self.frame_delay = 0

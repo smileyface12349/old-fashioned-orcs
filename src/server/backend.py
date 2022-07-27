@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import time
 
 import websockets
 from database import GameDatabase
@@ -12,6 +13,7 @@ logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=log
 games = GameManager()
 manager = ConnectionManager()
 db = GameDatabase()
+players = set()
 
 
 async def error(websocket, message):
@@ -36,9 +38,11 @@ async def join_game(player):
     """Handle connections from other players, joining an existing game."""
     # Find the game.
     for game in games.active_games:
-        if len(game.players) <= 2:
+        if len(game.players) <= 4:
             try:
                 await game.add_player(player)
+                await asyncio.sleep(1)
+                await broadcast_update(game)
                 await play_game(player, game)
 
             except KeyError:
@@ -49,23 +53,47 @@ async def join_game(player):
             await new_game(player)
 
 
+async def ping_pong(websocket):
+    """Trying to keep broadcast alive."""
+    while True:
+
+        t0 = time.perf_counter()
+        pong_waiter = await websocket.ping()
+        await pong_waiter
+        t1 = time.perf_counter()
+        latency = f"{t1-t0:.2f}"
+        message = json.dumps({"type": "ping", "latency": latency})
+        await websocket.send(message)
+        await asyncio.sleep(15)
+
+
+async def broadcast_update(game):
+    """Send an "update" event to everyone in the current game."""
+    event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
+    players = [p.broadcast for p in game.iter_players() if p.broadcast is not None]
+    websockets.broadcast(players, json.dumps(event))
+
+
 async def play_game(player, game):
     """Receive and process moves from players."""
     async for message in player.websocket:
         # Parse a "play" event from the client.
         event = json.loads(message)
-
         assert event["type"] == "play"
         assert event["unique_id"] == player.unique_id
+        await player.websocket.send(json.dumps(event))
 
         player.position = event["position"]
         player.level = event["level"]
-        player.direction=event["direction"]
+        player.direction = event["direction"]
+        request_id = event["unique_id"]
 
-        # Send an "update" event back
         event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
-        # Send the event to everyone after removing the id
-        websockets.broadcast(game.iter_websockets(), json.dumps(event))
+        # Send the "update" event to everyone in the current game but exclude the current player!
+        other_players = [
+            p.broadcast for p in game.iter_players() if p.unique_id != request_id and p.broadcast is not None
+        ]
+        websockets.broadcast(other_players, json.dumps(event))
 
 
 async def handler(websocket):
@@ -81,42 +109,74 @@ async def handler(websocket):
     :param payload: json object
     """
     try:
+        player = None
         logging.info(f"New WebSocket => {websocket.remote_address}")
-        await manager.add(websocket)
+        event = await websocket.recv()
+        event = json.loads(event)
 
-        event = await manager.update(websocket)
-        assert event["unique_id"]
-        await websocket.send(json.dumps(event))
+        # Check if websocket is main or broadcast.
+        if event["type"] in ["init", "ready", "play"]:
 
-        # Clear old games if necessary
-        await games.clear()
-        # Create new player session
-        player = PlayerSession(websocket, event["unique_id"], event["nickname"])
-        # Load progress of player, if any
-        player.level = await db.load(player)
+            if event["type"] in ["init", "ready"]:
+                event = await manager.update(event)
+                assert event["unique_id"]
 
-        if not games.active_games:
-            # Start a new game.
-            logging.info("Creating New Game!")
-            await new_game(player)
-        else:
-            logging.info("Player will join an existing game!")
-            await join_game(player)
+                await manager.add_main(websocket)
+                event = await manager.update(event)
+                assert event["unique_id"]
+                await websocket.send(json.dumps(event))
+
+            # Clear old games if necessary
+            await games.clear()
+            # Create new player session
+            player = PlayerSession(websocket, event["unique_id"], event["nickname"])
+            players.add(player)
+            # Load progress of player, if any
+            player.level = await db.load(player)
+
+            if not games.active_games:
+                # Start a new game.
+                logging.info("Creating New Game!")
+                await new_game(player)
+            else:
+                logging.info("Player will join an existing game!")
+                await join_game(player)
+
+        elif event["type"] == "broadcast":
+            await manager.add_broadcast(websocket)
+            for play in players:
+                if play.unique_id == event["unique_id"]:
+                    if not play.broadcast:
+                        play.attach_broadcast(websocket)
+                    break
+
+            await websocket.send(json.dumps({"type": "broadcast"}))
+            await ping_pong(websocket)
 
     except websockets.exceptions.ConnectionClosedError:
-        logging.info(f"ConnectionClosedError on WebSocket => {websocket.remote_address}")
+        logging.info(f"ConnectionClosedError from => {websocket.remote_address}")
 
     finally:
-        # Drop websocket when done
-        await db.save(player)
-        await manager.drop(websocket)
-        await games.remove_player(player)
-        logging.info(f"Closed WebSocket => {websocket.remote_address}")
+        # Drop websocket after figuring out its type
+        if websocket in manager.active_broadcasts:
+            await manager.drop_broadcast(websocket)
+            try:
+                for play in players:
+                    if play.unique_id == event["unique_id"]:
+                        players.remove(play)
+            except RuntimeError:
+                pass
+            logging.info(f"Closed game broadcast socket from => {websocket.remote_address}")
+        elif websocket in manager.active_connections and player:
+            await db.save(player)
+            await games.remove_player(player)
+            await manager.drop_main(websocket)
+            logging.info(f"Closed main socket from => {websocket.remote_address}")
 
 
 async def main():
     """Main function that starts the server."""
-    async with websockets.serve(handler, "localhost", 8000):
+    async with websockets.serve(handler, "134.255.220.44", 8000, ping_interval=None):
         await asyncio.Future()  # run forever
 
 
