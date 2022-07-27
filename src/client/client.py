@@ -162,7 +162,7 @@ class Client:
         # The main thread.
         self.main_thread = StoppableThread(target=self._main_start, daemon=True)
         # Broadcast listener thread
-        self.recv_thread = StoppableThread(target=self._recv_start, daemon=True)  # The connection thread.
+        self.recv_thread = StoppableThread(target=self._recv_start, daemon=True)
         # We make it "daemon" so that the full process stops when the window is closed.
         # (If the thread is not daemon, we get a RuntimeError upon closing the window.)
         self.main_thread.start()

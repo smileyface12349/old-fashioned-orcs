@@ -61,7 +61,7 @@ while running:
                         game.player.moving_left = True
                     elif event.key in (pygame.K_RIGHT, pygame.K_d):
                         game.player.moving_right = True
-                    elif event.key == pygame.K_SPACE:
+                    elif event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                         game.player.jump()
                     elif event.key == pygame.K_ESCAPE:
                         game.showing_gui = True
@@ -98,16 +98,16 @@ while running:
             for i in game.gui:
                 i.fetch(event.text)
 
-        elif event.type == pygame.KEYDOWN and game.showing_gui:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-                pygame.quit()
-
         elif event.type == pygame.KEYUP and not game.showing_gui:
             if event.key == pygame.K_LEFT:
                 game.player.moving_left = False
             elif event.key == pygame.K_RIGHT:
                 game.player.moving_right = False
+
+        if event.type == pygame.KEYDOWN and game.showing_gui:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+                pygame.quit()
 
 if game.client.running:
     try:
