@@ -78,21 +78,21 @@ async def play_game(player, game):
     async for message in player.websocket:
         # Parse a "play" event from the client.
         event = json.loads(message)
-        assert event["type"] == "play"
-        assert event["unique_id"] == player.unique_id
-        await player.websocket.send(json.dumps(event))
+        if event["type"] == "play":
+            assert event["unique_id"] == player.unique_id
+            await player.websocket.send(json.dumps(event))
 
-        player.position = event["position"]
-        player.level = event["level"]
-        player.direction = event["direction"]
-        request_id = event["unique_id"]
+            player.position = event["position"]
+            player.level = event["level"]
+            player.direction = event["direction"]
+            request_id = event["unique_id"]
 
-        event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
-        # Send the "update" event to everyone in the current game but exclude the current player!
-        other_players = [
-            p.broadcast for p in game.iter_players() if p.unique_id != request_id and p.broadcast is not None
-        ]
-        websockets.broadcast(other_players, json.dumps(event))
+            event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
+            # Send the "update" event to everyone in the current game but exclude the current player!
+            other_players = [
+                p.broadcast for p in game.iter_players() if p.unique_id != request_id and p.broadcast is not None
+            ]
+            websockets.broadcast(other_players, json.dumps(event))
 
 
 async def handler(websocket):

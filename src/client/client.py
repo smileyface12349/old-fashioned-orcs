@@ -138,6 +138,10 @@ class Client:
                 response = await self.websocket.recv()
                 response = json.loads(response)
                 print(f"Private Response => {response}")
+        else:
+            exit = json.dumps({"type": "exit"})
+            await self.websocket.send(exit)
+            await self.broadcast.send(exit)
 
     async def _main(self):
         """Main client websocket"""
@@ -166,11 +170,11 @@ class Client:
 
     def stop(self):
         """Stops the listen/receive threads."""
-        print("Exiting Main Thread")
-        self.main_thread.stop()
+        self.running = False
         print("Exiting Recv Thread")
         self.recv_thread.stop()
-        self.running = False
+        print("Exiting Main Thread")
+        self.main_thread.stop()
 
     def _main_start(self):
         """Thread for receiving broadcasts."""
