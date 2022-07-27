@@ -1,3 +1,4 @@
+import json
 import os.path as path
 
 import pygame
@@ -52,6 +53,21 @@ class Camera(object):
         self.state.topleft = x, y
 
 
+class EventTriggerManager:
+    def __init__(self, game):
+        self.game = game
+        with open(_resource_path("maps/levels.json"), "r", encoding="utf-8") as file:
+            self.level_data = json.loads(file.read())
+        self.triggers = {}
+        self.delay = 0
+        self.dialogues = {}
+
+    def set_triggers(self, level: int | str):
+        data = self.level_data[str(level)]
+        self.triggers = data["events"]
+        self.dialogues = data["dialogue"]
+
+
 SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
 
 
@@ -74,6 +90,7 @@ class Game:
         self.gui = pygame.sprite.Group(gui.Button((80, 72), "Play", self.start))
         self.showing_gui = True
         self.read_map("maps/tutorial.tmx")  # we'll need to change that depending on the player's level
+        self.trigger_man = EventTriggerManager(self)
 
     def start(self):
         """Start the game."""
@@ -124,8 +141,8 @@ class Game:
                     tile = self.tmx_data.get_tile_properties(tile_x, tile_y, layer)
                     if tile is None:
                         continue
-                    if tile["tile"]=="spawnpoint":
-                        self.player.rect.topleft=(tile_x*16, tile_y*16)
+                    if tile["tile"] == "spawnpoint":
+                        self.player.rect.topleft = (tile_x * 16, tile_y * 16)
                         continue
                     tile_id = tile["id"]
                     if tile_id not in [1, 20, 22, 25]:
@@ -213,6 +230,42 @@ class Game:
                 img = solid.shovel
             case 21:
                 img = solid.stone_block
+            case 22:
+                img = solid.cave_deep_gd
+            case 23:
+                img = solid.cave_bottom_gd
+            case 24:
+                img = solid.cave_bottom_corner_r if not flipped else solid.cave_bottom_corner_l
+            case 25:
+                img = solid.cave_bottom_corner_dual
+            case 26:
+                img = solid.cave_bottom_corner_single
+            case 27:
+                img = solid.cave_inward_bottom_corner_r if not flipped else solid.cave_inward_bottom_corner_l
+            case 28:
+                img = solid.cave_inward_bottom_corner_single
+            case 29:
+                img = solid.cave_inward_corner_r if not flipped else solid.cave_inward_corner_l
+            case 30:
+                img = solid.cave_inward_corner_single
+            case 31:
+                img = solid.cave_side_gd_l
+            case 32:
+                img = solid.cave_side_gd_r
+            case 33:
+                img = solid.cave_side_end_r if not flipped else cave_side_end_l
+            case 34:
+                img = solid.cave_side_single
+            case 35:
+                img = solid.cave_side_gd_single
+            case 36:
+                img = solid.cave_single_gd
+            case 37:
+                img = solid.cave_normal_gd
+            case 38:
+                img = solid.cave_upper_corner_r if not flipped else solid.cave_upper_corner_l
+            case 39:
+                img = solid.cave_upper_corner_single
         tile.image = img
 
     def add_player(self, nickname, direction, pos=None):

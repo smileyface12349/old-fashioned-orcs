@@ -154,7 +154,7 @@ class Player(pygame.sprite.Sprite):
                 )
 
                 if collisions:
-                    self.rect.bottom = collisions[0].rect.y+1
+                    self.rect.bottom = collisions[0].rect.y + 1
                     self.y_velocity = 0
                     self.falling = False
                     self.fall_delay = 1

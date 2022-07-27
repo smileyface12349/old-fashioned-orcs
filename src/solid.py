@@ -25,36 +25,62 @@ def _load_gif(file: str):
     return frames
 
 
-normal_gd = pygame.image.load(_resource_path("assets/tile.png")).convert_alpha()
-upper_corner_r = pygame.image.load(_resource_path("assets/upper_corner.png")).convert_alpha()
+def _load_img(file: str):
+    """Load a normal image."""
+    return pygame.image.load(_resource_path(file)).convert_alpha()
+
+
+normal_gd = _load_img("assets/tile.png")
+upper_corner_r = _load_img("assets/upper_corner.png")
 upper_corner_l = pygame.transform.flip(upper_corner_r, True, False)
-upper_corner_single = pygame.image.load(_resource_path("assets/upper_corner_single.png")).convert_alpha()
-deep_gd = pygame.image.load(_resource_path("assets/deep_gd.png")).convert_alpha()
-side_gd_r = pygame.image.load(_resource_path("assets/side_gd.png")).convert_alpha()
+upper_corner_single = _load_img("assets/upper_corner_single.png")
+deep_gd = _load_img("assets/deep_gd.png")
+side_gd_r = _load_img("assets/side_gd.png")
 side_gd_l = pygame.transform.flip(side_gd_r, True, False)
-side_gd_single = pygame.image.load(_resource_path("assets/side_gd_single.png")).convert_alpha()
-side_end_r = pygame.image.load(_resource_path("assets/side_end.png")).convert_alpha()
+side_gd_single = _load_img("assets/side_gd_single.png")
+side_end_r = _load_img("assets/side_end.png")
 side_end_l = pygame.transform.flip(side_end_r, True, False)
-side_single = pygame.image.load(_resource_path("assets/side_single.png")).convert_alpha()
-bottom_corner_r = pygame.image.load(_resource_path("assets/bottom_corner.png")).convert_alpha()
+side_single = _load_img("assets/side_single.png")
+bottom_corner_r = _load_img("assets/bottom_corner.png")
 bottom_corner_l = pygame.transform.flip(bottom_corner_r, True, False)
-bottom_corner_platform = pygame.image.load(_resource_path("assets/bottom_corner_platform.png")).convert_alpha()
-single_gd = pygame.image.load(_resource_path("assets/single_gd.png")).convert_alpha()
-bottom_corner_dual = pygame.image.load(_resource_path("assets/bottom_corner_dual.png")).convert_alpha()
-bottom_corner_single = pygame.image.load(_resource_path("assets/bottom_corner_single.png")).convert_alpha()
-bottom_gd = pygame.image.load(_resource_path("assets/bottom_gd.png")).convert_alpha()
-inward_bottom_corner_r = pygame.image.load(_resource_path("assets/inward_bottom_corner.png")).convert_alpha()
+bottom_corner_platform = _load_img("assets/bottom_corner_platform.png")
+single_gd = _load_img("assets/single_gd.png")
+bottom_corner_dual = _load_img("assets/bottom_corner_dual.png")
+bottom_corner_single = _load_img("assets/bottom_corner_single.png")
+bottom_gd = _load_img("assets/bottom_gd.png")
+inward_bottom_corner_r = _load_img("assets/inward_bottom_corner.png")
 inward_bottom_corner_l = pygame.transform.flip(inward_bottom_corner_r, True, False)
-inward_bottom_corner_single = pygame.image.load(
-    _resource_path("assets/inward_bottom_corner_single.png")
-).convert_alpha()
-inward_corner_r = pygame.image.load(_resource_path("assets/inward_corner.png")).convert_alpha()
+inward_bottom_corner_single = _load_img("assets/inward_bottom_corner_single.png")
+inward_corner_r = _load_img("assets/inward_corner.png")
 inward_corner_l = pygame.transform.flip(inward_corner_r, True, False)
-inward_corner_single = pygame.image.load(_resource_path("assets/inward_corner_single.png")).convert_alpha()
-bricks = pygame.image.load(_resource_path("assets/bricks.png")).convert_alpha()
+inward_corner_single = _load_img("assets/inward_corner_single.png")
+bricks = _load_img("assets/bricks.png")
 shiny_flag = _load_gif("assets/shiny_flag.gif")
-shovel = pygame.image.load(_resource_path("assets/shovel.png")).convert_alpha()
-stone_block = pygame.image.load(_resource_path("assets/stone_block.png")).convert_alpha()
+shovel = _load_img("assets/shovel.png")
+stone_block = _load_img("assets/stone_block.png")
+cave_deep_gd = _load_img("assets/cave.png")
+cave_bottom_gd = _load_img("assets/cave_bottom.png")
+cave_bottom_corner_r = _load_img("assets/cave_bottom_corner.png")
+cave_bottom_corner_l = pygame.transform.flip(cave_bottom_corner_r, True, False)
+cave_bottom_corner_dual = _load_img("assets/cave_bottom_corner_dual.png")
+cave_bottom_corner_single = _load_img("assets/cave_bottom_corner_single.png")
+cave_inward_bottom_corner_r = _load_img("assets/cave_inward_bottom_corner.png")
+cave_inward_bottom_corner_l = pygame.transform.flip(cave_inward_bottom_corner_r, True, False)
+cave_inward_bottom_corner_single = _load_img("assets/cave_inward_bottom_corner_single.png")
+cave_inward_corner_r = _load_img("assets/cave_inward_corner.png")
+cave_inward_corner_l = pygame.transform.flip(cave_inward_corner_r, True, False)
+cave_inward_corner_single = _load_img("assets/cave_inward_corner_single.png")
+cave_side_gd_l = _load_img("assets/cave_left.png")
+cave_side_gd_r = _load_img("assets/cave_right.png")
+cave_side_end_r = _load_img("assets/cave_side_end.png")
+cave_side_end_l = pygame.transform.flip(cave_side_end_r, True, False)
+cave_side_single = _load_img("assets/cave_side_gd_single.png")
+cave_side_gd_single = _load_img("assets/cave_side_single.png")
+cave_single_gd = _load_img("assets/cave_single_gd.png")
+cave_normal_gd = _load_img("assets/cave_top.png")
+cave_upper_corner_r = _load_img("assets/cave_upper_corner.png")
+cave_upper_corner_l = pygame.transform.flip(cave_upper_corner_r, True, False)
+cave_upper_corner_single = _load_img("assets/cave_upper_corner_single.png")
 
 
 class Solid(pygame.sprite.Sprite):
@@ -140,7 +166,7 @@ class BuggyThingy(Solid):
 
     def __init__(self, game, tile_pos: tuple, layer: int):
         super().__init__(game, tile_pos, layer)
-        self.image = pygame.image.load(_resource_path("assets/stone.png")).convert_alpha()
+        self.image = _load_img("assets/stone.png")
         self.mask = pygame.mask.from_surface(self.image)
 
 
@@ -150,7 +176,7 @@ class Ending(pygame.sprite.Sprite):
     def __init__(self, tile_pos):
         super().__init__()
         self.tile_pos = tile_pos
-        self.image = pygame.image.load(_resource_path("assets/end.png"))
+        self.image = _load_img("assets/end.png")
         self.rect = self.image.get_rect(topleft=tuple(item * 16 for item in self.tile_pos))
         self.mask = pygame.mask.from_surface(self.image)
 
