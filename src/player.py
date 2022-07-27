@@ -102,7 +102,9 @@ class Player(pygame.sprite.Sprite):
                 self,
                 solids_on_same_layer,
                 False,
-                lambda spr1, spr2: spr2.playerisright_strict and spr1.rect.colliderect(spr2.rect),
+                lambda spr1, spr2: spr2.playerisright_strict
+                and spr1.rect.colliderect(spr2.rect)
+                and pygame.sprite.collide_mask(spr1, spr2),
             )
             if left_collisions:
                 self.rect.x += 1
@@ -113,7 +115,9 @@ class Player(pygame.sprite.Sprite):
                 self,
                 solids_on_same_layer,
                 False,
-                lambda spr1, spr2: spr2.playerisleft_strict and spr1.rect.colliderect(spr2.rect),
+                lambda spr1, spr2: spr2.playerisleft_strict
+                and spr1.rect.colliderect(spr2.rect)
+                and pygame.sprite.collide_mask(spr1, spr2),
             )
             if right_collisions:
                 self.rect.x -= 1
@@ -144,11 +148,13 @@ class Player(pygame.sprite.Sprite):
                     self,
                     solids_on_same_layer,
                     False,
-                    lambda spr1, spr2: spr2.playerisup_strict and spr1.rect.colliderect(spr2.rect),
+                    lambda spr1, spr2: spr2.playerisup_strict
+                    and spr1.rect.colliderect(spr2.rect)
+                    and pygame.sprite.collide_mask(spr1, spr2),
                 )
 
                 if collisions:
-                    self.rect.bottom = collisions[0].rect.y
+                    self.rect.bottom = collisions[0].rect.y+1
                     self.y_velocity = 0
                     self.falling = False
                     self.fall_delay = 1

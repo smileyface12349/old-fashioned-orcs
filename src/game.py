@@ -63,6 +63,7 @@ class Game:
         self.tiles = pygame.sprite.LayeredUpdates()
         self.other_players = pygame.sprite.Group()
         self.objects = pygame.sprite.LayeredUpdates(self.player)
+        self.player_can_move = False
         self.crashing = False
         self.inputting_nickname = False
         self.nickname = ""
@@ -122,6 +123,9 @@ class Game:
                     flipped_tile = gid & 0x80000000
                     tile = self.tmx_data.get_tile_properties(tile_x, tile_y, layer)
                     if tile is None:
+                        continue
+                    if tile["tile"]=="spawnpoint":
+                        self.player.rect.topleft=(tile_x*16, tile_y*16)
                         continue
                     tile_id = tile["id"]
                     if tile_id not in [1, 20, 22, 25]:

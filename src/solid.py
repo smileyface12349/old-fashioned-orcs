@@ -72,7 +72,7 @@ class Solid(pygame.sprite.Sprite):
         # tile_pos is a tuple of integers representing a tile's topleft corner coordinates
         self.tile_pos = tile_pos
         # We'll only need to multiply these coords by 16 to have the real position
-        self.image = normal_gd
+        self._image = normal_gd
         self.rect = self.image.get_rect(topleft=tuple(map(lambda x: x * 16, self.tile_pos)))
         # Rectangles used for autotiling
         self.checks = (
@@ -82,16 +82,26 @@ class Solid(pygame.sprite.Sprite):
             pygame.Rect(self.rect.right, self.rect.y - 16, 16, self.rect.height * 3),
         )  # right
 
+    @property
+    def image(self):
+        """Special property allowing for a dynamic collision mask update."""
+        return self._image
+
+    @image.setter
+    def image(self, value):
+        self._image = value
+        self.mask = pygame.mask.from_surface(value)
+
     # Basic player-locating properties, used for collisions
     @property
     def playerisup(self):
         """Returns True if the player is above the Solid Tile, False otherwise."""
-        return self.game.player.rect.bottom <= self.rect.y + 6
+        return self.game.player.rect.bottom <= self.rect.y + 7
 
     @property
     def playerisdown(self):
         """Returns True if the player is below the Solid Tile, False otherwise."""
-        return self.game.player.rect.y >= self.rect.bottom - 6
+        return self.game.player.rect.y >= self.rect.bottom - 7
 
     @property
     def playerisleft(self):

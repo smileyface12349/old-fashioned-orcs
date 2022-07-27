@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.0" name="Summer Code Jam 2022 - Old-Fashioned Orcs" tilewidth="16" tileheight="16" tilecount="26" columns="0">
+<tileset version="1.9" tiledversion="1.9.0" name="Summer Code Jam 2022 - Old-Fashioned Orcs" tilewidth="16" tileheight="16" tilecount="45" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <transformations hflip="1" vflip="0" rotate="0" preferuntransformed="0"/>
  <tile id="0">
@@ -20,6 +20,12 @@
    <property name="tile" value="ending"/>
   </properties>
   <image width="16" height="16" source="end.png"/>
+ </tile>
+ <tile id="45">
+  <properties>
+   <property name="tile" value="spawnpoint"/>
+  </properties>
+  <image width="16" height="16" source="player.png"/>
  </tile>
  <tile id="2">
   <properties>
@@ -179,5 +185,131 @@
    <property name="type" type="int" value="21"/>
   </properties>
   <image width="16" height="16" source="stone_block.png"/>
+ </tile>
+ <tile id="27">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="22"/>
+  </properties>
+  <image width="16" height="16" source="cave.png"/>
+ </tile>
+ <tile id="28">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="23"/>
+  </properties>
+  <image width="16" height="16" source="cave_bottom.png"/>
+ </tile>
+ <tile id="29">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="24"/>
+  </properties>
+  <image width="16" height="16" source="cave_bottom_corner.png"/>
+ </tile>
+ <tile id="30">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="25"/>
+  </properties>
+  <image width="16" height="16" source="cave_bottom_corner_dual.png"/>
+ </tile>
+ <tile id="31">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="26"/>
+  </properties>
+  <image width="16" height="16" source="cave_bottom_corner_single.png"/>
+ </tile>
+ <tile id="32">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="27"/>
+  </properties>
+  <image width="16" height="16" source="cave_inward_bottom_corner.png"/>
+ </tile>
+ <tile id="33">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="28"/>
+  </properties>
+  <image width="16" height="16" source="cave_inward_bottom_corner_single.png"/>
+ </tile>
+ <tile id="34">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="29"/>
+  </properties>
+  <image width="16" height="16" source="cave_inward_corner.png"/>
+ </tile>
+ <tile id="35">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="30"/>
+  </properties>
+  <image width="16" height="16" source="cave_inward_corner_single.png"/>
+ </tile>
+ <tile id="36">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="31"/>
+  </properties>
+  <image width="16" height="16" source="cave_left.png"/>
+ </tile>
+ <tile id="37">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="32"/>
+  </properties>
+  <image width="16" height="16" source="cave_right.png"/>
+ </tile>
+ <tile id="38">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="33"/>
+  </properties>
+  <image width="16" height="16" source="cave_side_end.png"/>
+ </tile>
+ <tile id="39">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="34"/>
+  </properties>
+  <image width="16" height="16" source="cave_side_gd_single.png"/>
+ </tile>
+ <tile id="40">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="35"/>
+  </properties>
+  <image width="16" height="16" source="cave_side_single.png"/>
+ </tile>
+ <tile id="41">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="36"/>
+  </properties>
+  <image width="16" height="16" source="cave_single_gd.png"/>
+ </tile>
+ <tile id="42">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="37"/>
+  </properties>
+  <image width="16" height="16" source="cave_top.png"/>
+ </tile>
+ <tile id="43">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="38"/>
+  </properties>
+  <image width="16" height="16" source="cave_upper_corner.png"/>
+ </tile>
+ <tile id="44">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="39"/>
+  </properties>
+  <image width="16" height="16" source="cave_upper_corner_single.png"/>
  </tile>
 </tileset>
