@@ -26,6 +26,8 @@ while running:
     screen.fill("skyblue")
     dt = clock.tick(60)  # this ensures that the game cannot run higher that 60FPS. We also get a delta time in ms.
     if game.showing_gui:
+        if game.inputting_nickname:
+            game.render_ean_prompt(screen)
         game.gui.update(dt)
         game.gui.draw(screen)
     else:
@@ -48,14 +50,16 @@ while running:
 
         elif event.type == pygame.KEYDOWN:
             if not game.showing_gui:
-                if event.key == pygame.K_LEFT:
+                # Allow for ZQSD and WASD control schemes.
+                if event.key in (pygame.K_LEFT, pygame.K_a, pygame.K_q):
                     game.player.moving_left = True
-                elif event.key == pygame.K_RIGHT:
+                elif event.key in (pygame.K_RIGHT, pygame.K_d):
                     game.player.moving_right = True
                 elif event.key == pygame.K_SPACE:
                     game.player.jump()
                 elif event.key == pygame.K_ESCAPE:
                     game.showing_gui = True
+                    game.gui.add(src.game.gui.Button((80, 72), "Play", game.start))
                     game.client.stop()
                     break
             else:

@@ -19,7 +19,7 @@ pygame.transform.threshold(
     other_player_right,
     player_right,
     pygame.Color("#4A4AFF"),
-    set_color=(~pygame.Color("#4A4AFF")),
+    set_color=pygame.Color("yellow"),
     inverse_set=True,
 )  # if inverse_set were False, all pixels in player_right that were NOT set to a colour of #4A4AFF would be replaced
 other_player_left = pygame.transform.flip(other_player_right, True, False)

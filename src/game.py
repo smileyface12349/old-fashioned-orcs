@@ -236,3 +236,11 @@ class Game:
         for ply in self.other_players:
             if ply.nickname not in active_nicknames:
                 ply.kill()
+
+    @staticmethod
+    def render_ean_prompt(screen):
+        """Render the "Enter a Nickname" message on screen."""
+        text = gui.GUIItem.font.render("Enter a nickname", fgcolor=pygame.Color("black"))
+        text[1].centerx = 80
+        text[1].y = 16
+        screen.blit(*text)

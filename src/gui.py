@@ -19,11 +19,15 @@ button_clicked = pygame.image.load(_resource_path("assets/button_clicked.png")).
 nickname_input = pygame.image.load(_resource_path("assets/nickname_input.png")).convert_alpha()
 
 
-class Button(pygame.sprite.Sprite):
-    """A clickable button meant for GUI elements."""
+class GUIItem(pygame.sprite.Sprite):
+    """Base class for all GUI items."""
 
-    _font = pygame.freetype.Font(_resource_path("assets/scj2022.ttf"), 10)
-    _font.fgcolor = pygame.Color("white")
+    font = pygame.freetype.Font(_resource_path("assets/scj2022.ttf"), 10)
+    font.fgcolor = pygame.Color("white")
+
+
+class Button(GUIItem):
+    """A clickable button meant for GUI elements."""
 
     def __init__(self, pos: tuple[int, int], text: str, func: Callable):
         super().__init__()
@@ -50,7 +54,7 @@ class Button(pygame.sprite.Sprite):
 
     def _init_img_list(self):
         # PRIVATE USE ONLY!
-        text, text_rect = self._font.render(self.text)
+        text, text_rect = self.font.render(self.text)
         text = text.convert_alpha()
         img = pygame.Surface((8 + text_rect.width, button.get_height())).convert_alpha()
         img2 = img.copy()
@@ -87,12 +91,9 @@ class Button(pygame.sprite.Sprite):
         self._img_list.append(img2)
 
 
-class TextInput(pygame.sprite.Sprite):
+class TextInput(GUIItem):
     """Nickname text input"""
 
-    _font = pygame.freetype.Font(_resource_path("assets/scj2022.ttf"), 10)
-    _font.fgcolor = pygame.Color("white")
-    _font.fgcolor.a = 255
     _input_rect = pygame.Rect(12, 66, 136, 12)
 
     def __init__(self, game):
@@ -117,6 +118,6 @@ class TextInput(pygame.sprite.Sprite):
 
     def update(self, *args, **kwargs):
         self.image = nickname_input.copy()
-        txt = self._font.render(self.text)
+        txt = self.font.render(self.text)
         txt[1].center = (self.image.get_width() // 2, self.image.get_height() // 2)
         self.image.blit(*txt)
