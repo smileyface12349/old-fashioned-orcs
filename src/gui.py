@@ -127,8 +127,10 @@ class TextInput(GUIItem):
 class TextBox(GUIItem):
     """A text box to display, uh, some text"""
 
-    character_rect=pygame.Rect(16, 8, 128, 8)
-    line_rects=tuple(pygame.Rect(8, y, 144, 16) for y in range(24, 121, 24))
+    font = pygame.freetype.Font(_resource_path("assets/scj2022.ttf"), 10)
+
+    character_rect = pygame.Rect(16, 8, 128, 8)
+    line_rects = tuple(pygame.Rect(8, y, 144, 16) for y in range(24, 121, 24))
 
     def __init__(self, text: str, character=None):
         super().__init__()
@@ -137,12 +139,12 @@ class TextBox(GUIItem):
         self.parts_list = []
         self.part_index = 0
         self._init_part_list()
-        self.image=text_box
-        self.rect=self.image.get_rect()
+        self.image = text_box
+        self.rect = self.image.get_rect()
 
     def render(self):
-        self.image=text_box.copy()
-        lines_to_render=self.parts_list[self.part_index]
+        self.image = text_box.copy()
+        lines_to_render = self.parts_list[self.part_index]
         if self.character is not None:
             self.font.render_to(self.image, self.character_rect, self.character)
         for line, rect in zip(lines_to_render, self.line_rects):

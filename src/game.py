@@ -70,8 +70,24 @@ class EventTrigger:
         self.trigger_duration_reached = False
         self.type = arg_list[0]
         self.trigger_delay = 0
+        self.dial_index = 0
         self.trigger_max = self.arg_list[2]
-        self.dialogues=self.mgr.dialogues[self.id]
+        self.dialogues = self.mgr.dialogues[self.id]
+
+    def __repr__(self):
+        return f"<EventTrigger(id='{self.id}', arg_list={self.arg_list})>"
+
+    def update_evt(self):
+        if self.dial_index < len(self.dialogues):
+            dial = self.dialogues[self.dial_index]
+            if isinstance(dial, str):
+                self.game.gui.add(gui.TextBox(dial))
+            else:
+                self.game.gui.add(gui.TextBox(dial["text"], dial["character"]))
+            self.dial_index += 1
+        else:
+            self.mgr.current_trigger = None
+            self.game.gui.empty()
 
     def update(self, dt):
         """Can be used in cases where the current trigger should be enabled after a certain period of time."""
@@ -124,15 +140,20 @@ class EventTriggerManager:
         self.triggers = {}
         self.delay = 0
         self.dialogues = {}
-        self.triggering_sth = False
+        self.current_trigger = None
         self.trigger_objs: list[EventTrigger] = []
 
-    def check_triggers(self):
+    def check_triggers(self, dt):
         """Enable triggers if there are some."""
-        for trigger in self.trigger_objs:
-            if trigger.can_be_triggered():
-                trigger.triggered=True
-                self.triggering_sth=True
+        if not self.current_trigger:
+            for trigger in self.trigger_objs:
+                trigger.update(dt)
+                if trigger.can_be_triggered():
+                    trigger.triggered = True
+                    self.current_trigger = trigger
+                    print(trigger)
+                    trigger.update_evt()
+                    break
 
     def set_triggers(self, level: int | str):
         """Set up triggers for this level."""
@@ -172,6 +193,7 @@ class Game:
         self.showing_gui = False
         nick = client.cache.get_nickname()
         if nick:
+            self.gui.empty()
             self.client.start()
         else:
             self.show_input()
@@ -240,6 +262,7 @@ class Game:
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
         self.trigger_man.set_triggers(self.level)
+        print(self.trigger_man.trigger_objs)
 
     def draw_objects(self, screen):
         """

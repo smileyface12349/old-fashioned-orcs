@@ -31,9 +31,14 @@ while running:
         game.gui.update(dt)
         game.gui.draw(screen)
     else:
-        if not game.crashing:
-            game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
-        game.draw_objects(screen)  # We draw everything here
+        if not game.gui:
+            if not game.crashing:
+                game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
+            game.draw_objects(screen)  # We draw everything here
+            game.trigger_man.check_triggers(dt)
+        else:
+            game.gui.update()
+            game.gui.draw(screen)
     pygame.display.update()  # This function is called when everything render-related is done.
     # If you don't call this or pygame.display.flip, the screen won't show what you've drawn on it!
     # Events are how we manage player inputs (and others).
@@ -50,18 +55,28 @@ while running:
 
         elif event.type == pygame.KEYDOWN:
             if not game.showing_gui:
-                # Allow for ZQSD and WASD control schemes.
-                if event.key in (pygame.K_LEFT, pygame.K_a, pygame.K_q):
-                    game.player.moving_left = True
-                elif event.key in (pygame.K_RIGHT, pygame.K_d):
-                    game.player.moving_right = True
-                elif event.key == pygame.K_SPACE:
-                    game.player.jump()
-                elif event.key == pygame.K_ESCAPE:
-                    game.showing_gui = True
-                    game.gui.add(src.game.gui.Button((80, 72), "Play", game.start))
-                    game.client.stop()
-                    break
+                if not game.gui:
+                    # Allow for ZQSD and WASD control schemes.
+                    if event.key in (pygame.K_LEFT, pygame.K_a, pygame.K_q):
+                        game.player.moving_left = True
+                    elif event.key in (pygame.K_RIGHT, pygame.K_d):
+                        game.player.moving_right = True
+                    elif event.key == pygame.K_SPACE:
+                        game.player.jump()
+                    elif event.key == pygame.K_ESCAPE:
+                        game.showing_gui = True
+                        game.gui.add(src.game.gui.Button((80, 72), "Play", game.start))
+                        game.client.stop()
+                        break
+                else:
+                    if event.key == pygame.K_RETURN:
+                        for tbox in game.gui:
+                            if len(tbox.parts_list) > 1 and tbox.part_index < len(tbox.parts_list):
+                                tbox.part_index += 1
+                            else:
+                                tbox.kill()
+                                if game.trigger_man.current_trigger is not None:
+                                    game.trigger_man.current_trigger.update_evt()
             else:
                 if game.inputting_nickname:
                     if event.key == pygame.K_BACKSPACE:
