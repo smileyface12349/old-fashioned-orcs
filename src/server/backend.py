@@ -156,6 +156,9 @@ async def handler(websocket):
     except websockets.exceptions.ConnectionClosedError:
         logging.info(f"ConnectionClosedError from => {websocket.remote_address}")
 
+    except websockets.exceptions.ConnectionClosedOK:
+        logging.info(f"ConnectionClosedOK from => {websocket.remote_address}")
+
     finally:
         # Drop websocket after figuring out its type
         if websocket in manager.active_broadcasts:
