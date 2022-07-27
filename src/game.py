@@ -78,6 +78,7 @@ class EventTrigger:
         return f"<EventTrigger(id='{self.id}', arg_list={self.arg_list})>"
 
     def update_evt(self):
+        """Update dialogue box with event"""
         if self.dial_index < len(self.dialogues):
             dial = self.dialogues[self.dial_index]
             if isinstance(dial, str):
