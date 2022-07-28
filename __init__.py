@@ -33,7 +33,9 @@ while game.running:
         if not game.gui:
             if not game.crashing:
                 game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
-            game.draw_objects(screen)  # We draw everything here
+                game.draw_objects(screen)  # We draw everything here
+            else:
+                screen.blit(src.game.crash, (0, 0))
             game.trigger_man.check_triggers(dt)
         else:
             game.gui.update()
@@ -69,6 +71,10 @@ while game.running:
                         game.gui.add(src.game.gui.Button((80, 75), "Exit Game", game.quit))
                         game.client.stop()
                         break
+                    elif event.key == pygame.K_r and game.crashing:
+                        game.read_map(f"maps/level{game.level}.tmx")
+                        src.game.game_crash.stop()
+                        game.crashing = False
                 else:
                     if event.key in [pygame.K_RETURN, pygame.K_SPACE]:
                         for tbox in game.gui:
@@ -103,9 +109,9 @@ while game.running:
                 i.fetch(event.text)
 
         elif event.type == pygame.KEYUP and not game.showing_gui:
-            if event.key == pygame.K_LEFT:
+            if event.key in (pygame.K_LEFT, pygame.K_q, pygame.K_a):
                 game.player.moving_left = False
-            elif event.key == pygame.K_RIGHT:
+            elif event.key in (pygame.K_RIGHT, pygame.K_d):
                 game.player.moving_right = False
 
 

@@ -13,6 +13,7 @@ pygame.mixer.init()
 
 _resource_path = player._resource_path
 
+crash = pygame.image.load(_resource_path("assets/crash.png")).convert_alpha()
 
 game_crash = pygame.mixer.Sound(_resource_path("assets/game_crash.wav"))
 game_crash.set_volume(0.35)  # We don't want players to get their eardrums destroyed
@@ -71,7 +72,7 @@ class EventTrigger:
         self.trigger_duration_reached = False
         self.type = arg_list[0]
         self.trigger_delay = 0
-        self._required_evt=None
+        self._required_evt = None
         self.dial_index = 0
         self.trigger_max = (
             self.arg_list[2] * 1000
@@ -79,8 +80,12 @@ class EventTrigger:
         try:
             self.dialogues = self.mgr.dialogues[self.id]
             if "require:" in self.dialogues[0]:
-                self._required_evt=list(trigger for trigger in self.mgr.trigger_objs if trigger.id==self.dialogues[0].removeprefix("require:"))[0]
-                self.dialogues=self.dialogues[1:]
+                self._required_evt = list(
+                    trigger
+                    for trigger in self.mgr.trigger_objs
+                    if trigger.id == self.dialogues[0].removeprefix("require:")
+                )[0]
+                self.dialogues = self.dialogues[1:]
         except KeyError:
             self.dialogues = []
 
@@ -93,15 +98,15 @@ class EventTrigger:
             dial = self.dialogues[self.dial_index]
             if isinstance(dial, str):
                 self.game.gui.add(gui.TextBox(dial))
-                self.dial_index+=1
+                self.dial_index += 1
             else:
                 if "despawn_layer" not in dial:
                     self.game.gui.add(gui.TextBox(dial["text"], dial["character"]))
-                    self.dial_index+=1
+                    self.dial_index += 1
                 else:
-                    despawn_layer=self.game.tiles.get_sprites_from_layer(dial["despawn_layer"])
+                    despawn_layer = self.game.tiles.get_sprites_from_layer(dial["despawn_layer"])
                     for spr in despawn_layer:
-                        if spr.tile_pos==tuple(dial["coords"]):
+                        if spr.tile_pos == tuple(dial["coords"]):
                             spr.kill()
                             break
                     self.dial_index += 1

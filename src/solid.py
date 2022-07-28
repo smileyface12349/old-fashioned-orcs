@@ -175,8 +175,8 @@ class BuggyThingy(Solid):
 
     def __init__(self, game, tile_pos: tuple, layer: int):
         super().__init__(game, tile_pos, layer)
-        self.image = _load_img("assets/stone.png")
-        self.mask = pygame.mask.from_surface(self.image)
+        self.image = _load_img("assets/glitched_stone.png")
+        self.mask = pygame.mask.from_surface(_load_img("assets/stone.png"))
 
 
 class Ending(pygame.sprite.Sprite):
@@ -233,8 +233,10 @@ class NPC(Solid):
             self.image = npc_l
 
 
-_switch_id=0
-SWITCH_PRESSED=pygame.event.custom_type()
+_switch_id = 0
+SWITCH_PRESSED = pygame.event.custom_type()
+
+
 class Switch(pygame.sprite.Sprite):
     """A switch which can be pressed by the player."""
 
@@ -242,30 +244,30 @@ class Switch(pygame.sprite.Sprite):
         global _switch_id
         super().__init__()
         self.game = game
-        self.id=_switch_id
-        _switch_id+=1
+        self.id = _switch_id
+        _switch_id += 1
         self.tile_pos = tile_pos
         self.image = switch
         self.pressed = False
         self.rect = self.image.get_rect(topleft=(self.tile_pos[0] * 16, (self.tile_pos[1] + 0.5) * 16))
-        self.mask=pygame.mask.from_surface(self.image)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def press(self):
-        self.pressed=True
+        self.pressed = True
         pygame.event.post(pygame.event.Event(SWITCH_PRESSED, id=self.id))
 
     def kill(self):
         global _switch_id
         super().kill()
-        _switch_id-=1
+        _switch_id -= 1
 
     def update(self, *args, **kwargs):
         """Change the image according to whether the switch is pressed or not."""
-        self.image=switch if not self.pressed else pressed_switch
+        self.image = switch if not self.pressed else pressed_switch
 
     @property
     def playerisup(self):
-        return self.game.player.rect.bottom<=self.rect.centery+2
+        return self.game.player.rect.bottom <= self.rect.centery + 2
 
     @property
     def playerisup_strict(self):
@@ -273,7 +275,7 @@ class Switch(pygame.sprite.Sprite):
 
     @property
     def playerisleft(self):
-        return self.game.player.rect.right<=self.rect.x+2
+        return self.game.player.rect.right <= self.rect.x + 2
 
     @property
     def playerisleft_strict(self):
@@ -281,7 +283,7 @@ class Switch(pygame.sprite.Sprite):
 
     @property
     def playerisright(self):
-        return self.game.player.rect.x>=self.rect.right-2
+        return self.game.player.rect.x >= self.rect.right - 2
 
     @property
     def playerisright_strict(self):
@@ -289,7 +291,7 @@ class Switch(pygame.sprite.Sprite):
 
     @property
     def playerisdown(self):
-        return self.game.player.rect.y>=self.rect.centery+1
+        return self.game.player.rect.y >= self.rect.centery + 1
 
     @property
     def playerisdown_strict(self):
