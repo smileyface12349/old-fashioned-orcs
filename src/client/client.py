@@ -62,6 +62,7 @@ class Client:
                 self.game.level = response["level"]
             else:
                 self.game.level = 0
+            self.game.read_map(f"maps/level{self.game.level}.tmx")
             self.unique_id = cache_data["unique_id"]
             return cache_data
 

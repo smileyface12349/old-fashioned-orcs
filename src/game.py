@@ -199,6 +199,8 @@ class EventTriggerManager:
     def set_triggers(self, level: int | str):
         """Set up triggers for this level."""
         self.trigger_objs.clear()
+        self.triggers.clear()
+        self.dialogues.clear()
         data = self.level_data[str(level)]
         self.triggers = data["events"]
         self.dialogues = data["dialogue"]
@@ -273,7 +275,6 @@ class Game:
         if nick:
             self.gui.empty()
             self.client.start()
-            self.read_map(f"maps/level{self.level}.tmx")
         else:
             self.show_input()
 
