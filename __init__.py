@@ -61,7 +61,7 @@ while running:
                         game.player.moving_left = True
                     elif event.key in (pygame.K_RIGHT, pygame.K_d):
                         game.player.moving_right = True
-                    elif event.key == pygame.K_SPACE or event.key == pygame.K_UP:
+                    elif event.key in [pygame.K_SPACE, pygame.K_UP]:
                         game.player.jump()
                     elif event.key == pygame.K_ESCAPE:
                         game.showing_gui = True
@@ -69,7 +69,7 @@ while running:
                         game.client.stop()
                         break
                 else:
-                    if event.key == pygame.K_RETURN:
+                    if event.key in [pygame.K_RETURN, pygame.K_SPACE]:
                         for tbox in game.gui:
                             if len(tbox.parts_list) > 1 and tbox.part_index < len(tbox.parts_list):
                                 tbox.part_index += 1
