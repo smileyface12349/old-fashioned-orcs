@@ -65,9 +65,9 @@ while game.running:
             if not game.showing_gui:
                 if not game.gui:
                     # Allow for ZQSD and WASD control schemes.
-                    if event.key in (pygame.K_LEFT, pygame.K_a, pygame.K_q):
+                    if event.key == pygame.K_LEFT:
                         game.player.moving_left = True
-                    elif event.key in (pygame.K_RIGHT, pygame.K_d):
+                    elif event.key == pygame.K_RIGHT:
                         game.player.moving_right = True
                     elif event.key in [pygame.K_SPACE, pygame.K_UP]:
                         game.player.jump()
@@ -117,9 +117,9 @@ while game.running:
                 i.fetch(event.text)
 
         elif event.type == pygame.KEYUP and not game.showing_gui:
-            if event.key in (pygame.K_LEFT, pygame.K_q, pygame.K_a):
+            if event.key == pygame.K_LEFT:
                 game.player.moving_left = False
-            elif event.key in (pygame.K_RIGHT, pygame.K_d):
+            elif event.key == pygame.K_RIGHT:
                 game.player.moving_right = False
 
 
