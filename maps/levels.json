@@ -83,7 +83,92 @@
         }
     },
     "1": {
+        "dialogue": {
+            "first_dude": [
+                {
+                    "text": "Have any friends?",
+                    "character": "bob"
+                },
+                {
+                    "text": "...",
+                    "character": "you"
+                },
+                {
+                    "text": "Sorry if that came across as rude",
+                    "character": "bob"
+                },
+                {
+                    "text": "I guess it's a bit weird if someone randomly comes up to you and asks you if you have any friends",
+                    "character": "bob"
+                },
+                {
+                    "text": "However it is an important question. It wasn't meant to be rude",
+                    "character": "bob"
+                },
+                {
+                    "text": "This is a multiplayer game, so some levels are not possible alone",
+                    "character": "bob"
+                },
+                {
+                    "text": "(We had to justify implementing WebSockets somehow...)",
+                    "character": "bob"
+                },
+                {
+                    "text": "Press F if you have no friends (NOTE: Does not generate friends, just skips level)",
+                    "character": "you"
+                }
+            ],
+            "flag": [
+                "GET YOUR DIRTY HANDS OFF MY FLAG"
+            ],
+            "other_side": [
+                "Wow you actually made it! Congratulations!",
+                "(or did you?)",
+                "Remember to let your friend through! (or not)",
+                "Wow! You managed to touch some random blue cube in some random cave! Congratulations!"
+            ]
+        },
+        "events": {
+            "first_dude": ["touch", "npc1", 0],
+            "flag": ["touch", "flag", 0],
+            "other_side": ["right", 99, 0],
+            "completion": ["touch", "blue_cube", 0]
+        },
+        "fail": ["flag"]
+    },
+    "2": {
+        "dialogue": {
+            "flag": [
+                "Hey! Hands off my flag!"
+            ]
+        },
+        "events": {
+            "flag": ["touch", "flag", 0]
+        }
+    },
+    "3": {
         "dialogue": {},
         "events": {}
+    },
+    "4": {
+        "dialogue": {
+            "right_area": [
+                "Wow you managed to go through a wall. Don't think you're outsmarting me...",
+                "Are you assuming this pressure plate actually does something?"
+            ],
+            "end": [
+                {"text": "Sorry, the magic blue square hasn't loaded in yet", "character": "please_make_a_better_name"},
+                {"text": "There's another one up there but I doubt you can reach it", "character": "please_make_a_better_name"},
+                {"text": "Have you tried stepping on every pressure plate at random until it works?", "character": "please_make_a_better_name"}
+            ],
+            "both_pressure_plates": [
+                {"text": "Wow! It worked!", "character": "please_make_a_better_name"}
+            ]
+        },
+        "events": {
+            "right_area": ["right", 99, 0],
+            "end": ["left", 69, 0],
+            "both_pressure_plates": ["and", ["touch", "button2", 0], ["touch", "button3", 0]]
+        }
     }
 }
