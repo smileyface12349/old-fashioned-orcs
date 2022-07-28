@@ -31,11 +31,14 @@ while game.running:
         game.gui.draw(screen)
     else:
         if not game.gui:
-            if not game.crashing:
-                game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
-                game.draw_objects(screen)  # We draw everything here
+            if game.tiles:
+                if not game.crashing:
+                    game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
+                    game.draw_objects(screen)  # We draw everything here
+                else:
+                    screen.blit(src.game.crash, (0, 0))
             else:
-                screen.blit(src.game.crash, (0, 0))
+                screen.blit(src.game.loading, (0, 0))
             game.trigger_man.check_triggers(dt)
         else:
             game.gui.update()
