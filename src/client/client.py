@@ -46,16 +46,19 @@ class Client:
         print(f"Server hello => {response}")
 
         if response["type"] in ["init", "ready"]:
+
             if not cache_data["unique_id"]:
                 # If user didnt have a unique_id, server returned him one
                 cache_data["unique_id"] = response["unique_id"]
+
             if not cache_data["nickname"]:
                 cache_data["nickname"] = self.game.nickname
+
             if no_cache:
                 # If there is no cache saved, we need to create it
                 await cache.save(response)
                 no_cache = False
-            self.game.level = response["level"]
+
             self.unique_id = cache_data["unique_id"]
             return cache_data
 
