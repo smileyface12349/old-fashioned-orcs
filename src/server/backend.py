@@ -125,15 +125,14 @@ async def handler(websocket):
                 event = await manager.update(event)
                 assert event["unique_id"]
                 await manager.add_main(websocket)
+                player.level = await db.load(event["unique_id"])
+                event["level"] = player.level
                 await websocket.send(json.dumps(event))
 
-            # Clear old & inactive games if any
-            await games.clear()
             # Create new player session
             player = PlayerSession(websocket, event["unique_id"], event["nickname"])
             players.add(player)
             # Load progress of player, if any
-            player.level = await db.load(player)
 
             if not games.active_games:
                 # Start a new game.
@@ -181,7 +180,7 @@ async def handler(websocket):
 
 async def main():
     """Main function that starts the server."""
-    async with websockets.serve(handler, "134.255.220.44", 8000, ping_interval=None, close_timeout=1):
+    async with websockets.serve(handler, "134.255.220.44", 8001, ping_interval=None, close_timeout=1):
         await asyncio.Future()  # run forever
 
 
