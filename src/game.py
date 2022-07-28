@@ -101,7 +101,7 @@ class EventTrigger:
                 self.dial_index += 1
             else:
                 if "despawn_layer" not in dial:
-                    self.game.gui.add(gui.TextBox(dial["text"], dial["character"]))
+                    self.game.gui.add(gui.TextBox(dial["text"], '['+dial["character"]+']'))
                     self.dial_index += 1
                 else:
                     despawn_layer = self.game.tiles.get_sprites_from_layer(dial["despawn_layer"])
