@@ -47,7 +47,7 @@ async def join_game(player):
                 joined = True
                 await play_game(player, game)
             except KeyError as e:
-                print(e)
+                logging.info(e)
                 continue
     if not joined:
         await new_game(player)
@@ -93,6 +93,8 @@ async def play_game(player, game):
                 p.broadcast for p in game.iter_players() if p.unique_id != request_id and p.broadcast is not None
             ]
             websockets.broadcast(other_players, json.dumps(event))
+        elif event["type"] == "exit":
+            logging.info(f"Player {player.nickname} left.")
 
 
 async def handler(websocket):
