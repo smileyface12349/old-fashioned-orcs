@@ -265,26 +265,29 @@ class SwitchSpawnManager:
                         if obj.properties["related_switch"] not in self.objects:
                             new_rect = pygame.Rect(*args)
                             self.objects[obj.properties["related_switch"]] = [new_rect]
-                            self.related_tiles[obj.properties["related_switch"]] = pygame.sprite.Group(
-                                *(
+                            tile_gen=[
                                     tile
                                     for tile in self.game.tiles.get_sprites_from_layer(0)
                                     if tile.rect.colliderect(new_rect)
-                                )
+                                ]
+                            for tile in tile_gen:
+                                tile.kill()
+                            self.related_tiles[obj.properties["related_switch"]] = pygame.sprite.Group(
+                                *tile_gen
                             )
                         else:
                             new_rect = pygame.Rect(*args)
                             self.objects[obj.properties["related_switch"]].append(new_rect)
-                            self.related_tiles[obj.properties["related_switch"]].add(
-                                *(
+                            tile_gen=[
                                     tile
                                     for tile in self.game.tiles.get_sprites_from_layer(0)
                                     if tile.rect.colliderect(new_rect)
-                                )
+                                ]
+                            for tile in tile_gen:
+                                tile.kill()
+                            self.related_tiles[obj.properties["related_switch"]].add(
+                                *tile_gen
                             )
-                        for tile in self.related_tiles[obj.properties["related_switch"]]:
-                            if tile in self.game.tiles:
-                                tile.remove(self.game.tiles)
 
 
 SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
