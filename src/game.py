@@ -248,7 +248,7 @@ class Game:
                         self.player.rect.topleft = (tile_x * 16, tile_y * 16)
                         continue
                     if tile["tile"] == "npc":
-                        # Spawn an NPC.
+                        self.tiles.add(solid.NPC(self, (tile_x, tile_y), layer), layer=layer)
                         continue
                     tile_id = tile["id"]
                     if tile_id not in [1, 20, 22, 25]:
@@ -258,7 +258,7 @@ class Game:
                         self.tiles.add(new_spr, layer=layer)
                     elif tile_id == 20:
                         # Level end tile.
-                        pass
+                        self.tiles.add(solid.Ending((tile_x, tile_y)))
                     elif tile_id == 22:
                         # Shiny flag (tutorial tile)
                         self.tiles.add(solid.ShinyFlag((tile_x, tile_y)), layer=layer)

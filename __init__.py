@@ -65,6 +65,7 @@ while running:
                         game.player.jump()
                     elif event.key == pygame.K_ESCAPE:
                         game.showing_gui = True
+                        src.game.game_crash.stop()
                         game.gui.add(src.game.gui.Button((80, 72), "Play", game.start))
                         game.client.stop()
                         break

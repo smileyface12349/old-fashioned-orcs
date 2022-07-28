@@ -30,6 +30,8 @@ def _load_img(file: str):
     return pygame.image.load(_resource_path(file)).convert_alpha()
 
 
+npc_r = _load_img("assets/player_base.png")
+npc_l = pygame.transform.flip(npc_r, True, False)
 normal_gd = _load_img("assets/tile.png")
 upper_corner_r = _load_img("assets/upper_corner.png")
 upper_corner_l = pygame.transform.flip(upper_corner_r, True, False)
@@ -83,6 +85,8 @@ cave_upper_corner_l = pygame.transform.flip(cave_upper_corner_r, True, False)
 cave_upper_corner_single = _load_img("assets/cave_upper_corner_single.png")
 invisible_solid = pygame.Surface((16, 16)).convert_alpha()
 invisible_solid.fill("skyblue")
+switch = _load_img("assets/switch.png")
+pressed_switch = _load_img("assets/pressed_switch.png")
 
 
 class Solid(pygame.sprite.Sprite):
@@ -205,3 +209,36 @@ class ShinyFlag(pygame.sprite.Sprite):
             if self.frame > len(shiny_flag):
                 self.frame = 1
             self.frame_delay = 0
+
+
+class NPC(Solid):
+    """An NPC."""
+
+    def __init__(self, game, tile_pos, layer):
+        super().__init__(game, tile_pos, layer)
+        self.image = npc_r
+        self.direction = "r"
+
+    def update(self, *args, **kwargs):
+        """Make the NPC face towards the player."""
+        vec_to_player = pygame.Vector2(self.game.player.rect.x - self.rect.x, 0)
+        if vec_to_player.x > 0:
+            self.direction = "r"
+        elif vec_to_player.x < 0:
+            self.direction = "l"
+        if self.direction == "r":
+            self.image = npc_r
+        else:
+            self.image = npc_l
+
+
+class Switch(pygame.sprite.Sprite):
+    """A switch which can be pressed by the player."""
+
+    def __init__(self, game, tile_pos):
+        super().__init__()
+        self.game = game
+        self.tile_pos = tile_pos
+        self.image = switch
+        self.pressed = False
+        self.rect = self.image.get_rect(topleft=(self.tile_pos[0] * 16, (self.tile_pos[1] + 0.5) * 16))

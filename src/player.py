@@ -81,7 +81,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = player_left
         tiles_on_same_layer = self.game.tiles.get_sprites_from_layer(0)
-        solids_on_same_layer = [tile for tile in tiles_on_same_layer if tile.__class__.__name__ == "Solid"]
+        solids_on_same_layer = [tile for tile in tiles_on_same_layer if tile.__class__.__name__ in ("Solid", "NPC")]
         if pygame.sprite.spritecollide(
             self,
             tiles_on_same_layer,
