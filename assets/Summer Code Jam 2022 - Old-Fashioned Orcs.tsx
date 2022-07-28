@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.0" name="Summer Code Jam 2022 - Old-Fashioned Orcs" tilewidth="16" tileheight="16" tilecount="45" columns="0">
+<tileset version="1.9" tiledversion="1.9.0" name="Summer Code Jam 2022 - Old-Fashioned Orcs" tilewidth="16" tileheight="16" tilecount="47" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <transformations hflip="1" vflip="0" rotate="0" preferuntransformed="0"/>
  <tile id="0">
@@ -26,6 +26,12 @@
    <property name="tile" value="spawnpoint"/>
   </properties>
   <image width="16" height="16" source="player.png"/>
+ </tile>
+ <tile id="46">
+  <properties>
+   <property name="tile" value="npc"/>
+  </properties>
+  <image width="16" height="16" source="player_base.png"/>
  </tile>
  <tile id="2">
   <properties>
@@ -311,5 +317,12 @@
    <property name="type" type="int" value="39"/>
   </properties>
   <image width="16" height="16" source="cave_upper_corner_single.png"/>
+ </tile>
+ <tile id="47">
+  <properties>
+   <property name="tile" value="solid"/>
+   <property name="type" type="int" value="40"/>
+  </properties>
+  <image width="16" height="16" source="invisible_solid.png"/>
  </tile>
 </tileset>

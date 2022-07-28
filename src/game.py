@@ -242,6 +242,9 @@ class Game:
                     if tile["tile"] == "spawnpoint":
                         self.player.rect.topleft = (tile_x * 16, tile_y * 16)
                         continue
+                    if tile["tile"] == "npc":
+                        # Spawn an NPC.
+                        continue
                     tile_id = tile["id"]
                     if tile_id not in [1, 20, 22, 25]:
                         # Solid tile
@@ -366,6 +369,8 @@ class Game:
                 img = solid.cave_upper_corner_r if not flipped else solid.cave_upper_corner_l
             case 39:
                 img = solid.cave_upper_corner_single
+            case 40:
+                img = solid.invisible_solid  # can be used for some tiles that don't blend well with the collision.
         tile.image = img
 
     def add_player(self, nickname, direction, pos=None):
