@@ -14,6 +14,7 @@ pygame.mixer.init()
 _resource_path = player._resource_path
 
 crash = pygame.image.load(_resource_path("assets/crash.png")).convert_alpha()
+loading = pygame.image.load(_resource_path("assets/loading.png")).convert_alpha()
 
 game_crash = pygame.mixer.Sound(_resource_path("assets/game_crash.wav"))
 game_crash.set_volume(0.35)  # We don't want players to get their eardrums destroyed
@@ -199,6 +200,8 @@ class EventTriggerManager:
     def set_triggers(self, level: int | str):
         """Set up triggers for this level."""
         self.trigger_objs.clear()
+        self.triggers.clear()
+        self.dialogues.clear()
         data = self.level_data[str(level)]
         self.triggers = data["events"]
         self.dialogues = data["dialogue"]
@@ -298,7 +301,6 @@ class Game:
         if nick:
             self.gui.empty()
             self.client.start()
-            self.read_map(f"maps/level{self.level}.tmx")
         else:
             self.show_input()
 
