@@ -58,8 +58,10 @@ class Client:
                 # If there is no cache saved, we need to create it
                 await cache.save(response)
                 no_cache = False
-
-            self.game.level = response["level"]
+            if response["level"]:
+                self.game.level = response["level"]
+            else:
+                self.game.level = 0
             self.unique_id = cache_data["unique_id"]
             return cache_data
 

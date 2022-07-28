@@ -125,14 +125,13 @@ async def handler(websocket):
                 event = await manager.update(event)
                 assert event["unique_id"]
                 await manager.add_main(websocket)
+                # Create new player session
+                player = PlayerSession(websocket, event["unique_id"], event["nickname"])
+                players.add(player)
+                # Load progress of player, if any
                 player.level = await db.load(event["unique_id"])
-                event["level"] = player.level
+                event["level"] = player.level if player.level else 0
                 await websocket.send(json.dumps(event))
-
-            # Create new player session
-            player = PlayerSession(websocket, event["unique_id"], event["nickname"])
-            players.add(player)
-            # Load progress of player, if any
 
             if not games.active_games:
                 # Start a new game.
