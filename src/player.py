@@ -81,7 +81,8 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = player_left
         tiles_on_same_layer = self.game.tiles.get_sprites_from_layer(0)
-        solids_on_same_layer = [tile for tile in tiles_on_same_layer if tile.__class__.__name__ in ("Solid", "NPC")]
+        assert not any(tile for tile in tiles_on_same_layer if hasattr(tile, "tile_type") and tile.tile_type==39)
+        solids_on_same_layer = [tile for tile in tiles_on_same_layer if tile.__class__.__name__ in ("Solid", "NPC", "Switch")]
         if pygame.sprite.spritecollide(
             self,
             tiles_on_same_layer,
@@ -96,7 +97,7 @@ class Player(pygame.sprite.Sprite):
             lambda spr1, spr2: spr2.__class__.__name__ == "Ending" and pygame.sprite.collide_mask(spr1, spr2),
         ):
             # Go to next level - behaviour undefined for now
-            pass
+            self.game.read_map(f"maps/level{self.game.level+1}.tmx")
         if self.moving_left:
             left_collisions = pygame.sprite.spritecollide(
                 self,
@@ -154,7 +155,9 @@ class Player(pygame.sprite.Sprite):
                 )
 
                 if collisions:
-                    self.rect.bottom = collisions[0].rect.y + 1
+                    self.rect.bottom = collisions[0].rect.y + 1 if collisions[0].rect.height==16 else collisions[0].rect.centery-2
+                    if collisions[0].__class__.__name__=="Switch":
+                        collisions[0].press()
                     self.y_velocity = 0
                     self.falling = False
                     self.fall_delay = 1

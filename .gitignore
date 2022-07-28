@@ -33,3 +33,4 @@ build/
 *.db
 # Cache file
 cache.dmp
+/temp_txt.png

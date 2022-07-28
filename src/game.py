@@ -55,6 +55,7 @@ class Camera(object):
 
 TYPE_MAPPINGS: dict[str, type] = {
     "flag": solid.ShinyFlag,
+    "solid": solid.Solid,
 }
 
 
@@ -70,11 +71,18 @@ class EventTrigger:
         self.trigger_duration_reached = False
         self.type = arg_list[0]
         self.trigger_delay = 0
+        self._required_evt=None
         self.dial_index = 0
         self.trigger_max = (
             self.arg_list[2] * 1000
         )  # we need to convert this in milliseconds so that events don't immediately happen
-        self.dialogues = self.mgr.dialogues[self.id]
+        try:
+            self.dialogues = self.mgr.dialogues[self.id]
+            if "require:" in self.dialogues[0]:
+                self._required_evt=list(trigger for trigger in self.mgr.trigger_objs if trigger.id==self.dialogues[0].removeprefix("require:"))[0]
+                self.dialogues=self.dialogues[1:]
+        except KeyError:
+            self.dialogues = []
 
     def __repr__(self):
         return f"<EventTrigger(id='{self.id}', arg_list={self.arg_list})>"
@@ -85,9 +93,19 @@ class EventTrigger:
             dial = self.dialogues[self.dial_index]
             if isinstance(dial, str):
                 self.game.gui.add(gui.TextBox(dial))
+                self.dial_index+=1
             else:
-                self.game.gui.add(gui.TextBox(dial["text"], dial["character"]))
-            self.dial_index += 1
+                if "despawn_layer" not in dial:
+                    self.game.gui.add(gui.TextBox(dial["text"], dial["character"]))
+                    self.dial_index+=1
+                else:
+                    despawn_layer=self.game.tiles.get_sprites_from_layer(dial["despawn_layer"])
+                    for spr in despawn_layer:
+                        if spr.tile_pos==tuple(dial["coords"]):
+                            spr.kill()
+                            break
+                    self.dial_index += 1
+                    self.update_evt()
         else:
             self.mgr.current_trigger = None
             self.game.gui.empty()
@@ -119,18 +137,30 @@ class EventTrigger:
             case "start":
                 val = True
             case "touch":
-                val = bool(
-                    pygame.sprite.spritecollide(
-                        self.game.player,
-                        tiles_on_same_layer,
-                        False,
-                        lambda spr1, spr2: pygame.sprite.collide_mask(spr1, spr2)
-                        and isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1]]),
+                if isinstance(self.arg_list[1], str):
+                    val = bool(
+                        pygame.sprite.spritecollide(
+                            self.game.player,
+                            tiles_on_same_layer,
+                            False,
+                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1]])
+                            and pygame.sprite.collide_mask(spr1, spr2),
+                        )
                     )
-                )
+                else:
+                    val = bool(
+                        pygame.sprite.spritecollide(
+                            self.game.player,
+                            tiles_on_same_layer,
+                            False,
+                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1][0]])
+                            and spr2.tile_type == self.arg_list[1][1]
+                            and pygame.sprite.collide_mask(spr1, spr2),
+                        )
+                    )
             case "left":
                 val = self.game.player.rect.x <= self.arg_list[1]
-        return val and not self.triggered
+        return val and not self.triggered and (self._required_evt is None or self._required_evt.triggered)
 
 
 class EventTriggerManager:
@@ -234,7 +264,7 @@ class Game:
         if any(key for key in SPECIAL_LEVEL_MAPS if key in directory):
             self.level = SPECIAL_LEVEL_MAPS[list(key for key in SPECIAL_LEVEL_MAPS if key in directory)[0]]
         else:
-            self.level = int(path.split(directory)[1].removesuffix(".tmx")[5:])
+            self.level = int(directory.removeprefix("maps/level").removesuffix(".tmx"))
         self.camera.change_settings(self.tmx_data.width * 16, self.tmx_data.height * 16)
         for sprite in self.tiles:
             sprite.kill()
@@ -274,7 +304,7 @@ class Game:
                         self.tiles.add(solid.ShinyFlag((tile_x, tile_y)), layer=layer)
                     elif tile_id == 25:
                         # Switch (can be pressed by the player)
-                        pass
+                        self.tiles.add(solid.Switch(self, (tile_x, tile_y)), layer=layer)
                     else:
                         # "Glitchy" tile (starts a pseudo-crash upon contact)
                         self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer)
@@ -367,9 +397,9 @@ class Game:
             case 30:
                 img = solid.cave_inward_corner_single
             case 31:
-                img = solid.cave_side_gd_l
+                img = solid.cave_side_gd_l if not flipped else solid.cave_side_gd_r
             case 32:
-                img = solid.cave_side_gd_r
+                img = solid.cave_side_gd_r if not flipped else solid.cave_side_gd_l
             case 33:
                 img = solid.cave_side_end_r if not flipped else solid.cave_side_end_l
             case 34:
@@ -387,6 +417,7 @@ class Game:
             case 40:
                 img = solid.invisible_solid  # can be used for some tiles that don't blend well with the collision.
         tile.image = img
+        tile.tile_type = type
 
     def add_player(self, nickname, direction, pos=None):
         """Adds a player that joined the game online."""

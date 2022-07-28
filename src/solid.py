@@ -101,6 +101,7 @@ class Solid(pygame.sprite.Sprite):
         # Once again the game object is needed for collisions
         self.game = game
         self.layer = layer
+        self.tile_type = 0
         # tile_pos is a tuple of integers representing a tile's topleft corner coordinates
         self.tile_pos = tile_pos
         # We'll only need to multiply these coords by 16 to have the real position
@@ -232,13 +233,64 @@ class NPC(Solid):
             self.image = npc_l
 
 
+_switch_id=0
+SWITCH_PRESSED=pygame.event.custom_type()
 class Switch(pygame.sprite.Sprite):
     """A switch which can be pressed by the player."""
 
     def __init__(self, game, tile_pos):
+        global _switch_id
         super().__init__()
         self.game = game
+        self.id=_switch_id
+        _switch_id+=1
         self.tile_pos = tile_pos
         self.image = switch
         self.pressed = False
         self.rect = self.image.get_rect(topleft=(self.tile_pos[0] * 16, (self.tile_pos[1] + 0.5) * 16))
+        self.mask=pygame.mask.from_surface(self.image)
+
+    def press(self):
+        self.pressed=True
+        pygame.event.post(pygame.event.Event(SWITCH_PRESSED, id=self.id))
+
+    def kill(self):
+        global _switch_id
+        super().kill()
+        _switch_id-=1
+
+    def update(self, *args, **kwargs):
+        """Change the image according to whether the switch is pressed or not."""
+        self.image=switch if not self.pressed else pressed_switch
+
+    @property
+    def playerisup(self):
+        return self.game.player.rect.bottom<=self.rect.centery+2
+
+    @property
+    def playerisup_strict(self):
+        return self.playerisup and not self.playerisleft and not self.playerisright
+
+    @property
+    def playerisleft(self):
+        return self.game.player.rect.right<=self.rect.x+2
+
+    @property
+    def playerisleft_strict(self):
+        return self.playerisleft and not self.playerisup and not self.playerisdown
+
+    @property
+    def playerisright(self):
+        return self.game.player.rect.x>=self.rect.right-2
+
+    @property
+    def playerisright_strict(self):
+        return self.playerisright and not self.playerisup and not self.playerisdown
+
+    @property
+    def playerisdown(self):
+        return self.game.player.rect.y>=self.rect.centery+1
+
+    @property
+    def playerisdown_strict(self):
+        return self.playerisdown and not self.playerisleft and not self.playerisright

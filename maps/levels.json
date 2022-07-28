@@ -52,6 +52,18 @@
                 {
                     "text": "Eh, you'll find a way. Let me grab that shovel",
                     "character": "tony"
+                },
+                {
+                    "despawn_layer": 1,
+                    "coords": [5, 7]
+                },
+                {
+                    "despawn_layer": 0,
+                    "coords": [5, 7]
+                },
+                {
+                    "despawn_layer": 0,
+                    "coords": [5, 6]
                 }
             ],
             "through_brick_wall": [
@@ -65,9 +77,13 @@
             "start": ["start", null, 0],
             "flag": ["touch", "flag", 0],
             "flag_delay": ["touch", "flag", 1],
-            "brick_wall": ["left", 96, 0],
-            "brick_wall_delay": ["left", 96, 3],
-            "through_brick_wall": ["left", 24, 0]
+            "brick_wall": ["left", 98, 0],
+            "brick_wall_delay": ["left", 98, 3],
+            "through_brick_wall": ["left", 48, 0]
         }
+    },
+    "1": {
+        "dialogue": {},
+        "events": {}
     }
 }
