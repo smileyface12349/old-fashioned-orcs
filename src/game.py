@@ -248,8 +248,9 @@ class SwitchSpawnManager:
 
     def spawn(self, switch: int):
         """Spawn the tiles associated with this switch."""
-        for tile in self.related_tiles[switch]:
-            self.game.tiles.add(tile, layer=0)
+        if switch in self.related_tiles:
+            for tile in self.related_tiles[switch]:
+                self.game.tiles.add(tile, layer=0)
 
     def update_from_map(self, layer_list):
         """Set up the tiles to spawn according to areas and switches."""
