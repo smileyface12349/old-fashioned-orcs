@@ -101,7 +101,7 @@ class Client:
             self.game.update_player(nick, player["direction"], player["position"])
         self.game.check_who_left(nicknames)
 
-    async def _play(self, payload):
+    async def _play(self, data):
         """Play loop"""
         history = {"position": [0, 0], "level": -100}
         while self.running:
