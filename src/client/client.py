@@ -9,6 +9,7 @@ from .cache import CacheManager  # relative import otherwise it doesn't work
 
 cache = CacheManager()
 player_nickname = itemgetter("nickname")
+player_level = itemgetter("level")
 
 
 class Client:
@@ -24,13 +25,13 @@ class Client:
 
     async def _sync_engine(self):
         """Sync real game data to send back to the server!"""
-        payload = {
+        data = {
             "type": "play",
             "position": list(self.game.player.rect.topleft),
             "level": self.game.level,
             "direction": self.game.player.direction,
         }
-        return payload
+        return data
 
     async def _hello(self, cache_data):
         """Typical client/server hello connection"""
@@ -90,8 +91,9 @@ class Client:
         nicknames = []
         for player in response["players"]:
             nick = player_nickname(player)
+            level = player_level(player)
             nicknames.append(nick)
-            if nick == self.payload["nickname"]:
+            if nick == self.payload["nickname"] or level != self.payload["level"]:
                 continue
             if not any(ply for ply in self.game.other_players if ply.nickname == nick):
                 self.game.add_player(nick, player["direction"], player["position"])
@@ -103,8 +105,8 @@ class Client:
         """Play loop"""
         history = {"position": [0, 0], "level": -100}
         while self.running:
-            payload = await self._sync_engine()
-            self.payload.update(payload)
+            data = await self._sync_engine()
+            self.payload.update(data)
 
             # When moving & on spawn inform the server!
             if self.payload["position"] != history["position"] or self.payload["level"] != history["level"]:
