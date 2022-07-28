@@ -214,9 +214,11 @@ class SwitchDestroyManager:
         self.objects = {}
 
     def destroy(self, switch: int):
-        for obj in self.objects[switch]:
-            for tile in filter(lambda tile: tile.rect.colliderect(obj), self.game.tiles.get_sprites_from_layer(0)):
-                tile.kill()
+        """Destroy all the tiles associated with this switch."""
+        if switch in self.objects:
+            for obj in self.objects[switch]:
+                for tile in filter(lambda tile: tile.rect.colliderect(obj), self.game.tiles.get_sprites_from_layer(0)):
+                    tile.kill()
 
     def update_from_map(self, layer_list):
         """Set up the tiles to destroy according to areas and switches."""
@@ -232,6 +234,29 @@ class SwitchDestroyManager:
                         else:
                             self.objects[obj.properties["related_switch"]].append(pygame.Rect(*args))
 
+
+class SwitchSpawnManager:
+    """Same as SwitchDestroyManager but handles the spawn"""
+    def __init__(self, game):
+        self.game=game
+        self.objects={}
+
+    def spawn(self, switch: int):
+        pass
+
+    def update_from_map(self, layer_list):
+        """Set up the tiles to destroy according to areas and switches."""
+        # Said areas can be defined using Object Layers in Tiled and put rectangles colliding with the tiles you want to destroy. Provide a related_switch property to ensure which ones spawn
+        self.objects.clear()
+        for layer in layer_list:
+            if isinstance(layer, pytmx.TiledObjectGroup):
+                for obj in layer:
+                    if "related_switch" in obj.properties and "spawner" in obj.name:
+                        args = map(round, (obj.x, obj.y, obj.width, obj.height))
+                        if obj.properties["related_switch"] not in self.objects:
+                            self.objects[obj.properties["related_switch"]] = [pygame.Rect(*args)]
+                        else:
+                            self.objects[obj.properties["related_switch"]].append(pygame.Rect(*args))
 
 SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
 
