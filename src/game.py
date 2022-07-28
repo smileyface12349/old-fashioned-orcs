@@ -71,7 +71,9 @@ class EventTrigger:
         self.type = arg_list[0]
         self.trigger_delay = 0
         self.dial_index = 0
-        self.trigger_max = self.arg_list[2]
+        self.trigger_max = (
+            self.arg_list[2] * 1000
+        )  # we need to convert this in milliseconds so that events don't immediately happen
         self.dialogues = self.mgr.dialogues[self.id]
 
     def __repr__(self):
@@ -139,7 +141,6 @@ class EventTriggerManager:
         with open(_resource_path("maps/levels.json"), "r", encoding="utf-8") as file:
             self.level_data = json.loads(file.read())
         self.triggers = {}
-        self.delay = 0
         self.dialogues = {}
         self.current_trigger = None
         self.trigger_objs: list[EventTrigger] = []
@@ -153,6 +154,10 @@ class EventTriggerManager:
                     trigger.triggered = True
                     self.current_trigger = trigger
                     print(trigger)
+                    for trgger in self.trigger_objs:
+                        if trigger is trgger or not trgger.trigger_max:
+                            continue
+                        trgger.trigger_delay = 0
                     trigger.update_evt()
                     break
 
