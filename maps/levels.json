@@ -80,6 +80,12 @@
             "brick_wall": ["left", 98, 0],
             "brick_wall_delay": ["left", 98, 5],
             "through_brick_wall": ["left", 48, 0]
+        },
+        "actions": {
+            "brick_wall_delay": [
+                ["remove", 69, 3],
+                ["remove", 69, 4]
+            ]
         }
     },
     "1": {
