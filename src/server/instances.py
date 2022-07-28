@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 
@@ -65,6 +66,7 @@ class GameManager:
         game_id = uuid.uuid4().hex
         new_game = GameInstance(game_id)
         self.active_games.append(new_game)
+        logging.info(f"Created game with id: {new_game.id}")
         return new_game
 
     async def delete(self, game: GameInstance):
@@ -75,6 +77,7 @@ class GameManager:
         """Auto-checks for empty games."""
         for game in self.active_games:
             if len(game.players) == 0:
+                logging.info(f"Deleting empty game with id: {game.id}")
                 self.active_games.remove(game)
 
     async def remove_player(self, player):
