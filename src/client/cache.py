@@ -35,7 +35,7 @@ class CacheManager:
             pickle.dump(data, f)
 
     @staticmethod
-    async def delete():
+    def delete():
         """Deletes local cache for whatever reason."""
         try:
             os.remove("cache.dmp")
