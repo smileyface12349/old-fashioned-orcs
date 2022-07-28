@@ -37,18 +37,20 @@ async def new_game(player):
 async def join_game(player):
     """Handle connections from other players, joining an existing game."""
     # Find the game.
+    joined = False
     for game in games.active_games:
         if len(game.players) <= 4:
             try:
                 await game.add_player(player)
                 await asyncio.sleep(1)
                 await broadcast_update(game)
+                joined = True
                 await play_game(player, game)
             except KeyError as e:
                 print(e)
-                await new_game(player)
-        else:
-            await new_game(player)
+                continue
+    if not joined:
+        await new_game(player)
 
 
 async def ping_pong(websocket):
