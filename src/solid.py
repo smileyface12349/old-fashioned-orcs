@@ -122,6 +122,7 @@ class Solid(pygame.sprite.Sprite):
 
     @image.setter
     def image(self, value):
+        """Sets the image"""
         self._image = value
         self.mask = pygame.mask.from_surface(value)
         if self.image == invisible_solid:
