@@ -29,14 +29,19 @@ class GameInstance:
         self.id = game_id
         self.players = []
         self.sockets = []
+        self.nicknames = []
 
     async def add_player(self, player):
         """Add a player to an existing game"""
+        if player.nickname in self.nicknames:
+            raise KeyError("Nickname in use")
+        self.nicknames.append(player.nickname)
         self.players.append(player)
         self.sockets.append(player.websocket)
 
     async def remove_player(self, player):
         """Remove player from an existing game"""
+        self.nicknames.remove(player.nickname)
         self.players.remove(player)
         self.sockets.remove(player.websocket)
 

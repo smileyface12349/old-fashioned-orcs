@@ -44,11 +44,9 @@ async def join_game(player):
                 await asyncio.sleep(1)
                 await broadcast_update(game)
                 await play_game(player, game)
-
-            except KeyError:
-                await error(player.websocket, "Game not found.")
-                await game.remove_player(player)
-                return
+            except KeyError as e:
+                print(e)
+                await new_game(player)
         else:
             await new_game(player)
 
@@ -125,7 +123,7 @@ async def handler(websocket):
                 assert event["unique_id"]
                 await websocket.send(json.dumps(event))
 
-            # Clear old games if necessary
+            # Clear old & inactive games if any
             await games.clear()
             # Create new player session
             player = PlayerSession(websocket, event["unique_id"], event["nickname"])
@@ -172,6 +170,7 @@ async def handler(websocket):
         elif websocket in manager.active_connections and player:
             await db.save(player)
             await games.remove_player(player)
+            await games.clear()
             await manager.drop_main(websocket)
             logging.info(f"Closed main socket from => {websocket.remote_address}")
 

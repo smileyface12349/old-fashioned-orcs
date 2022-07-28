@@ -30,10 +30,9 @@ class ConnectionManager:
 
     async def update(self, payload):
         """Receives JSON payload from a websocket and updates client's unique_id if required."""
-        if not payload["unique_id"]:
+        if not self._is_valid(payload["unique_id"]):
             # Generate client's unique ID
             payload["unique_id"] = uuid.uuid4().hex
-
         if not payload["nickname"] or len(payload["nickname"]) > 12:
             # If a nickname wasnt given, generate a random one
             while True:
@@ -43,6 +42,14 @@ class ConnectionManager:
                     self.active_nicknames.append(random_nickname)
                     break
         return payload
+
+    def _is_valid(self, uuid_to_test):
+        """Checks validity of the uuid hex."""
+        try:
+            uuid.UUID(str(uuid_to_test))
+            return True
+        except ValueError:
+            return False
 
     def connections(self):
         """Return a list of all currently active connections."""

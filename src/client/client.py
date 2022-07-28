@@ -58,11 +58,11 @@ class Client:
 
         hi = json.dumps(cache_data)
         await self.websocket.send(hi)
-        print(f"Hello => {hi}")
+        print(f"Client hello => {hi}")
 
         response = await self.websocket.recv()
         response = json.loads(response)
-        print(f"Hello back => {response}")
+        print(f"Server hello => {response}")
 
         if response["type"] in ["init", "ready"]:
 
