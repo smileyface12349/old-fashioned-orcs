@@ -168,6 +168,8 @@ class Client:
             asyncio.run(self._main())
         except asyncio.exceptions.TimeoutError or asyncio.exceptions.CancelledError:
             print("Cannot connect to server. Try again later!")
+        except websockets.exceptions.ConnectionClosedError or asyncio.exceptions.IncompleteReadError:
+            print("Connection closed.")
 
     def _recv_start(self):
         """Main Thread, mostly for sending payloads to the server."""
@@ -175,3 +177,5 @@ class Client:
             asyncio.run(self._broadcast())
         except asyncio.exceptions.TimeoutError or asyncio.exceptions.CancelledError:
             print("Cannot connect to server. Try again later!")
+        except websockets.exceptions.ConnectionClosedError or asyncio.exceptions.IncompleteReadError:
+            print("Connection closed.")
