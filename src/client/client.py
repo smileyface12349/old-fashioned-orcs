@@ -11,26 +11,6 @@ cache = CacheManager()
 player_nickname = itemgetter("nickname")
 
 
-class StoppableThread(threading.Thread):
-    """
-    Thread class with a stop() method.
-
-    The thread itself has to check regularly for the stopped() condition.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super(StoppableThread, self).__init__(*args, **kwargs)
-        self._stop_event = threading.Event()
-
-    def stop(self):
-        """Stop the running thread."""
-        self._stop_event.set()
-
-    def stopped(self):
-        """Return is_set() response of thread."""
-        return self._stop_event.is_set()
-
-
 class Client:
     """Client class that handles the connection with the server."""
 
@@ -160,9 +140,9 @@ class Client:
         """Starts the listen/receive threads."""
         self.running = True
         # The main thread.
-        self.main_thread = StoppableThread(target=self._main_start, daemon=True)
+        self.main_thread = threading.Thread(target=self._main_start, daemon=True)
         # Broadcast listener thread
-        self.recv_thread = StoppableThread(target=self._recv_start, daemon=True)
+        self.recv_thread = threading.Thread(target=self._recv_start, daemon=True)
         # We make it "daemon" so that the full process stops when the window is closed.
         # (If the thread is not daemon, we get a RuntimeError upon closing the window.)
         self.main_thread.start()
@@ -172,9 +152,9 @@ class Client:
         """Stops the listen/receive threads."""
         self.running = False
         print("Exiting Recv Thread")
-        self.recv_thread.stop()
+        self.recv_thread.join()
         print("Exiting Main Thread")
-        self.main_thread.stop()
+        self.main_thread.join()
 
     def _main_start(self):
         """Thread for receiving broadcasts."""
