@@ -18,10 +18,9 @@ import src.game  # noqa: E402
 
 game = src.game.Game()
 clock = pygame.time.Clock()  # a framerate helper object.
-running = True
 
 
-while running:
+while game.running:
     # We generally use a while loop when making a game. Most of the game code should go here.
     screen.fill("skyblue")
     dt = clock.tick(60)  # this ensures that the game cannot run higher that 60FPS. We also get a delta time in ms.
@@ -46,7 +45,7 @@ while running:
         if event.type == pygame.QUIT:
             # This one is, as you may have guessed, used when the user clicks on the "Close" button.
             # Generally we just close the window when we get an event of that type.
-            running = False
+            game.running = False
             pygame.quit()
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             for btn in game.gui:
@@ -66,7 +65,8 @@ while running:
                     elif event.key == pygame.K_ESCAPE:
                         game.showing_gui = True
                         src.game.game_crash.stop()
-                        game.gui.add(src.game.gui.Button((80, 72), "Play", game.start))
+                        game.gui.add(src.game.gui.Button((80, 50), "Play", game.start))
+                        game.gui.add(src.game.gui.Button((80, 75), "Exit Game", game.quit))
                         game.client.stop()
                         break
                 else:
@@ -80,7 +80,7 @@ while running:
                                     game.trigger_man.current_trigger.update_evt()
             else:
                 if event.key == pygame.K_ESCAPE:
-                    running = False
+                    game.running = False
                     pygame.quit()
                 if game.inputting_nickname:
                     if event.key == pygame.K_BACKSPACE:

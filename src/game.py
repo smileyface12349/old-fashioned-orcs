@@ -189,10 +189,20 @@ class Game:
         self.client = client.Client(self)
         self.level = -1  # Value for the test map.
         self.camera = Camera(complex_camera, 160, 144)
-        self.gui = pygame.sprite.Group(gui.Button((80, 72), "Play", self.start))
+        self.gui = pygame.sprite.Group(
+            gui.Button((80, 50), "Play", self.start), gui.Button((80, 75), "Exit Game", self.quit)
+        )
+        self.running = True
         self.showing_gui = True
         self.trigger_man = EventTriggerManager(self)
         self.read_map("maps/level0.tmx")  # we'll need to change that depending on the player's level
+
+    def quit(self):
+        """Quit button event"""
+        if self.client.running:
+            self.client.stop()
+        self.running = False
+        pygame.quit()
 
     def start(self):
         """Start the game."""
