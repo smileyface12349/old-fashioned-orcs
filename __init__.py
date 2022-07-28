@@ -58,7 +58,8 @@ while game.running:
                     btn.click()
 
         elif event.type == src.game.solid.SWITCH_PRESSED:
-            game.switch_man.destroy(event.id)
+            game.switchs_man.spawn(event.id)
+            game.switchd_man.destroy(event.id)
 
         elif event.type == pygame.KEYDOWN:
             if not game.showing_gui:
@@ -73,8 +74,9 @@ while game.running:
                     elif event.key == pygame.K_ESCAPE:
                         game.showing_gui = True
                         src.game.game_crash.stop()
-                        game.gui.add(src.game.gui.Button((80, 50), "Play", game.start))
-                        game.gui.add(src.game.gui.Button((80, 75), "Exit Game", game.quit))
+                        game.gui.add(src.game.gui.Button((80, 45), "Play", game.start))
+                        game.gui.add(src.game.gui.Button((80, 70), "Reset", game.del_cache))
+                        game.gui.add(src.game.gui.Button((80, 95), "Exit Game", game.quit))
                         game.client.stop()
                         break
                     elif event.key == pygame.K_r and game.crashing:
