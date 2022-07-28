@@ -101,7 +101,7 @@ class EventTrigger:
                 self.dial_index += 1
             else:
                 if "despawn_layer" not in dial:
-                    self.game.gui.add(gui.TextBox(dial["text"], '['+dial["character"]+']'))
+                    self.game.gui.add(gui.TextBox(dial["text"], "[" + dial["character"] + "]"))
                     self.dial_index += 1
                 else:
                     despawn_layer = self.game.tiles.get_sprites_from_layer(dial["despawn_layer"])
@@ -206,6 +206,33 @@ class EventTriggerManager:
             self.trigger_objs.append(EventTrigger(self, *item))
 
 
+class SwitchDestroyManager:
+    """Used to despawn tiles when a switch is pressed."""
+
+    def __init__(self, game):
+        self.game = game
+        self.objects = {}
+
+    def destroy(self, switch: int):
+        for obj in self.objects[switch]:
+            for tile in filter(lambda tile: tile.rect.colliderect(obj), self.game.tiles.get_sprites_from_layer(0)):
+                tile.kill()
+
+    def update_from_map(self, layer_list):
+        """Set up the tiles to destroy according to areas and switches."""
+        # Said areas can be defined using Object Layers in Tiled and put rectangles colliding with the tiles you want to destroy. Provide a related_switch property to ensure which ones spawn
+        self.objects.clear()
+        for layer in layer_list:
+            if isinstance(layer, pytmx.TiledObjectGroup):
+                for obj in layer:
+                    if "related_switch" in obj.properties and "destroyer" in obj.name:
+                        args = map(round, (obj.x, obj.y, obj.width, obj.height))
+                        if obj.properties["related_switch"] not in self.objects:
+                            self.objects[obj.properties["related_switch"]] = [pygame.Rect(*args)]
+                        else:
+                            self.objects[obj.properties["related_switch"]].append(pygame.Rect(*args))
+
+
 SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
 
 
@@ -222,7 +249,7 @@ class Game:
         self.nickname = ""
         self.tmx_data: pytmx.TiledMap | None = None
         self.client = client.Client(self)
-        self.level = -1  # Value for the test map.
+        self.level = 0
         self.camera = Camera(complex_camera, 160, 144)
         self.gui = pygame.sprite.Group(
             gui.Button((80, 50), "Play", self.start), gui.Button((80, 75), "Exit Game", self.quit)
@@ -230,7 +257,7 @@ class Game:
         self.running = True
         self.showing_gui = True
         self.trigger_man = EventTriggerManager(self)
-        self.read_map("maps/level0.tmx")  # we'll need to change that depending on the player's level
+        self.switch_man = SwitchDestroyManager(self)
 
     def quit(self):
         """Quit button event"""
@@ -246,6 +273,7 @@ class Game:
         if nick:
             self.gui.empty()
             self.client.start()
+            self.read_map(f"maps/level{self.level}.tmx")
         else:
             self.show_input()
 
@@ -316,6 +344,7 @@ class Game:
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
         self.trigger_man.set_triggers(self.level)
+        self.switch_man.update_from_map(self.tmx_data.layers)
         print(self.trigger_man.trigger_objs)
 
     def draw_objects(self, screen):

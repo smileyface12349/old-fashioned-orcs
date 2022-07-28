@@ -97,7 +97,7 @@ class Player(pygame.sprite.Sprite):
             False,
             lambda spr1, spr2: spr2.__class__.__name__ == "Ending" and pygame.sprite.collide_mask(spr1, spr2),
         ):
-            # Go to next level - behaviour undefined for now
+            # Go to next level
             self.game.read_map(f"maps/level{self.game.level+1}.tmx")
         if self.moving_left:
             left_collisions = pygame.sprite.spritecollide(
@@ -159,8 +159,9 @@ class Player(pygame.sprite.Sprite):
                     self.rect.bottom = (
                         collisions[0].rect.y + 1 if collisions[0].rect.height == 16 else collisions[0].rect.centery - 2
                     )
-                    if collisions[0].__class__.__name__ == "Switch":
-                        collisions[0].press()
+                    for switch in filter(lambda switch: switch.__class__.__name__ == "Switch", collisions):
+                        switch.press()
+                        print(f"Switch number {switch.id} pressed")
                     self.y_velocity = 0
                     self.falling = False
                     self.fall_delay = 1

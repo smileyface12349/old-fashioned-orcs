@@ -267,7 +267,7 @@ class Switch(pygame.sprite.Sprite):
 
     @property
     def playerisup(self):
-        return self.game.player.rect.bottom <= self.rect.centery + 2
+        return self.game.player.rect.bottom <= self.rect.centery + 6
 
     @property
     def playerisup_strict(self):
@@ -291,7 +291,7 @@ class Switch(pygame.sprite.Sprite):
 
     @property
     def playerisdown(self):
-        return self.game.player.rect.y >= self.rect.centery + 1
+        return self.game.player.rect.y >= self.rect.bottom - 2
 
     @property
     def playerisdown_strict(self):
