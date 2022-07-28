@@ -75,6 +75,7 @@ async def broadcast_update(game):
 
 async def play_game(player, game):
     """Receive and process moves from players."""
+    logging.info(f"Player {player.nickname} joined a game.")
     async for message in player.websocket:
         # Parse a "play" event from the client.
         event = json.loads(message)
