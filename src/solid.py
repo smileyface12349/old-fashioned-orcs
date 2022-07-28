@@ -81,6 +81,8 @@ cave_normal_gd = _load_img("assets/cave_top.png")
 cave_upper_corner_r = _load_img("assets/cave_upper_corner.png")
 cave_upper_corner_l = pygame.transform.flip(cave_upper_corner_r, True, False)
 cave_upper_corner_single = _load_img("assets/cave_upper_corner_single.png")
+invisible_solid = pygame.Surface((16, 16)).convert_alpha()
+invisible_solid.fill("skyblue")
 
 
 class Solid(pygame.sprite.Sprite):
@@ -105,8 +107,8 @@ class Solid(pygame.sprite.Sprite):
             pygame.Rect(self.rect.x - 16, self.rect.y - 16, self.rect.width * 3, 16),  # top
             pygame.Rect(self.rect.x - 16, self.rect.bottom, self.rect.width * 3, 16),  # bottom
             pygame.Rect(self.rect.x - 16, self.rect.y - 16, 16, self.rect.height * 3),  # left
-            pygame.Rect(self.rect.right, self.rect.y - 16, 16, self.rect.height * 3),
-        )  # right
+            pygame.Rect(self.rect.right, self.rect.y - 16, 16, self.rect.height * 3),  # right
+        )
 
     @property
     def image(self):
@@ -117,6 +119,8 @@ class Solid(pygame.sprite.Sprite):
     def image(self, value):
         self._image = value
         self.mask = pygame.mask.from_surface(value)
+        if self.image == invisible_solid:
+            self.image.set_alpha(0)  # we do this to make sure the player doesn't notice anything odd
 
     # Basic player-locating properties, used for collisions
     @property
