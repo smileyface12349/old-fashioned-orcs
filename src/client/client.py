@@ -59,6 +59,7 @@ class Client:
                 await cache.save(response)
                 no_cache = False
 
+            self.game.level = response["level"]
             self.unique_id = cache_data["unique_id"]
             return cache_data
 
