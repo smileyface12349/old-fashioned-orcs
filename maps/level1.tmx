@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="40" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="6">
+<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="40" height="12" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="7">
  <tileset firstgid="1" source="../assets/Summer Code Jam 2022 - Old-Fashioned Orcs.tsx"/>
  <layer id="1" name="Collision" width="40" height="12">
   <data encoding="csv">
@@ -17,6 +17,13 @@
 35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,28,30,43,2147483678,28,35,35,35,35,35
 </data>
  </layer>
+ <objectgroup id="6" name="Switch Spawners" visible="0">
+  <object id="6" name="tile_spawner1" x="595" y="147.333" width="10.3333" height="8" visible="0">
+   <properties>
+    <property name="related_switch" type="int" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="5" name="Switch Destroyers" visible="0">
   <object id="4" name="bug_destroyer1" x="463.5" y="95.5" width="16.5" height="64" visible="0">
    <properties>

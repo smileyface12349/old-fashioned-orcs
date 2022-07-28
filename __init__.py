@@ -58,7 +58,8 @@ while game.running:
                     btn.click()
 
         elif event.type == src.game.solid.SWITCH_PRESSED:
-            game.switch_man.destroy(event.id)
+            game.switchd_man.destroy(event.id)
+            game.switchs_man.spawn(event.id)
 
         elif event.type == pygame.KEYDOWN:
             if not game.showing_gui:

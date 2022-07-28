@@ -240,26 +240,51 @@ class SwitchDestroyManager:
 
 class SwitchSpawnManager:
     """Same as SwitchDestroyManager but handles the spawn"""
+
     def __init__(self, game):
-        self.game=game
-        self.objects={}
+        self.game = game
+        self.objects = {}
+        self.related_tiles = {}
 
     def spawn(self, switch: int):
-        pass
+        """Spawn the tiles associated with this switch."""
+        for tile in self.related_tiles[switch]:
+            self.game.tiles.add(tile, layer=0)
 
     def update_from_map(self, layer_list):
-        """Set up the tiles to destroy according to areas and switches."""
+        """Set up the tiles to spawn according to areas and switches."""
         # Said areas can be defined using Object Layers in Tiled and put rectangles colliding with the tiles you want to destroy. Provide a related_switch property to ensure which ones spawn
         self.objects.clear()
+        self.related_tiles.clear()
         for layer in layer_list:
             if isinstance(layer, pytmx.TiledObjectGroup):
                 for obj in layer:
                     if "related_switch" in obj.properties and "spawner" in obj.name:
                         args = map(round, (obj.x, obj.y, obj.width, obj.height))
                         if obj.properties["related_switch"] not in self.objects:
-                            self.objects[obj.properties["related_switch"]] = [pygame.Rect(*args)]
+                            new_rect = pygame.Rect(*args)
+                            self.objects[obj.properties["related_switch"]] = [new_rect]
+                            self.related_tiles[obj.properties["related_switch"]] = pygame.sprite.Group(
+                                *(
+                                    tile
+                                    for tile in self.game.tiles.get_sprites_from_layer(0)
+                                    if tile.rect.colliderect(new_rect)
+                                )
+                            )
                         else:
-                            self.objects[obj.properties["related_switch"]].append(pygame.Rect(*args))
+                            new_rect = pygame.Rect(*args)
+                            self.objects[obj.properties["related_switch"]].append(new_rect)
+                            self.related_tiles[obj.properties["related_switch"]].add(
+                                *(
+                                    tile
+                                    for tile in self.game.tiles.get_sprites_from_layer(0)
+                                    if tile.rect.colliderect(new_rect)
+                                )
+                            )
+                        for tile in self.related_tiles[obj.properties["related_switch"]]:
+                            if tile in self.game.tiles:
+                                tile.remove(self.game.tiles)
+
 
 SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
 
@@ -285,7 +310,8 @@ class Game:
         self.running = True
         self.showing_gui = True
         self.trigger_man = EventTriggerManager(self)
-        self.switch_man = SwitchDestroyManager(self)
+        self.switchd_man = SwitchDestroyManager(self)
+        self.switchs_man = SwitchSpawnManager(self)
 
     def quit(self):
         """Quit button event"""
@@ -371,8 +397,8 @@ class Game:
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
         self.trigger_man.set_triggers(self.level)
-        self.switch_man.update_from_map(self.tmx_data.layers)
-        print(self.trigger_man.trigger_objs)
+        self.switchd_man.update_from_map(self.tmx_data.layers)
+        self.switchs_man.update_from_map(self.tmx_data.layers)
 
     def draw_objects(self, screen):
         """
