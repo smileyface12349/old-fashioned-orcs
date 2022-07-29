@@ -125,6 +125,10 @@
                     "character": "you"
                 }
             ],
+            "other_dude": [{
+                "text": "Like my house?",
+                "character": "Guy"
+            }],
             "flag": [
                 "GET YOUR DIRTY HANDS OFF MY FLAG"
             ],
@@ -137,6 +141,7 @@
         },
         "events": {
             "first_dude": ["touch", "npc1", 0],
+            "other_dude": ["touch", ["solid", 40], 0],
             "flag": ["touch", "flag", 0],
             "other_side": ["right", 99, 0],
             "completion": ["touch", "blue_cube", 0]
