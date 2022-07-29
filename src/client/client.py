@@ -74,7 +74,7 @@ class Client:
         init = False
         # Wait for the response/update and process it
         async with websockets.connect(
-            "wss://oldfashionedorcs.servegame.com:8001/", close_timeout=1, ssl=ssl_context
+            "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
         ) as self.broadcast:
             while self.running:
                 # Make sure main thread actually initialized
@@ -142,7 +142,7 @@ class Client:
             cache_data["nickname"] = self.game.nickname
 
         async with websockets.connect(
-            "wss://oldfashionedorcs.servegame.com:8001/", close_timeout=1, ssl=ssl_context
+            "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
         ) as self.websocket:
             # Send the first data to initialize the connection
             self.payload = await self._hello(cache_data)

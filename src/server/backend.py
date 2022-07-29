@@ -183,7 +183,7 @@ async def handler(websocket):
 
 async def main():
     """Main function that starts the server."""
-    async with websockets.serve(handler, "134.255.220.44", 8001, ssl=ssl_context, ping_interval=None, close_timeout=1):
+    async with websockets.serve(handler, "134.255.220.44", 8000, ssl=ssl_context, ping_interval=None, close_timeout=1):
         await asyncio.Future()  # run forever
 
 
