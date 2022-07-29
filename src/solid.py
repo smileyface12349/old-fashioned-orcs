@@ -117,6 +117,10 @@ class Solid(pygame.sprite.Sprite):
             pygame.Rect(self.rect.right, self.rect.y - 16, 16, self.rect.height * 3),  # right
         )
 
+    def update(self, *args, **kwargs):
+        if not pygame.sprite.spritecollide(self, [self.game.player], False):
+            self.image.set_alpha(255)
+
     @property
     def image(self):
         """Special property allowing for a dynamic collision mask update."""
@@ -213,6 +217,7 @@ class ShinyFlag(pygame.sprite.Sprite):
             if self.frame > len(shiny_flag):
                 self.frame = 1
             self.frame_delay = 0
+        super().update(dt)
 
 
 class NPC(Solid):
@@ -225,6 +230,7 @@ class NPC(Solid):
 
     def update(self, *args, **kwargs):
         """Make the NPC face towards the player."""
+        super().update()
         vec_to_player = pygame.Vector2(self.game.player.rect.x - self.rect.x, 0)
         if vec_to_player.x > 0:
             self.direction = "r"
@@ -267,10 +273,10 @@ class Switch(pygame.sprite.Sprite):
 
     def update(self, *args, **kwargs):
         """Change the image according to whether the switch is pressed or not."""
+        if not pygame.sprite.spritecollide(self, [self.game.player], False):
+            self.image.set_alpha(255)
         self.image = switch if not self.pressed else pressed_switch
-        if (not self.pressed) and pygame.sprite.spritecollide(
-            self, self.game.other_players, False, pygame.sprite.collide_mask
-        ):
+        if (not self.pressed) and pygame.sprite.spritecollide(self, self.game.other_players, False):
             self.press()
 
     @property
