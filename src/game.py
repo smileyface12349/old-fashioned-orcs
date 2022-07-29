@@ -99,7 +99,7 @@ class EventTrigger:
         if self.dial_index < len(self.dialogues):
             dial = self.dialogues[self.dial_index]
             if isinstance(dial, str):
-                if dial!="crash":
+                if dial != "crash":
                     self.game.gui.add(gui.TextBox(dial))
                     self.dial_index += 1
                 else:
@@ -188,7 +188,7 @@ class EventTriggerManager:
             self.level_data = json.loads(file.read())
         self.triggers = {}
         self.dialogues = {}
-        self.current_trigger: EventTrigger|None = None
+        self.current_trigger: EventTrigger | None = None
         self.trigger_objs: list[EventTrigger] = []
 
     def check_triggers(self, dt):
@@ -214,7 +214,7 @@ class EventTriggerManager:
             print(self.current_trigger.triggered)
         except:
             print(False)
-        self.current_trigger=None
+        self.current_trigger = None
         self.trigger_objs.clear()
         self.triggers.clear()
         self.dialogues.clear()
