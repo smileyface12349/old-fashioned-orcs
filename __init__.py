@@ -84,7 +84,7 @@ while game.running:
                         game.gui.add(src.game.gui.Button((80, 95), "Exit Game", game.quit))
                         game.client.stop()
                         break
-                    elif event.key==pygame.K_f:
+                    elif event.key == pygame.K_f:
                         game.read_map(f"maps/level{game.level+1}.tmx")
                     elif event.key == pygame.K_r and game.crashing:
                         game.gui.empty()
