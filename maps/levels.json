@@ -2,7 +2,7 @@
 	"0": {
         "dialogue": {
             "start": [
-                "Welcome to a very normal platformer",
+                "Welcome to a totally generic platformer",
                 "This is the tutorial, where I tell you how to play the game",
                 "But if you've played platformers before I'm sure you'll figure it out"
             ],
@@ -77,9 +77,9 @@
         "events": {
             "start": ["start", null, 0],
             "flag": ["touch", "flag", 0],
-            "flag_delay": ["touch", "flag", 3],
+            "flag_delay": ["touch", "flag", 2],
             "brick_wall": ["left", 98, 0],
-            "brick_wall_delay": ["left", 128, 5],
+            "brick_wall_delay": ["left", 128, 3],
             "through_brick_wall": ["left", 48, 0]
         },
         "actions": {
