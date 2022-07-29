@@ -1,5 +1,6 @@
 import asyncio
 import json
+import ssl
 import threading
 from operator import itemgetter
 
@@ -7,6 +8,8 @@ import websockets
 
 from .cache import CacheManager  # relative import otherwise it doesn't work
 
+ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+ssl_context.load_verify_locations("./src/client/cert.pem")
 cache = CacheManager()
 player_nickname = itemgetter("nickname")
 player_level = itemgetter("level")
@@ -18,7 +21,7 @@ class Client:
     def __init__(self, game):
         self.websocket = None
         self.broadcast = None
-        self.game = game  # the game object is needed to check the player's position and level
+        self.game = game
         self.payload = {}
         self.unique_id = None
         self.running = False
@@ -70,7 +73,9 @@ class Client:
         """Listener for game broadcasts."""
         init = False
         # Wait for the response/update and process it
-        async with websockets.connect("ws://oldfashionedorcs.servegame.com:8001/", close_timeout=1) as self.broadcast:
+        async with websockets.connect(
+            "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
+        ) as self.broadcast:
             while self.running:
                 # Make sure main thread actually initialized
                 if not self.unique_id:
@@ -136,7 +141,9 @@ class Client:
         if not cache_data["nickname"]:
             cache_data["nickname"] = self.game.nickname
 
-        async with websockets.connect("ws://oldfashionedorcs.servegame.com:8001/", close_timeout=1) as self.websocket:
+        async with websockets.connect(
+            "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
+        ) as self.websocket:
             # Send the first data to initialize the connection
             self.payload = await self._hello(cache_data)
             # Now play the game

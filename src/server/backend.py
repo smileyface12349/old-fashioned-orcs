@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import ssl
 import time
 
 import websockets
@@ -8,6 +9,8 @@ from database import GameDatabase
 from instances import GameManager, PlayerSession
 from manager import ConnectionManager
 
+ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+ssl_context.load_cert_chain("server-cert.pem", keyfile="server-key.pem")
 logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=logging.INFO)
 
 games = GameManager()
@@ -83,13 +86,14 @@ async def play_game(player, game):
             assert event["unique_id"] == player.unique_id
             await player.websocket.send(json.dumps(event))
 
+            # Update server from the event
             player.position = event["position"]
             player.level = event["level"]
             player.direction = event["direction"]
             request_id = event["unique_id"]
 
             event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
-            # Send the "update" event to everyone in the current game but exclude the current player!
+            # Send the "update" event to everyone in the current level but exclude the current player!
             other_players = [
                 p.broadcast
                 for p in game.iter_players()
@@ -179,7 +183,7 @@ async def handler(websocket):
 
 async def main():
     """Main function that starts the server."""
-    async with websockets.serve(handler, "134.255.220.44", 8001, ping_interval=None, close_timeout=1):
+    async with websockets.serve(handler, "134.255.220.44", 8000, ssl=ssl_context, ping_interval=None, close_timeout=1):
         await asyncio.Future()  # run forever
 
 
