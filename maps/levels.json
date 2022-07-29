@@ -203,7 +203,7 @@
         },
         "events": {
             "right_area": ["right", 480, 0],
-            "end": ["left", 69, 0],
+            "end": ["left", 96, 0],
             "both_pressure_plates": ["and", [["touch", ["button", 1], 0], ["touch", ["button", 2], 0]], 0]
         }
     },
