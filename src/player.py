@@ -82,7 +82,9 @@ class Player(pygame.sprite.Sprite):
             self.image = player_left
         tiles_on_same_layer = self.game.tiles.get_sprites_from_layer(0)
         solids_on_same_layer = [
-            tile for tile in tiles_on_same_layer if tile.__class__.__name__ in ("Solid", "NPC", "Switch", "TempSwitch", "SwitchBlock")
+            tile
+            for tile in tiles_on_same_layer
+            if tile.__class__.__name__ in ("Solid", "NPC", "Switch", "TempSwitch", "SwitchBlock")
         ]
         if pygame.sprite.spritecollide(
             self,
@@ -159,7 +161,11 @@ class Player(pygame.sprite.Sprite):
                     self.rect.bottom = (
                         collisions[0].rect.y + 1 if collisions[0].rect.height == 16 else collisions[0].rect.centery - 2
                     )
-                    for switch in filter(lambda switch: "Switch" in switch.__class__.__name__ and "Block" not in switch.__class__.__name__, collisions):
+                    for switch in filter(
+                        lambda switch: "Switch" in switch.__class__.__name__
+                        and "Block" not in switch.__class__.__name__,
+                        collisions,
+                    ):
                         switch.press()
                     self.y_velocity = 0
                     self.falling = False

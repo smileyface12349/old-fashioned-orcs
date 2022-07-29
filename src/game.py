@@ -60,8 +60,7 @@ TYPE_MAPPINGS: dict[str, type] = {
     "solid": solid.Solid,
     "npc1": solid.NPC,
     "blue_cube": solid.Ending,
-    "button2": solid.Switch,
-    "button3": solid.Switch,
+    "button": solid.Switch,
 }
 
 
@@ -187,7 +186,11 @@ class EventTrigger:
                             tiles_on_same_layer if "button" not in self.arg_list[1][0] else self.game.tiles,
                             False,
                             lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1][0]])
-                            and spr2.tile_type == self.arg_list[1][1]
+                            and (
+                                (spr2.tile_type == self.arg_list[1][1])
+                                if self.arg_list[1][0] == "solid"
+                                else (spr2.id == self.arg_list[1][1])
+                            )
                             and pygame.sprite.collide_mask(spr1, spr2),
                         )
                     )
@@ -219,7 +222,11 @@ class EventTrigger:
                             tiles_on_same_layer if "button" not in self.arg_list[1][0] else self.game.tiles,
                             False,
                             lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1][0]])
-                            and spr2.tile_type == self.arg_list[1][1]
+                            and (
+                                (spr2.tile_type == self.arg_list[1][1])
+                                if self.arg_list[1][0] == "solid"
+                                else (spr2.id == self.arg_list[1][1])
+                            )
                             and pygame.sprite.collide_mask(spr1, spr2),
                         )
                     ) or bool(
@@ -230,7 +237,11 @@ class EventTrigger:
                             False,
                             lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1][0]])
                             and pygame.sprite.collide_mask(spr1, spr2)
-                            and spr2.tile_type == self.arg_list[1][1],
+                            and (
+                                (spr2.tile_type == self.arg_list[1][1])
+                                if self.arg_list[1][0] == "solid"
+                                else (spr2.id == self.arg_list[1][1])
+                            ),
                         )
                     )
             case "left":
@@ -386,7 +397,7 @@ class SwitchToggleManager:
                     if props is not None and obj.name is not None:
                         if "toggler" in obj.name and "related_switch" in props:
                             switch = props["related_switch"]
-                            switch2=props["related_other_switch"] if "related_other_switch" in props else None
+                            switch2 = props["related_other_switch"] if "related_other_switch" in props else None
                             args = map(round, (obj.x, obj.y, obj.width, obj.height))
                             new_rect = pygame.Rect(*args)
                             tile_gen = [
