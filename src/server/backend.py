@@ -157,29 +157,30 @@ async def handler(websocket):
             await ping_pong(websocket)
 
     except websockets.exceptions.ConnectionClosedError:
-        logging.info(f"ConnectionClosedError from => {websocket.remote_address}")
+        logging.info("Websocket closed with ConnectionClosedError")
 
     except websockets.exceptions.ConnectionClosedOK:
-        logging.info(f"ConnectionClosedOK from => {websocket.remote_address}")
+        logging.info("Websocket closed with ConnectionClosedOK")
 
     finally:
         # Drop websocket after figuring out its type
         if websocket in manager.active_broadcasts:
+
             await manager.drop_broadcast(websocket)
             try:
                 for play in players:
                     if play.unique_id == event["unique_id"]:
                         players.remove(play)
+                        logging.info(f"Closed game broadcast of => {play.nickname}")
             except RuntimeError:
                 pass
-            logging.info(f"Closed game broadcast socket from => {websocket.remote_address}")
         elif websocket in manager.active_connections and player:
+            logging.info(f"Closed main socket of => {player.nickname}")
+            manager.active_nicknames.remove(player.nickname)
             await db.save(player)
-            await manager.active_nicknames.remove(player.nickname)
             await games.remove_player(player)
             await games.clear()
             await manager.drop_main(websocket)
-            logging.info(f"Closed main socket from => {websocket.remote_address}")
 
 
 async def main():
