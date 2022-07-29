@@ -70,9 +70,9 @@ while game.running:
             if not game.showing_gui:
                 if not game.gui:
                     # Allow for ZQSD and WASD control schemes.
-                    if event.key == pygame.K_LEFT:
+                    if event.key in [pygame.K_LEFT, pygame.K_a, pygame.K_q]:
                         game.player.moving_left = True
-                    elif event.key == pygame.K_RIGHT:
+                    elif event.key in [pygame.K_RIGHT, pygame.K_d]:
                         game.player.moving_right = True
                     elif event.key in [pygame.K_SPACE, pygame.K_UP, pygame.K_z, pygame.K_w]:
                         game.player.jump()
@@ -84,6 +84,8 @@ while game.running:
                         game.gui.add(src.game.gui.Button((80, 95), "Exit Game", game.quit))
                         game.client.stop()
                         break
+                    elif event.key==pygame.K_f:
+                        game.read_map(f"maps/level{game.level+1}.tmx")
                     elif event.key == pygame.K_r and game.crashing:
                         game.gui.empty()
                         game.read_map(f"maps/level{game.level}.tmx")

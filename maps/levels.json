@@ -206,5 +206,13 @@
             "end": ["left", 69, 0],
             "both_pressure_plates": ["and", [["touch", ["button", 1], 0], ["touch", ["button", 2], 0]], 0]
         }
+    },
+    "5": {
+        "dialogue": {
+
+        },
+        "events": {
+
+        }
     }
 }
