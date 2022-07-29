@@ -7,7 +7,7 @@ The framework we chose to use for the client/server stuff is [`websockets`](http
 
 ## Installation
 
-If you want to play the our game, simply download the package you need from [the latest release](https://github.com/smileyface12349/old-fashioned-orcs/releases/latest), then run the executable. (Internet connection required to start the game.)
+If you want to play our game, simply download the package you need from [the latest release](https://github.com/smileyface12349/old-fashioned-orcs/releases/latest), then run the executable. (Internet connection required to start the game.)
 
 
 For a manual installation :
