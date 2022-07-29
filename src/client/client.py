@@ -50,6 +50,7 @@ class Client:
         print(f"Server hello => {response}")
 
         if response["type"] in ["init", "ready"]:
+            self.game.nickname = response["nickname"]
 
             if not cache_data["unique_id"]:
                 # If user didnt have a unique_id, server returned him one
@@ -157,6 +158,7 @@ class Client:
                 # Send the first data to initialize the connection
                 self.payload = await self._hello(cache_data)
                 # Now play the game
+                self.payload["nickname"] = self.game.nickname
                 await self._play(self.payload)
         except socket.gaierror:
             self.running = False
