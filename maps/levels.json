@@ -98,7 +98,7 @@
                 },
                 {
                     "text": "...",
-                    "character": "you"
+                    "character": "player"
                 },
                 {
                     "text": "Sorry if that came across as rude",
@@ -122,12 +122,12 @@
                 },
                 {
                     "text": "Press F if you have no friends (NOTE: Does not generate friends, just skips level)",
-                    "character": "you"
+                    "character": "player"
                 }
             ],
             "other_dude": [{
                 "text": "Like my house?",
-                "character": "Guy"
+                "character": "gary"
             }],
             "flag": [
                 "GET YOUR DIRTY HANDS OFF MY FLAG"
