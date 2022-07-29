@@ -194,11 +194,11 @@
             ],
             "end": [
                 {"text": "Sorry, the magic blue square hasn't loaded in yet", "character": "Mr. Dev"},
-                {"text": "There's another one up there but I doubt you can reach it", "character": "Mr. Dev"},
-                {"text": "Have you tried stepping on every pressure plate at random until it works?", "character": "Mr. Dev"}
+                {"text": "There's another one up there but you'll have to be really skilled to reach it", "character": "Mr. Dev"},
+                {"text": "You can try and get up there (requires very good co-ordination with your partner) or just step on every pressure plate at random until it works", "character": "Mr. Dev"}
             ],
             "both_pressure_plates": [
-                {"text": "Wow! It worked!", "character": "Mr. Dev"}
+                {"text": "Wow! It worked! There's a magic blue square here!", "character": "Mr. Dev"}
             ]
         },
         "events": {
