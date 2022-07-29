@@ -186,8 +186,9 @@ class Client:
         """Thread for receiving broadcasts."""
         try:
             asyncio.run(self._main())
-        except asyncio.exceptions.TimeoutError or asyncio.exceptions.CancelledError:
+        except TimeoutError or asyncio.exceptions.CancelledError:
             print("Cannot connect to server. Try again later!")
+            self.running = False
         except websockets.exceptions.ConnectionClosedError or asyncio.exceptions.IncompleteReadError:
             print("Connection closed.")
             self.running = False
@@ -196,8 +197,9 @@ class Client:
         """Main Thread, mostly for sending payloads to the server."""
         try:
             asyncio.run(self._broadcast())
-        except asyncio.exceptions.TimeoutError or asyncio.exceptions.CancelledError:
+        except TimeoutError or asyncio.exceptions.CancelledError:
             print("Cannot connect to server. Try again later!")
+            self.running = False
         except websockets.exceptions.ConnectionClosedError or asyncio.exceptions.IncompleteReadError:
             print("Connection closed.")
             self.running = False
