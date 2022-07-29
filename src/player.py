@@ -159,7 +159,7 @@ class Player(pygame.sprite.Sprite):
                     self.rect.bottom = (
                         collisions[0].rect.y + 1 if collisions[0].rect.height == 16 else collisions[0].rect.centery - 2
                     )
-                    for switch in filter(lambda switch: "Switch" in switch.__class__.__name__, collisions):
+                    for switch in filter(lambda switch: "Switch" in switch.__class__.__name__ and "Block" not in switch.__class__.__name__, collisions):
                         switch.press()
                     self.y_velocity = 0
                     self.falling = False
