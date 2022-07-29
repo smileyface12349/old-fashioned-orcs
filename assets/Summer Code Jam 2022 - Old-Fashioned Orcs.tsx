@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.0" name="Summer Code Jam 2022 - Old-Fashioned Orcs" tilewidth="16" tileheight="16" tilecount="47" columns="0">
+<tileset version="1.9" tiledversion="1.9.0" name="Summer Code Jam 2022 - Old-Fashioned Orcs" tilewidth="16" tileheight="16" tilecount="50" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <transformations hflip="1" vflip="0" rotate="0" preferuntransformed="0"/>
  <tile id="0">
@@ -324,5 +324,23 @@
    <property name="type" type="int" value="40"/>
   </properties>
   <image width="16" height="16" source="invisible_solid.png"/>
+ </tile>
+ <tile id="48">
+  <properties>
+   <property name="tile" value="temp_button"/>
+  </properties>
+  <image width="16" height="16" source="btn_tiled.png"/>
+ </tile>
+ <tile id="49">
+  <properties>
+   <property name="tile" value="switch_block_f"/>
+  </properties>
+  <image width="16" height="16" source="switch_block1.png"/>
+ </tile>
+ <tile id="50">
+  <properties>
+   <property name="tile" value="switch_block_t"/>
+  </properties>
+  <image width="16" height="16" source="switch_block2.png"/>
  </tile>
 </tileset>

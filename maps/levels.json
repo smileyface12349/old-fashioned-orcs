@@ -76,8 +76,8 @@
         },
         "events": {
             "start": ["start", null, 0],
-            "flag": ["touch", "flag", 0],
-            "flag_delay": ["touch", "flag", 2],
+            "flag": ["touch_player", "flag", 0],
+            "flag_delay": ["touch_player", "flag", 2],
             "brick_wall": ["left", 98, 0],
             "brick_wall_delay": ["left", 128, 3],
             "through_brick_wall": ["left", 48, 0]
@@ -140,11 +140,11 @@
             ]
         },
         "events": {
-            "first_dude": ["touch", "npc1", 0],
-            "other_dude": ["touch", ["solid", 40], 0],
-            "flag": ["touch", "flag", 0],
+            "first_dude": ["touch_player", "npc1", 0],
+            "other_dude": ["touch_player", ["solid", 40], 0],
+            "flag": ["touch_player", "flag", 0],
             "other_side": ["right", 99, 0],
-            "completion": ["touch", "blue_cube", 0]
+            "completion": ["touch_player", "blue_cube", 0]
         },
         "fail": ["flag"]
     },
@@ -170,8 +170,8 @@
             ]
         },
         "events": {
-            "flag": ["touch", "flag", 0],
-            "shovel": ["touch", ["solid", 20], 0]
+            "flag": ["touch_player", "flag", 0],
+            "shovel": ["touch_player", ["solid", 20], 0]
         },
         "fail": ["flag"]
     },
@@ -183,7 +183,7 @@
             ]
         },
         "events": {
-            "flag": ["touch", "flag", 0]
+            "flag": ["touch_player", "flag", 0]
         }
     },
     "4": {

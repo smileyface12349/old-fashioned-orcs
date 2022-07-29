@@ -168,12 +168,13 @@ class EventTrigger:
         match self.type:
             case "start":
                 val = True
-            case "touch":
+            case "touch_player":
+                # Only happens when the LOCAL player meets the given requirements.
                 if isinstance(self.arg_list[1], str):
                     val = bool(
                         pygame.sprite.spritecollide(
                             self.game.player,
-                            tiles_on_same_layer,
+                            tiles_on_same_layer if "button" not in self.arg_list[1] else self.game.tiles,
                             False,
                             lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1]])
                             and pygame.sprite.collide_mask(spr1, spr2),
@@ -183,11 +184,53 @@ class EventTrigger:
                     val = bool(
                         pygame.sprite.spritecollide(
                             self.game.player,
-                            tiles_on_same_layer,
+                            tiles_on_same_layer if "button" not in self.arg_list[1][0] else self.game.tiles,
                             False,
                             lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1][0]])
                             and spr2.tile_type == self.arg_list[1][1]
                             and pygame.sprite.collide_mask(spr1, spr2),
+                        )
+                    )
+            case "touch":
+                # Happens when ANY player (local or not) meets the given requirements.
+                if isinstance(self.arg_list[1], str):
+                    val = bool(
+                        pygame.sprite.spritecollide(
+                            self.game.player,
+                            tiles_on_same_layer if "button" not in self.arg_list[1] else self.game.tiles,
+                            False,
+                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1]])
+                            and pygame.sprite.collide_mask(spr1, spr2),
+                        )
+                    ) or bool(
+                        pygame.sprite.groupcollide(
+                            self.game.other_players,
+                            tiles_on_same_layer if "button" not in self.arg_list[1] else self.game.tiles,
+                            False,
+                            False,
+                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1]])
+                            and pygame.sprite.collide_mask(spr1, spr2),
+                        )
+                    )
+                else:
+                    val = bool(
+                        pygame.sprite.spritecollide(
+                            self.game.player,
+                            tiles_on_same_layer if "button" not in self.arg_list[1][0] else self.game.tiles,
+                            False,
+                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1][0]])
+                            and spr2.tile_type == self.arg_list[1][1]
+                            and pygame.sprite.collide_mask(spr1, spr2),
+                        )
+                    ) or bool(
+                        pygame.sprite.groupcollide(
+                            self.game.other_players,
+                            tiles_on_same_layer if "button" not in self.arg_list[1][0] else self.game.tiles,
+                            False,
+                            False,
+                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1][0]])
+                            and pygame.sprite.collide_mask(spr1, spr2)
+                            and spr2.tile_type == self.arg_list[1][1],
                         )
                     )
             case "left":
@@ -323,6 +366,58 @@ class SwitchSpawnManager:
                             self.related_tiles[obj.properties["related_switch"]].add(*tile_gen)
 
 
+class SwitchToggleManager:
+    """Handles toggleable switch blocks."""
+
+    def __init__(self, game):
+        self.game = game
+        self.objects = {}
+        self.switch_blocks = {}
+
+    def update_from_map(self, layer_list):
+        """Update the toggleable tile list."""
+        self.switch_blocks.clear()
+        for layer in layer_list:
+            if isinstance(layer, pytmx.TiledObjectGroup):
+                for obj in layer:
+                    props = obj.properties
+                    if "toggler" in obj.name and "related_switch" in props:
+                        switch = props["related_switch"]
+                        args = map(round, (obj.x, obj.y, obj.width, obj.height))
+                        new_rect = pygame.Rect(*args)
+                        tile_gen = [
+                            tile
+                            for tile in self.game.tiles.get_sprites_from_layer(0)
+                            if isinstance(tile, solid.SwitchBlock) and new_rect.colliderect(tile.rect)
+                        ]
+                        for tile in tile_gen:
+                            if tile.tile_type - 1:
+                                tile.kill()
+                        if switch in self.switch_blocks:
+                            self.objects[switch].append(new_rect)
+                            self.switch_blocks[switch].add(*tile_gen)
+                        else:
+                            self.objects[switch] = [new_rect]
+                            self.switch_blocks[switch] = pygame.sprite.Group(*tile_gen)
+
+    def toggle(self, switch: int, status: bool):
+        """Toggle the switch blocks."""
+        if switch in self.objects:
+            for s_block in self.switch_blocks[switch]:
+                if s_block.tile_type - 1:
+                    if status:
+                        self.game.tiles.add(s_block, layer=0)
+                        self.game.objects.add(s_block, layer=0)
+                    else:
+                        s_block.remove(self.game.tiles, self.game.objects)
+                else:
+                    if status:
+                        s_block.remove(self.game.tiles, self.game.objects)
+                    else:
+                        self.game.tiles.add(s_block, layer=0)
+                        self.game.objects.add(s_block, layer=0)
+
+
 SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
 
 
@@ -351,6 +446,7 @@ class Game:
         self.trigger_man = EventTriggerManager(self)
         self.switchd_man = SwitchDestroyManager(self)
         self.switchs_man = SwitchSpawnManager(self)
+        self.switcht_man = SwitchToggleManager(self)
 
     def quit(self):
         """Quit button event"""
@@ -421,7 +517,7 @@ class Game:
                         self.tiles.add(solid.NPC(self, (tile_x, tile_y), layer), layer=layer)
                         continue
                     tile_id = tile["id"]
-                    if tile_id not in [1, 20, 22, 25]:
+                    if tile_id not in [1, 20, 22, 25, 48, 49, 50]:
                         # Solid tile
                         new_spr = solid.Solid(self, (tile_x, tile_y), layer)
                         self._select_solid_image(new_spr, tile["type"], flipped_tile)
@@ -435,6 +531,10 @@ class Game:
                     elif tile_id == 25:
                         # Switch (can be pressed by the player)
                         self.tiles.add(solid.Switch(self, (tile_x, tile_y)), layer=layer)
+                    elif tile_id == 48:
+                        self.tiles.add(solid.TempSwitch(self, (tile_x, tile_y)), layer=layer)
+                    elif tile_id in [49, 50]:
+                        self.tiles.add(solid.SwitchBlock(self, (tile_x, tile_y), layer, tile_id - 48), layer=layer)
                     else:
                         # "Glitchy" tile (starts a pseudo-crash upon contact)
                         self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer)
@@ -443,6 +543,7 @@ class Game:
         self.trigger_man.set_triggers(self.level)
         self.switchd_man.update_from_map(self.tmx_data.layers)
         self.switchs_man.update_from_map(self.tmx_data.layers)
+        self.switcht_man.update_from_map(self.tmx_data.layers)
 
     def draw_objects(self, screen):
         """

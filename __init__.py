@@ -22,7 +22,7 @@ clock = pygame.time.Clock()  # a framerate helper object.
 
 while game.running:
     # We generally use a while loop when making a game. Most of the game code should go here.
-    screen.fill("skyblue")
+    screen.fill("skyblue" if game.level in (0, 5) else "darkgray")
     dt = clock.tick(60)  # this ensures that the game cannot run higher that 60FPS. We also get a delta time in ms.
     if game.showing_gui:
         if game.inputting_nickname:
@@ -61,6 +61,10 @@ while game.running:
         elif event.type == src.game.solid.SWITCH_PRESSED:
             game.switchs_man.spawn(event.id)
             game.switchd_man.destroy(event.id)
+            game.switcht_man.toggle(event.id, True)
+
+        elif event.type == src.game.solid.SWITCH_RELEASED:
+            game.switcht_man.toggle(event.id, False)
 
         elif event.type == pygame.KEYDOWN:
             if not game.showing_gui:

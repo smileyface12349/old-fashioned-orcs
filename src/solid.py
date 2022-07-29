@@ -87,6 +87,8 @@ invisible_solid = pygame.Surface((16, 16)).convert_alpha()
 invisible_solid.fill("skyblue")
 switch = _load_img("assets/switch.png")
 pressed_switch = _load_img("assets/pressed_switch.png")
+switch_block_g = _load_img("assets/switch_block1.png")
+switch_block_b = _load_img("assets/switch_block2.png")
 
 
 class Solid(pygame.sprite.Sprite):
@@ -236,6 +238,7 @@ class NPC(Solid):
 
 _switch_id = 0
 SWITCH_PRESSED = pygame.event.custom_type()
+SWITCH_RELEASED = pygame.event.custom_type()
 
 
 class Switch(pygame.sprite.Sprite):
@@ -301,3 +304,24 @@ class Switch(pygame.sprite.Sprite):
     @property
     def playerisdown_strict(self):
         return self.playerisdown and not self.playerisleft and not self.playerisright
+
+
+class TempSwitch(Switch):
+    def update(self, *args, **kwargs):
+        super().update(*args, **kwargs)
+        if self.pressed and (
+            not pygame.sprite.spritecollide(self, self.game.other_players, False)
+            and not pygame.sprite.spritecollide(self.game.player, [self], False)
+        ):
+            self.unpress()
+
+    def unpress(self):
+        self.pressed = False
+        pygame.event.post(pygame.event.Event(SWITCH_RELEASED, id=self.id))
+
+
+class SwitchBlock(Solid):
+    def __init__(self, game, tile_pos, layer, ttype):
+        super().__init__(game, tile_pos, layer)
+        self.tile_type = ttype
+        self.image = switch_block_g if not (ttype - 1) else switch_block_b
