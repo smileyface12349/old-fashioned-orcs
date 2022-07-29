@@ -449,6 +449,7 @@ class EndingIncrementManager:
         self.increments = {}
 
     def update_from_map(self, layer_list):
+        """A nice doc string, duh."""
         self.objects.clear()
         self.increments.clear()
         for layer in layer_list:
@@ -588,7 +589,7 @@ class Game:
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
         self.trigger_man.set_triggers(self.level)
-        layers=self.tmx_data.layers
+        layers = self.tmx_data.layers
         self.switchd_man.update_from_map(layers)
         self.switchs_man.update_from_map(layers)
         self.switcht_man.update_from_map(layers)
