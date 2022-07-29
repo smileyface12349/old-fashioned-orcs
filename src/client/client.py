@@ -183,6 +183,7 @@ class Client:
             print("Cannot connect to server. Try again later!")
         except websockets.exceptions.ConnectionClosedError or asyncio.exceptions.IncompleteReadError:
             print("Connection closed.")
+            self.running = False
 
     def _recv_start(self):
         """Main Thread, mostly for sending payloads to the server."""
@@ -192,3 +193,4 @@ class Client:
             print("Cannot connect to server. Try again later!")
         except websockets.exceptions.ConnectionClosedError or asyncio.exceptions.IncompleteReadError:
             print("Connection closed.")
+            self.running = False

@@ -14,6 +14,7 @@ _resource_path = player._resource_path
 
 crash = pygame.image.load(_resource_path("assets/crash.png")).convert_alpha()
 loading = pygame.image.load(_resource_path("assets/loading.png")).convert_alpha()
+disconnected = pygame.image.load(_resource_path("assets/loading.png")).convert_alpha()
 
 game_crash = pygame.mixer.Sound(_resource_path("assets/game_crash.wav"))
 game_crash.set_volume(0.35)  # We don't want players to get their eardrums destroyed

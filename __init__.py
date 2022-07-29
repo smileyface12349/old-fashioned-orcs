@@ -36,6 +36,8 @@ while game.running:
                 game.draw_objects(screen)  # We draw everything here
             else:
                 screen.blit(src.game.loading, (0, 0))
+            if not game.client.running:
+                screen.blit(src.game.disconnected, (0, 0))
             game.trigger_man.check_triggers(dt)
         elif game.crashing:
             screen.blit(src.game.crash, (0, 0))
