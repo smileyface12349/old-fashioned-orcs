@@ -34,3 +34,6 @@ build/
 # Cache file
 cache.dmp
 /temp_txt.png
+# SSL Certs
+src/server/server-cert.pem
+src/server/server-key.pem

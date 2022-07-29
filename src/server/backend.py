@@ -10,7 +10,7 @@ from instances import GameManager, PlayerSession
 from manager import ConnectionManager
 
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-ssl_context.load_cert_chain("cert.pem", keyfile="key.pem")
+ssl_context.load_cert_chain("server-cert.pem", keyfile="server-key.pem")
 logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=logging.INFO)
 
 games = GameManager()
