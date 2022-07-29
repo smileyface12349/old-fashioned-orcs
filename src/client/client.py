@@ -1,5 +1,6 @@
 import asyncio
 import json
+import socket
 import ssl
 import threading
 from operator import itemgetter
@@ -73,27 +74,30 @@ class Client:
         """Listener for game broadcasts."""
         init = False
         # Wait for the response/update and process it
-        async with websockets.connect(
-            "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
-        ) as self.broadcast:
-            while self.running:
-                # Make sure main thread actually initialized
-                if not self.unique_id:
-                    await asyncio.sleep(0.1)
-                    continue
-                # First payload on this websocket needs to include unique_id
-                # So that the server can identify it and assign the socket to the same player
-                if not init:
-                    await self.broadcast.send(json.dumps({"type": "broadcast", "unique_id": self.unique_id}))
-                    init = True
-                # Now that we have initiliased, wait for actual updates/pings!
-                response = await self.broadcast.recv()
-                response = json.loads(response)
-                if response["type"] == "update":
-                    print(f"Public Broadcast => {response}")
-                    await self._sync_players(response)
-                elif response["type"] == "ping":
-                    print(f"Private Ping Broadcast => {response}")
+        try:
+            async with websockets.connect(
+                "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
+            ) as self.broadcast:
+                while self.running:
+                    # Make sure main thread actually initialized
+                    if not self.unique_id:
+                        await asyncio.sleep(0.1)
+                        continue
+                    # First payload on this websocket needs to include unique_id
+                    # So that the server can identify it and assign the socket to the same player
+                    if not init:
+                        await self.broadcast.send(json.dumps({"type": "broadcast", "unique_id": self.unique_id}))
+                        init = True
+                    # Now that we have initiliased, wait for actual updates/pings!
+                    response = await self.broadcast.recv()
+                    response = json.loads(response)
+                    if response["type"] == "update":
+                        print(f"Public Broadcast => {response}")
+                        await self._sync_players(response)
+                    elif response["type"] == "ping":
+                        print(f"Private Ping Broadcast => {response}")
+        except socket.gaierror:
+            print("Cannot connect to server. Try again later!")
 
     async def _sync_players(self, response):
         """Update OtherPlayers from broadcasts!"""
@@ -137,23 +141,24 @@ class Client:
     async def _main(self):
         """Main client websocket"""
         cache_data = await cache.load()
-
         cache_nick = player_nickname(cache_data)
 
         if not cache_nick:
             cache_data["nickname"] = self.game.nickname
         else:
             self.game.nickname = cache_nick
-
         del cache_nick
 
-        async with websockets.connect(
-            "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
-        ) as self.websocket:
-            # Send the first data to initialize the connection
-            self.payload = await self._hello(cache_data)
-            # Now play the game
-            await self._play(self.payload)
+        try:
+            async with websockets.connect(
+                "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
+            ) as self.websocket:
+                # Send the first data to initialize the connection
+                self.payload = await self._hello(cache_data)
+                # Now play the game
+                await self._play(self.payload)
+        except socket.gaierror:
+            print("Cannot connect to server. Try again later!")
 
     def start(self):
         """Starts the listen/receive threads."""
