@@ -153,16 +153,38 @@
             "flag": [
                 "Hey! Hands off my flag!",
                 "crash"
+            ],
+            "shovel": [
+                {
+                    "despawn_layer": 0,
+                    "coords": [39, 9]
+                },
+                {
+                    "despawn_layer": 0,
+                    "coords": [13, 8]
+                },
+                {
+                    "despawn_layer": 0,
+                    "coords": [13, 9]
+                }
             ]
         },
         "events": {
-            "flag": ["touch", "flag", 0]
+            "flag": ["touch", "flag", 0],
+            "shovel": ["touch", ["solid", 20], 0]
         },
         "fail": ["flag"]
     },
     "3": {
-        "dialogue": {},
-        "events": {}
+        "dialogue": {
+            "flag": [
+                "I don't remember allowing you to touch these flags!",
+                "crash"
+            ]
+        },
+        "events": {
+            "flag": ["touch", "flag", 0]
+        }
     },
     "4": {
         "dialogue": {
@@ -171,18 +193,18 @@
                 "Are you assuming this pressure plate actually does something?"
             ],
             "end": [
-                {"text": "Sorry, the magic blue square hasn't loaded in yet", "character": "please_make_a_better_name"},
-                {"text": "There's another one up there but I doubt you can reach it", "character": "please_make_a_better_name"},
-                {"text": "Have you tried stepping on every pressure plate at random until it works?", "character": "please_make_a_better_name"}
+                {"text": "Sorry, the magic blue square hasn't loaded in yet", "character": "Mr. Dev"},
+                {"text": "There's another one up there but I doubt you can reach it", "character": "Mr. Dev"},
+                {"text": "Have you tried stepping on every pressure plate at random until it works?", "character": "Mr. Dev"}
             ],
             "both_pressure_plates": [
-                {"text": "Wow! It worked!", "character": "please_make_a_better_name"}
+                {"text": "Wow! It worked!", "character": "Mr. Dev"}
             ]
         },
         "events": {
-            "right_area": ["right", 99, 0],
+            "right_area": ["right", 480, 0],
             "end": ["left", 69, 0],
-            "both_pressure_plates": ["and", ["touch", "button2", 0], ["touch", "button3", 0]]
+            "both_pressure_plates": ["and", [["touch", "button2", 0], ["touch", "button3", 0]], 0]
         }
     }
 }

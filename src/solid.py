@@ -265,6 +265,10 @@ class Switch(pygame.sprite.Sprite):
     def update(self, *args, **kwargs):
         """Change the image according to whether the switch is pressed or not."""
         self.image = switch if not self.pressed else pressed_switch
+        if (not self.pressed) and pygame.sprite.spritecollide(
+            self, self.game.other_players, False, pygame.sprite.collide_mask
+        ):
+            self.press()
 
     @property
     def playerisup(self):

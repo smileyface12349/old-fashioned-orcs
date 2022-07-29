@@ -60,6 +60,8 @@ TYPE_MAPPINGS: dict[str, type] = {
     "solid": solid.Solid,
     "npc1": solid.NPC,
     "blue_cube": solid.Ending,
+    "button2": solid.Switch,
+    "button3": solid.Switch,
 }
 
 
@@ -71,9 +73,13 @@ class EventTrigger:
         self.game = mgr.game
         self.id = id
         self.arg_list = arg_list
-        self.triggered = False
+        self._triggered = False
         self.trigger_duration_reached = False
         self.type = arg_list[0]
+        if self.type == "and":
+            self._evts = list(map(lambda tgr: EventTrigger(self.mgr, "", tgr), self.arg_list[1]))
+        else:
+            self._evts = None
         self.trigger_delay = 0
         self._required_evt = None
         self.dial_index = 0
@@ -91,6 +97,15 @@ class EventTrigger:
                 self.dialogues = self.dialogues[1:]
         except KeyError:
             self.dialogues = []
+
+    def _set_triggered(self, val: bool):
+        """Private setter for the triggered flag."""
+        if self._evts is not None:
+            for evt in self._evts:
+                evt.triggered = val
+        self._triggered = val
+
+    triggered = property(lambda self: self._triggered, _set_triggered)
 
     def __repr__(self):
         return f"<EventTrigger(id='{self.id}', arg_list={self.arg_list}, triggered={self.triggered})>"
@@ -177,6 +192,10 @@ class EventTrigger:
                     )
             case "left":
                 val = self.game.player.rect.x <= self.arg_list[1]
+            case "right":
+                val = self.game.player.rect.right >= self.arg_list[1]
+            case "and":
+                val = all(evt.trigger_condition() for evt in self._evts)
         return val and not self.triggered and (self._required_evt is None or self._required_evt.triggered)
 
 
@@ -210,11 +229,6 @@ class EventTriggerManager:
 
     def set_triggers(self, level: int | str):
         """Set up triggers for this level."""
-        print(self.current_trigger)
-        try:
-            print(self.current_trigger.triggered)
-        except:
-            print(False)
         self.current_trigger = None
         self.trigger_objs.clear()
         self.triggers.clear()
@@ -224,6 +238,7 @@ class EventTriggerManager:
         self.dialogues.update(data["dialogue"])
         for item in self.triggers.items():
             self.trigger_objs.append(EventTrigger(self, *item))
+        print(self.trigger_objs)
 
 
 class SwitchDestroyManager:
