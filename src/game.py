@@ -376,30 +376,40 @@ class SwitchToggleManager:
 
     def update_from_map(self, layer_list):
         """Update the toggleable tile list."""
+        self.objects.clear()
         self.switch_blocks.clear()
         for layer in layer_list:
             if isinstance(layer, pytmx.TiledObjectGroup):
                 for obj in layer:
                     print(obj)
                     props = obj.properties
-                    if "toggler" in obj.name and "related_switch" in props:
-                        switch = props["related_switch"]
-                        args = map(round, (obj.x, obj.y, obj.width, obj.height))
-                        new_rect = pygame.Rect(*args)
-                        tile_gen = [
-                            tile
-                            for tile in self.game.tiles.get_sprites_from_layer(0)
-                            if isinstance(tile, solid.SwitchBlock) and new_rect.colliderect(tile.rect)
-                        ]
-                        for tile in tile_gen:
-                            if tile.tile_type - 1:
-                                tile.kill()
-                        if switch in self.switch_blocks:
-                            self.objects[switch].append(new_rect)
-                            self.switch_blocks[switch].add(*tile_gen)
-                        else:
-                            self.objects[switch] = [new_rect]
-                            self.switch_blocks[switch] = pygame.sprite.Group(*tile_gen)
+                    if props is not None and obj.name is not None:
+                        if "toggler" in obj.name and "related_switch" in props:
+                            switch = props["related_switch"]
+                            switch2=props["related_other_switch"] if "related_other_switch" in props else None
+                            args = map(round, (obj.x, obj.y, obj.width, obj.height))
+                            new_rect = pygame.Rect(*args)
+                            tile_gen = [
+                                tile
+                                for tile in self.game.tiles.get_sprites_from_layer(0)
+                                if isinstance(tile, solid.SwitchBlock) and new_rect.colliderect(tile.rect)
+                            ]
+                            for tile in tile_gen:
+                                if tile.tile_type - 1:
+                                    tile.kill()
+                            if switch in self.switch_blocks:
+                                self.objects[switch].append(new_rect)
+                                self.switch_blocks[switch].add(*tile_gen)
+                            else:
+                                self.objects[switch] = [new_rect]
+                                self.switch_blocks[switch] = pygame.sprite.Group(*tile_gen)
+                            if switch2 is not None:
+                                if switch2 in self.switch_blocks:
+                                    self.objects[switch2].append(new_rect)
+                                    self.switch_blocks[switch2].add(*tile_gen)
+                                else:
+                                    self.objects[switch2] = [new_rect]
+                                    self.switch_blocks[switch2] = pygame.sprite.Group(*tile_gen)
 
     def toggle(self, switch: int, status: bool):
         """Toggle the switch blocks."""

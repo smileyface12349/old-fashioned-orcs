@@ -17,27 +17,13 @@
 35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,28,30,43,2147483678,28,35,35,35,35,35
 </data>
  </layer>
- <objectgroup id="7" name="Switch Togglers" visible="0">
-  <object id="7" name="switch_toggler1" x="468.667" y="100" width="5.66667" height="55.6667" visible="0">
+ <objectgroup id="7" name="Switch Togglers">
+  <object id="7" name="switch_toggler1" x="468.667" y="100" width="5.66667" height="55.6667">
    <properties>
+    <property name="related_other_switch" type="int" value="1"/>
     <property name="related_switch" type="int" value="0"/>
    </properties>
   </object>
- </objectgroup>
- <objectgroup id="6" name="Switch Spawners" visible="0">
-  <object id="6" name="tile_spawner1" x="595" y="147.333" width="10.3333" height="8" visible="0">
-   <properties>
-    <property name="related_switch" type="int" value="1"/>
-   </properties>
-  </object>
- </objectgroup>
- <objectgroup id="5" name="Switch Destroyers" visible="0">
-  <object id="4" name="bug_destroyer1" x="463.5" y="95.5" width="16.5" height="64" visible="0">
-   <properties>
-    <property name="related_switch" type="int" value="0"/>
-   </properties>
-  </object>
-  <object id="5" x="464.25" y="96.375" width="15.375" height="63.125"/>
  </objectgroup>
  <layer id="2" name="No collision" width="40" height="12">
   <data encoding="csv">
