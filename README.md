@@ -3,6 +3,7 @@
 Hello there! This is our project for the summer code jam of Python Discord!
 "A Totally Generic Platformer" by Old-Fashioned Orcs, is an online multiplayer game written in Python with [`pygame`](http://pygame.org).
 The framework we chose to use for the client/server stuff is [`websockets`](https://github.com/aaugustin/websockets).
+Also, I must warn you, don't expect much more than what the title says. It's your generic, average platformer, duh.
 
 
 ## Installation
@@ -25,7 +26,7 @@ python3 -m pip install -r dev-requirements.txt
 
 ## Controls
 
-- `←` and `→` to move right/left.
+- `←` and `→` to move right/left (WASD and ZQSD control schemes are supported as well).
 - `↑` or `Space Bar` to jump.
 - `R` if you experience a "pseudo-crash".
 - `Return` or `Space Bar` for interactions.

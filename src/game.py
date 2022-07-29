@@ -92,22 +92,28 @@ class EventTrigger:
             self.dialogues = []
 
     def __repr__(self):
-        return f"<EventTrigger(id='{self.id}', arg_list={self.arg_list})>"
+        return f"<EventTrigger(id='{self.id}', arg_list={self.arg_list}, triggered={self.triggered})>"
 
     def update_evt(self):
         """Update dialogue box with event"""
         if self.dial_index < len(self.dialogues):
             dial = self.dialogues[self.dial_index]
             if isinstance(dial, str):
-                self.game.gui.add(gui.TextBox(dial))
-                self.dial_index += 1
+                if dial!="crash":
+                    self.game.gui.add(gui.TextBox(dial))
+                    self.dial_index += 1
+                else:
+                    if not self.game.crashing:
+                        self.game.crash()
             else:
-                if "despawn_layer" not in dial:
+                if "despawn_layer" not in dial and "crash" not in dial:
                     char = dial["character"]
                     self.game.gui.add(
                         gui.TextBox(dial["text"], f"[{char if char not in ('player', 'you') else self.game.nickname}]")
                     )
                     self.dial_index += 1
+                elif "crash" in dial:
+                    self.game.crash()
                 else:
                     despawn_layer = self.game.tiles.get_sprites_from_layer(dial["despawn_layer"])
                     for spr in despawn_layer:
@@ -182,7 +188,7 @@ class EventTriggerManager:
             self.level_data = json.loads(file.read())
         self.triggers = {}
         self.dialogues = {}
-        self.current_trigger = None
+        self.current_trigger: EventTrigger|None = None
         self.trigger_objs: list[EventTrigger] = []
 
     def check_triggers(self, dt):
@@ -203,12 +209,18 @@ class EventTriggerManager:
 
     def set_triggers(self, level: int | str):
         """Set up triggers for this level."""
+        print(self.current_trigger)
+        try:
+            print(self.current_trigger.triggered)
+        except:
+            print(False)
+        self.current_trigger=None
         self.trigger_objs.clear()
         self.triggers.clear()
         self.dialogues.clear()
         data = self.level_data[str(level)]
-        self.triggers = data["events"]
-        self.dialogues = data["dialogue"]
+        self.triggers.update(data["events"])
+        self.dialogues.update(data["dialogue"])
         for item in self.triggers.items():
             self.trigger_objs.append(EventTrigger(self, *item))
 
@@ -366,6 +378,7 @@ class Game:
             self.level = SPECIAL_LEVEL_MAPS[list(key for key in SPECIAL_LEVEL_MAPS if key in directory)[0]]
         else:
             self.level = int(directory.removeprefix("maps/level").removesuffix(".tmx"))
+            print(self.level)
         self.camera.change_settings(self.tmx_data.width * 16, self.tmx_data.height * 16)
         for sprite in self.tiles:
             sprite.kill()

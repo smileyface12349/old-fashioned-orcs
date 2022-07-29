@@ -145,12 +145,14 @@
     "2": {
         "dialogue": {
             "flag": [
-                "Hey! Hands off my flag!"
+                "Hey! Hands off my flag!",
+                "crash"
             ]
         },
         "events": {
             "flag": ["touch", "flag", 0]
-        }
+        },
+        "fail": ["flag"]
     },
     "3": {
         "dialogue": {},

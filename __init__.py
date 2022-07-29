@@ -30,16 +30,15 @@ while game.running:
         game.gui.update(dt)
         game.gui.draw(screen)
     else:
-        if not game.gui:
+        if not game.gui and not game.crashing:
             if game.tiles:
-                if not game.crashing:
-                    game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
-                    game.draw_objects(screen)  # We draw everything here
-                else:
-                    screen.blit(src.game.crash, (0, 0))
+                game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
+                game.draw_objects(screen)  # We draw everything here
             else:
                 screen.blit(src.game.loading, (0, 0))
             game.trigger_man.check_triggers(dt)
+        elif game.crashing:
+            screen.blit(src.game.crash, (0, 0))
         else:
             game.gui.update()
             game.gui.draw(screen)
@@ -80,6 +79,7 @@ while game.running:
                         game.client.stop()
                         break
                     elif event.key == pygame.K_r and game.crashing:
+                        game.gui.empty()
                         game.read_map(f"maps/level{game.level}.tmx")
                         src.game.game_crash.stop()
                         game.crashing = False
