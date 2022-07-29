@@ -97,6 +97,7 @@ class Client:
                     elif response["type"] == "ping":
                         print(f"Private Ping Broadcast => {response}")
         except socket.gaierror:
+            self.running = False
             print("Cannot connect to server. Try again later!")
 
     async def _sync_players(self, response):
@@ -158,11 +159,11 @@ class Client:
                 # Now play the game
                 await self._play(self.payload)
         except socket.gaierror:
+            self.running = False
             print("Cannot connect to server. Try again later!")
 
     def start(self):
         """Starts the listen/receive threads."""
-        self.running = True
         # The main thread.
         self.main_thread = threading.Thread(target=self._main_start, daemon=True)
         # Broadcast listener thread
@@ -171,6 +172,7 @@ class Client:
         # (If the thread is not daemon, we get a RuntimeError upon closing the window.)
         self.main_thread.start()
         self.recv_thread.start()
+        self.running = True
 
     def stop(self):
         """Stops the listen/receive threads."""
