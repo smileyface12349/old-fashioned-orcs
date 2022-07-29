@@ -440,6 +440,30 @@ class SwitchToggleManager:
                         self.game.objects.add(s_block, layer=0)
 
 
+class EndingIncrementManager:
+    """Override the default level increment for ending tiles."""
+
+    def __init__(self, game):
+        self.game = game
+        self.objects = []
+        self.increments = {}
+
+    def update_from_map(self, layer_list):
+        self.objects.clear()
+        self.increments.clear()
+        for layer in layer_list:
+            if isinstance(layer, pytmx.TiledObjectGroup):
+                for obj in layer:
+                    props = obj.properties
+                    if "increase" in obj.name and "increment" in props:
+                        new_rect = pygame.Rect(*map(round, (obj.x, obj.y, obj.width, obj.height)))
+                        increment = props["increment"]
+                        tile = list(tile for tile in self.game.tiles if tile.rect.colliderect(new_rect))[0]
+                        print(tile)
+                        self.objects.append((new_rect, increment))
+                        self.increments[tile] = increment
+
+
 SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
 
 
@@ -469,6 +493,7 @@ class Game:
         self.switchd_man = SwitchDestroyManager(self)
         self.switchs_man = SwitchSpawnManager(self)
         self.switcht_man = SwitchToggleManager(self)
+        self.ending_man = EndingIncrementManager(self)
 
     def quit(self):
         """Quit button event"""
@@ -563,9 +588,11 @@ class Game:
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
         self.trigger_man.set_triggers(self.level)
-        self.switchd_man.update_from_map(self.tmx_data.layers)
-        self.switchs_man.update_from_map(self.tmx_data.layers)
-        self.switcht_man.update_from_map(self.tmx_data.layers)
+        layers=self.tmx_data.layers
+        self.switchd_man.update_from_map(layers)
+        self.switchs_man.update_from_map(layers)
+        self.switcht_man.update_from_map(layers)
+        self.ending_man.update_from_map(layers)
 
     def draw_objects(self, screen):
         """

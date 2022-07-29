@@ -86,8 +86,15 @@ class Player(pygame.sprite.Sprite):
             for tile in tiles_on_same_layer
             if tile.__class__.__name__ in ("Solid", "NPC", "Switch", "TempSwitch", "SwitchBlock")
         ]
-        for tile in pygame.sprite.spritecollide(self, self.game.tiles, False, lambda spr1, spr2: self.game.tiles.get_layer_of_sprite(spr2) and spr2.__class__.__name__ in ("Solid", "NPC", "Switch", "TempSwitch", "SwitchBlock") and spr1.rect.colliderect(spr2.rect)):
-            tile.image.set_alpha(255//2)
+        for tile in pygame.sprite.spritecollide(
+            self,
+            self.game.tiles,
+            False,
+            lambda spr1, spr2: self.game.tiles.get_layer_of_sprite(spr2)
+            and spr2.__class__.__name__ in ("Solid", "NPC", "Switch", "TempSwitch", "SwitchBlock")
+            and spr1.rect.colliderect(spr2.rect),
+        ):
+            tile.image.set_alpha(255 // 2)
         if pygame.sprite.spritecollide(
             self,
             tiles_on_same_layer,
@@ -102,7 +109,12 @@ class Player(pygame.sprite.Sprite):
             lambda spr1, spr2: spr2.__class__.__name__ == "Ending" and pygame.sprite.collide_mask(spr1, spr2),
         ):
             # Go to next level
-            self.game.read_map(f"maps/level{self.game.level+1}.tmx")
+            try:
+                i=self.game.ending_man.increments[tile]
+            except LookupError:
+                print("Failed")
+                i=1
+            self.game.read_map(f"maps/level{self.game.level+i}.tmx")
         if self.moving_left:
             left_collisions = pygame.sprite.spritecollide(
                 self,
