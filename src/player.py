@@ -110,10 +110,10 @@ class Player(pygame.sprite.Sprite):
         ):
             # Go to next level
             try:
-                i=self.game.ending_man.increments[tile]
+                i = self.game.ending_man.increments[tile]
             except LookupError:
                 print("Failed")
-                i=1
+                i = 1
             self.game.read_map(f"maps/level{self.game.level+i}.tmx")
         if self.moving_left:
             left_collisions = pygame.sprite.spritecollide(
