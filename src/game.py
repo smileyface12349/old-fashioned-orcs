@@ -380,6 +380,7 @@ class SwitchToggleManager:
         for layer in layer_list:
             if isinstance(layer, pytmx.TiledObjectGroup):
                 for obj in layer:
+                    print(obj)
                     props = obj.properties
                     if "toggler" in obj.name and "related_switch" in props:
                         switch = props["related_switch"]
