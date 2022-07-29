@@ -73,7 +73,9 @@ class Client:
         """Listener for game broadcasts."""
         init = False
         # Wait for the response/update and process it
-        async with websockets.connect("ws://oldfashionedorcs.servegame.com:8001/", close_timeout=1) as self.broadcast:
+        async with websockets.connect(
+            "ws://oldfashionedorcs.servegame.com:8001/", close_timeout=1, ssl=ssl_context
+        ) as self.broadcast:
             while self.running:
                 # Make sure main thread actually initialized
                 if not self.unique_id:
