@@ -175,6 +175,7 @@ async def handler(websocket):
             logging.info(f"Closed game broadcast socket from => {websocket.remote_address}")
         elif websocket in manager.active_connections and player:
             await db.save(player)
+            await manager.active_nicknames.remove(player.nickname)
             await games.remove_player(player)
             await games.clear()
             await manager.drop_main(websocket)
