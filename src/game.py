@@ -57,6 +57,8 @@ class Camera(object):
 TYPE_MAPPINGS: dict[str, type] = {
     "flag": solid.ShinyFlag,
     "solid": solid.Solid,
+    "npc1": solid.NPC,
+    "blue_cube": solid.Ending,
 }
 
 
