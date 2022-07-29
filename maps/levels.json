@@ -143,7 +143,7 @@
             "first_dude": ["touch_player", "npc1", 0],
             "other_dude": ["touch_player", ["solid", 40], 0],
             "flag": ["touch_player", "flag", 0],
-            "other_side": ["right", 99, 0],
+            "other_side": ["right", 480, 0],
             "completion": ["touch_player", "blue_cube", 0]
         },
         "fail": ["flag"]
