@@ -138,8 +138,14 @@ class Client:
         """Main client websocket"""
         cache_data = await cache.load()
 
-        if not cache_data["nickname"]:
+        cache_nick = player_nickname(cache_data)
+
+        if not cache_nick:
             cache_data["nickname"] = self.game.nickname
+        else:
+            self.game.nickname = cache_nick
+
+        del cache_nick
 
         async with websockets.connect(
             "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context

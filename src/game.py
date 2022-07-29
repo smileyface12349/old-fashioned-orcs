@@ -103,7 +103,10 @@ class EventTrigger:
                 self.dial_index += 1
             else:
                 if "despawn_layer" not in dial:
-                    self.game.gui.add(gui.TextBox(dial["text"], "[" + dial["character"] + "]"))
+                    char = dial["character"]
+                    self.game.gui.add(
+                        gui.TextBox(dial["text"], f"[{char if char not in ('player', 'you') else self.game.nickname}]")
+                    )
                     self.dial_index += 1
                 else:
                     despawn_layer = self.game.tiles.get_sprites_from_layer(dial["despawn_layer"])
@@ -254,6 +257,7 @@ class SwitchSpawnManager:
         if switch in self.related_tiles:
             for tile in self.related_tiles[switch]:
                 self.game.tiles.add(tile, layer=0)
+                self.game.objects.add(tile, layer=0)
 
     def update_from_map(self, layer_list):
         """Set up the tiles to spawn according to areas and switches."""
