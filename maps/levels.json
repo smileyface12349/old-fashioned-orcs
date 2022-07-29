@@ -21,22 +21,22 @@
                 },
                 {
                     "text": "Ugh. Tourists again",
-                    "character": "tony"
+                    "character": "Tony"
                 },
                 {
                     "text": "Are you blind? Can you not see the very conveniently placed shovel right in front of you?",
-                    "character": "tony"
+                    "character": "Tony"
                 }
             ],
             "brick_wall_delay": [
                 "require:brick_wall",
                 {
                     "text": "Everything okay?",
-                    "character": "tony"
+                    "character": "Tony"
                 },
                 {
                     "text": "[sigh] It's like talking to a brick wall",
-                    "character": "tony"
+                    "character": "Tony"
                 },
                 {
                     "text": "I can't seem to pick it up",
@@ -44,7 +44,7 @@
                 },
                 {
                     "text": "Oh yeah I forgot. You don't actually have hands. Why are you trying to pick up a shovel without hands?",
-                    "character": "tony"
+                    "character": "Tony"
                 },
                 {
                     "text": "How on earth am I going to get through without the very conveniently placed shovel?",
@@ -52,7 +52,7 @@
                 },
                 {
                     "text": "Eh, you'll find a way. Let me grab that shovel",
-                    "character": "tony"
+                    "character": "Tony"
                 },
                 {
                     "despawn_layer": 1,
@@ -70,7 +70,7 @@
             "through_brick_wall": [
                 {
                     "text": "Oh yeah I forgot to tell you, the devs forgot to add collision to brick walls. Very convenient!",
-                    "character": "tony"
+                    "character": "Tony"
                 }
             ]
         },
@@ -94,7 +94,7 @@
             "first_dude": [
                 {
                     "text": "Have any friends?",
-                    "character": "bob"
+                    "character": "Bob"
                 },
                 {
                     "text": "...",
@@ -102,23 +102,23 @@
                 },
                 {
                     "text": "Sorry if that came across as rude",
-                    "character": "bob"
+                    "character": "Bob"
                 },
                 {
                     "text": "I guess it's a bit weird if someone randomly comes up to you and asks you if you have any friends",
-                    "character": "bob"
+                    "character": "Bob"
                 },
                 {
                     "text": "However it is an important question. It wasn't meant to be rude",
-                    "character": "bob"
+                    "character": "Bob"
                 },
                 {
                     "text": "This is a multiplayer game, so some levels are not possible alone",
-                    "character": "bob"
+                    "character": "Bob"
                 },
                 {
                     "text": "(We had to justify implementing WebSockets somehow...)",
-                    "character": "bob"
+                    "character": "Bob"
                 },
                 {
                     "text": "Press F if you have no friends (NOTE: Does not generate friends, just skips level)",
@@ -127,7 +127,7 @@
             ],
             "other_dude": [{
                 "text": "Like my house?",
-                "character": "gary"
+                "character": "Gary"
             }],
             "flag": [
                 "GET YOUR DIRTY HANDS OFF MY FLAG"

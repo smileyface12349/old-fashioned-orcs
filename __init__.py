@@ -68,7 +68,7 @@ while game.running:
                         game.player.moving_left = True
                     elif event.key == pygame.K_RIGHT:
                         game.player.moving_right = True
-                    elif event.key in [pygame.K_SPACE, pygame.K_UP]:
+                    elif event.key in [pygame.K_SPACE, pygame.K_UP, pygame.K_z, pygame.K_w]:
                         game.player.jump()
                     elif event.key == pygame.K_ESCAPE:
                         game.showing_gui = True
