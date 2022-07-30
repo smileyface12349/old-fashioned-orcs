@@ -122,7 +122,11 @@
                 },
                 {
                     "text": "Press F if you have no friends (NOTE: Does not generate friends, just skips level)",
-                    "character": "player"
+                    "character": "Bob"
+                },
+                {
+                    "text": "You can also press G to go back a level",
+                    "character": "Bob"
                 }
             ],
             "other_dude": [{
