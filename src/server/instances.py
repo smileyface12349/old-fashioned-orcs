@@ -11,6 +11,7 @@ class PlayerSession:
         self.unique_id = unique_id
         self.nickname = nickname
         self.banned = None
+        self.violations = 0
         self.level = -1
         self.position = [0, 0]
         self.direction = "r"

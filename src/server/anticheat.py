@@ -5,7 +5,7 @@ class GameAntiCheat:
     """Basic anticheat so that the server actually asserts what client sends him."""
 
     def __init__(self):
-        self.spawned = set()
+        pass
 
     async def ensure(self, event, player, game):
         """Checks an event for strange activity."""
@@ -22,8 +22,8 @@ class GameAntiCheat:
             logging.info("Wrong position type.")
             return True
 
-        if not len(event["position"]) > 2:
-            logging.info("Position list has more than 2 values.")
+        if len(event["position"]) != 2:
+            logging.info("Positions list length is not 2.")
             return True
 
         if event["direction"] not in ["r", "l"]:
@@ -38,14 +38,22 @@ class GameAntiCheat:
             if int(player.level) - int(event["level"]) > 1:
                 logging.info("Failed the level check.")
                 return True
+
+            # This can also be triggered when the game teleports the player
+            # In order to not ban the player we will keep track of how
+            # many position violations occurred
             if not int(player.level) != int(event["level"]):
                 # Skip position check when spawning and on level change.
                 if abs(event["position"][0] - player.position[0]) > 25:
-                    logging.info("Invalid position [X].")
-                    return True
+                    player.violations += 1
+                    if player.violations > 10:
+                        logging.info("Too many 'Invalid position X'")
+                        return True
                 if abs(event["position"][1] - player.position[1]) > 25:
-                    logging.info("Invalid position [Y].")
-                    return True
+                    player.violations += 1
+                    if player.violations > 10:
+                        logging.info("Too many 'Invalid position Y'")
+                        return True
 
         # Player/Game checks
         if player not in game.players:
@@ -56,5 +64,4 @@ class GameAntiCheat:
             logging.info("Nickname not in game.")
             return True
 
-        self.spawned.add(player)
         return False
