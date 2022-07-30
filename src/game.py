@@ -1,4 +1,5 @@
 import json
+import os
 
 import pygame
 import pytmx
@@ -558,13 +559,15 @@ class Game:
 
     def load_next(self):
         """Load next map button event"""
-        self.read_map(f"maps/level{self.level+1}.tmx")
+        if os.path.isfile(f"maps/level{self.level+1}.tmx"):
+            self.read_map(f"maps/level{self.level+1}.tmx")
         self.showing_gui = False
         self.gui.empty()
 
     def load_previous(self):
         """Load previous map button event"""
-        self.read_map(f"maps/level{self.level-1}.tmx")
+        if os.path.isfile(f"maps/level{self.level-1}.tmx"):
+            self.read_map(f"maps/level{self.level-1}.tmx")
         self.showing_gui = False
         self.gui.empty()
 
