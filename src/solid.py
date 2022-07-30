@@ -117,10 +117,6 @@ class Solid(pygame.sprite.Sprite):
             pygame.Rect(self.rect.right, self.rect.y - 16, 16, self.rect.height * 3),  # right
         )
 
-    def update(self, *args, **kwargs):
-        if not pygame.sprite.spritecollide(self, [self.game.player], False):
-            self.image.set_alpha(255)
-
     @property
     def image(self):
         """Special property allowing for a dynamic collision mask update."""
@@ -273,8 +269,11 @@ class Switch(pygame.sprite.Sprite):
 
     def update(self, *args, **kwargs):
         """Change the image according to whether the switch is pressed or not."""
-        if not pygame.sprite.spritecollide(self, [self.game.player], False):
+        if not pygame.sprite.spritecollide(self.game.player, [self], False):
             self.image.set_alpha(255)
+        else:
+            print("Transparent")
+            self.image.set_alpha(255//2)
         self.image = switch if not self.pressed else pressed_switch
         if (not self.pressed) and pygame.sprite.spritecollide(self, self.game.other_players, False):
             self.press()

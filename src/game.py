@@ -446,12 +446,10 @@ class EndingIncrementManager:
     def __init__(self, game):
         self.game = game
         self.objects = []
-        self.increments = {}
 
     def update_from_map(self, layer_list):
         """A nice doc string, duh."""
         self.objects.clear()
-        self.increments.clear()
         for layer in layer_list:
             if isinstance(layer, pytmx.TiledObjectGroup):
                 for obj in layer:
@@ -462,7 +460,55 @@ class EndingIncrementManager:
                         tile = list(tile for tile in self.game.tiles if tile.rect.colliderect(new_rect))[0]
                         print(tile)
                         self.objects.append((new_rect, increment))
-                        self.increments[tile] = increment
+                        tile.increment=increment
+
+
+class TimedTileToggler:
+    def __init__(self, game):
+        self.game = game
+        self.time_delay=0
+        self.time_max=0
+        self.status=False
+        self.objects=[]
+        self.tiles=[]
+    def update_from_map(self, layer_list):
+        self.time_delay=0
+        self.time_max=0
+        self.objects.clear()
+        self.tiles.clear()
+        self.status=False
+        for layer in layer_list:
+            if isinstance(layer, pytmx.TiledObjectGroup):
+                for obj in layer:
+                    if "timer_config" in obj.name:
+                        self.time_max=obj.properties["max_delay"]
+                    elif "timer" in obj.name:
+                        new_rect=pygame.Rect(*map(round, (obj.x, obj.y, obj.width, obj.height)))
+                        self.objects.append(new_rect)
+                        tile_gen=[tile for tile in self.game.tiles.get_sprites_from_layer(0) if isinstance(tile, solid.SwitchBlock) and tile.rect.colliderect(new_rect)]
+                        self.tiles.extend(tile_gen)
+                        for tile in tile_gen:
+                            if tile.tile_type-1:
+                                tile.remove(self.game.tiles, self.game.objects)
+    def update(self, dt):
+        if self.time_max:
+            self.time_delay+=dt
+            if self.time_delay>=self.time_max:
+                self.time_delay=0
+                self.status=not self.status
+                for tile in self.tiles:
+                    if tile.tile_type-1:
+                        if self.status:
+                            self.game.tiles.add(tile, layer=0)
+                            self.game.objects.add(tile, layer=0)
+                        else:
+                            tile.remove(self.game.tiles, self.game.objects)
+                    else:
+                        if self.status:
+                            tile.remove(self.game.tiles, self.game.objects)
+                        else:
+                            self.game.tiles.add(tile, layer=0)
+                            self.game.objects.add(tile, layer=0)
 
 
 SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
@@ -495,6 +541,7 @@ class Game:
         self.switchs_man = SwitchSpawnManager(self)
         self.switcht_man = SwitchToggleManager(self)
         self.ending_man = EndingIncrementManager(self)
+        self.tile_timer=TimedTileToggler(self)
 
     def quit(self):
         """Quit button event"""
@@ -594,6 +641,18 @@ class Game:
         self.switchs_man.update_from_map(layers)
         self.switcht_man.update_from_map(layers)
         self.ending_man.update_from_map(layers)
+        self.tile_timer.update_from_map(layers)
+
+    def update_objects(self, *args, **kwargs):
+        layer1_collisions=pygame.sprite.spritecollide(self.player, self.tiles.get_sprites_from_layer(1), False)
+        if layer1_collisions:
+            for sprite in layer1_collisions:
+                sprite.image.set_alpha(255//2)
+        else:
+            for sprite in self.tiles.get_sprites_from_layer(1):
+                if sprite.image.get_alpha()<255:
+                    sprite.image.set_alpha(255)
+        self.objects.update(*args, **kwargs)
 
     def draw_objects(self, screen):
         """
@@ -605,7 +664,8 @@ class Game:
         for layer in self.objects.layers():
             sprites = self.objects.get_sprites_from_layer(layer)
             for sprite in sprites:
-                screen.blit(sprite.image, self.camera.apply(sprite))
+                if (not hasattr(sprite, "tile_type")) or sprite.tile_type!=40:
+                    screen.blit(sprite.image, self.camera.apply(sprite))
 
     @staticmethod
     def _select_solid_image(tile, type, flipped):

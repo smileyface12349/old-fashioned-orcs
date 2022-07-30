@@ -32,7 +32,8 @@ while game.running:
     else:
         if not game.gui and not game.crashing:
             if game.tiles:
-                game.objects.update(dt)  # Auto update for every sprite, if the game has not "crashed"
+                game.tile_timer.update(dt)
+                game.update_objects(dt)  # Auto update for every sprite, if the game has not "crashed"
                 game.draw_objects(screen)  # We draw everything here
             else:
                 screen.blit(src.game.loading, (0, 0))
