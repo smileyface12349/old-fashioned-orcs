@@ -217,18 +217,139 @@
     },
     "6": {
         "dialogue": {
-
+            "start": [
+                "Welcome to a totally generic platformer",
+                "This is the tutorial, where I tell you how to play the game",
+                "But if you've played platformers before I'm sure you'll figure it out"
+            ],
+            "sushpish": [
+                "require:start",
+                {
+                "text": "Wait... Am I back to the beginning again?",
+                "character": "player"
+            }],
+            "brick_wall": [
+                "require:sushpish",
+                {
+                    "text": "Ah! The brick wall! How am I going to get through? (I'm sure I remember this happening before...)",
+                    "character": "player"
+                },
+                {
+                    "text": "Ugh. Tourists again",
+                    "character": "Tony"
+                },
+                {
+                    "text": "Are you blind? Can you not see the very conveniently placed shovel right in front of you?",
+                    "character": "Tony"
+                },
+                {
+                    "text": "Tony! Don't you recognise me?",
+                    "character": "player"
+                },
+                {
+                    "text": "Hmmm... nah, not in the slightest. Anyway, please don't be an idiot and grab that shovel!",
+                    "character": "Tony"
+                },
+                {
+                    "text": "What are you waiting for?!",
+                    "character": "Tony"
+                }
+            ],
+            "brick_wall_delay": [
+                "require:brick_wall",
+                {
+                    "text": "Everything okay?",
+                    "character": "Tony"
+                },
+                {
+                    "text": "[sigh] It's like talking to a brick wall",
+                    "character": "Tony"
+                },
+                {
+                    "text": "I can't seem to pick it up! (Dang it, I'm sure that also happened before!)",
+                    "character": "player"
+                },
+                {
+                    "text": "Oh yeah I forgot. You don't actually have hands. Why are you trying to pick up a shovel without hands?",
+                    "character": "Tony"
+                },
+                {
+                    "text": "How on earth am I going to get through without the very conveniently placed shovel?",
+                    "character": "player"
+                },
+                {
+                    "text": "Eh, you'll find a way. Let me grab that shovel",
+                    "character": "Tony"
+                },
+                {
+                    "text": "Ah yes whoops, brick walls don't have collisions because the devs didn't code that in, correct?",
+                    "character": "player"
+                },
+                {
+                    "text": "How the HELL do you know that? You never came here before!",
+                    "character": "Tony"
+                },
+                {
+                    "text": "I don't think you'd believe me if I told you anyway...",
+                    "character": "player"
+                },
+                {
+                    "despawn_layer": 1,
+                    "coords": [5, 7]
+                },
+                {
+                    "despawn_layer": 0,
+                    "coords": [5, 7]
+                },
+                {
+                    "despawn_layer": 0,
+                    "coords": [5, 6]
+                }
+            ],
+            "other_dude": [
+                {
+                    "text": "Hey! How's it going? That flag up there is mine, feel free to touch it as much as you like.",
+                    "character": "Joe"
+                }
+            ],
+            "flag": ["require:other_dude",
+                "Congratulations! At long last, you managed to reach a flag you were allowed to touch!",
+                {
+                    "text": "Hey! That's not his flag! It's MY flag!",
+                    "character": "Tony"
+                }
+            ]
         },
         "events": {
-
-        }
+            "start": ["start", null, 0],
+            "sushpish": ["left", 480, 3],
+            "brick_wall": ["left", 98, 0],
+            "brick_wall_delay": ["left", 128, 3],
+            "other_dude": ["and",[["touch", ["solid", 40], 0], ["right", 400, 0]], 0],
+            "flag": ["touch", "flag", 0]
+}
     },
     "7": {
         "dialogue": {
-
+            "start": [
+                {
+                    "text": "This flag seems like the only exit. But it's difficult to get to...",
+                    "character": "player"
+                },
+                "Ah well. I'm sure you'll find a way to get to it.",
+                "Anyways, a guy named Joe tells me that he allows you to get to that flag so go ahead!"
+            ],
+            "flag": ["Congratulations on finally reaching a flag you were allowed to touch!",
+            "crash"]
         },
         "events": {
-
+            "start": ["start", null, 0],
+            "flag": ["touch", "flag", 0]
+        }
+    },
+    "credits": {
+        "dialogue": {
+            "start": []
         }
     }
 }
