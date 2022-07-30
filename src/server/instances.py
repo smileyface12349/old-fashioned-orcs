@@ -10,6 +10,7 @@ class PlayerSession:
         self.broadcast = None
         self.unique_id = unique_id
         self.nickname = nickname
+        self.banned = None
         self.level = -1
         self.position = [0, 0]
         self.direction = "r"

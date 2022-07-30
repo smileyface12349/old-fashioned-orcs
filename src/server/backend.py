@@ -5,6 +5,7 @@ import ssl
 import time
 
 import websockets
+from anticheat import GameAntiCheat
 from database import GameDatabase
 from instances import GameManager, PlayerSession
 from manager import ConnectionManager
@@ -16,6 +17,7 @@ logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=log
 games = GameManager()
 manager = ConnectionManager()
 db = GameDatabase()
+anticheat = GameAntiCheat()
 players = set()
 
 
@@ -56,9 +58,9 @@ async def join_game(player):
         await new_game(player)
 
 
-async def ping_pong(websocket):
+async def ping_pong(websocket, player):
     """Trying to keep broadcast alive."""
-    while websocket:
+    while websocket and not player.banned:
         t0 = time.perf_counter()
         pong_waiter = await websocket.ping()
         await pong_waiter
@@ -83,10 +85,18 @@ async def play_game(player, game):
         # Parse a "play" event from the client.
         event = json.loads(message)
         if event["type"] == "play":
-            assert event["unique_id"] == player.unique_id
+
+            # So before echoing back the payload and
+            # actually update the logical PlayerSession, anticheat will check the event.
+            player.banned = await anticheat.ensure(event, player, game)
+            if player.banned:
+                logging.info(f"Player {player.nickname} got banned.")
+                break
+
+            # Echo the payload back to let client know we got it.
             await player.websocket.send(json.dumps(event))
 
-            # Update server from the event
+            # Now that we trust the event, we update the server from the event
             player.position = event["position"]
             player.level = event["level"]
             player.direction = event["direction"]
@@ -154,7 +164,7 @@ async def handler(websocket):
                     break
 
             await websocket.send(json.dumps({"type": "broadcast"}))
-            await ping_pong(websocket)
+            await ping_pong(websocket, play)
 
     except websockets.exceptions.ConnectionClosedError:
         logging.info("Websocket closed with ConnectionClosedError")
@@ -185,7 +195,7 @@ async def handler(websocket):
 
 async def main():
     """Main function that starts the server."""
-    async with websockets.serve(handler, "134.255.220.44", 8000, ssl=ssl_context, ping_interval=None, close_timeout=1):
+    async with websockets.serve(handler, "0.0.0.0", 8001, ssl=ssl_context, ping_interval=None, close_timeout=1):
         await asyncio.Future()  # run forever
 
 
