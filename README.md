@@ -8,7 +8,7 @@ Also, we must warn you, don't expect much more than what the title says. It's yo
 
 ## Installation
 
-If you want to play our game, simply download the package you need from [the latest release](https://github.com/smileyface12349/old-fashioned-orcs/releases/latest), then run the executable. (Internet connection required to start the game.)
+If you want to play our game, simply download the package you need from [the latest release](https://github.com/smileyface12349/old-fashioned-orcs/releases/latest), then run the executable (note that the game is multiplayer, so an internet connection is required)
 
 
 For a manual installation :
