@@ -60,7 +60,7 @@ async def join_game(player):
 
 async def ping_pong(websocket):
     """Trying to keep broadcast alive."""
-    while websocket:
+    while websocket in manager.active_broadcasts:
         t0 = time.perf_counter()
         pong_waiter = await websocket.ping()
         await pong_waiter
@@ -73,7 +73,7 @@ async def ping_pong(websocket):
 
 async def broadcast_update(game):
     """Send an "update" event to everyone in the current game."""
-    event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
+    event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players if not p.banned]}
     players = [p.broadcast for p in game.iter_players() if p.broadcast is not None]
     websockets.broadcast(players, json.dumps(event))
 
@@ -91,6 +91,7 @@ async def play_game(player, game):
             player.banned = await anticheat.ensure(event, player, game)
             if player.banned:
                 logging.info(f"Player {player.nickname} got banned.")
+                await manager.drop_broadcast(player.broadcast)
                 break
 
             # Echo the payload back to let client know we got it.

@@ -2,7 +2,7 @@ import logging
 
 
 class GameAntiCheat:
-    """Basic anticheat so that the server actually asserts what client sends him."""
+    """Basic anticheat so that the server actually asserts what clients send him."""
 
     def __init__(self):
         pass
@@ -44,14 +44,14 @@ class GameAntiCheat:
             # many position violations occurred
             if not int(player.level) != int(event["level"]):
                 # Skip position check when spawning and on level change.
-                if abs(event["position"][0] - player.position[0]) > 25:
+                if abs(event["position"][0] - player.position[0]) > 20:
                     player.violations += 1
-                    if player.violations > 10:
+                    if player.violations > 15:
                         logging.info("Too many 'Invalid position X'")
                         return True
-                if abs(event["position"][1] - player.position[1]) > 25:
+                if abs(event["position"][1] - player.position[1]) > 20:
                     player.violations += 1
-                    if player.violations > 10:
+                    if player.violations > 15:
                         logging.info("Too many 'Invalid position Y'")
                         return True
 
