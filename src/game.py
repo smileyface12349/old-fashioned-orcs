@@ -863,4 +863,5 @@ class Game:
 
     @staticmethod
     def render_title_team(screen):
+        """Render the title (with the team names)"""
         screen.blit(title_team, (19, 10))
