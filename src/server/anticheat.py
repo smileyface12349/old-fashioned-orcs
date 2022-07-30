@@ -22,12 +22,16 @@ class GameAntiCheat:
             logging.info("Wrong position type.")
             return True
 
+        if not len(event["position"]) > 2:
+            logging.info("Position list has more than 2 values.")
+            return True
+
         if event["direction"] not in ["r", "l"]:
             logging.info("Invalid direction.")
             return True
 
         if event["position"][0] < 0 or event["position"][1] < 0:
-            logging.info("Invalid position [negative]")
+            logging.info("Invalid position [negative].")
             return True
 
         if player.banned is not None and player.level is not None:
@@ -36,11 +40,11 @@ class GameAntiCheat:
                 return True
             if not int(player.level) != int(event["level"]):
                 # Skip position check when spawning and on level change.
-                if event["position"][0] - player.position[0] > 50:
-                    logging.info("Invalid position [X-Axis]")
+                if abs(event["position"][0] - player.position[0]) > 25:
+                    logging.info("Invalid position [X].")
                     return True
-                if event["position"][1] - player.position[1] > 50:
-                    logging.info("Invalid position [Y-Axis]")
+                if abs(event["position"][1] - player.position[1]) > 25:
+                    logging.info("Invalid position [Y].")
                     return True
 
         # Player/Game checks
