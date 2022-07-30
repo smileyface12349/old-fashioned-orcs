@@ -1,5 +1,4 @@
 import os.path as path
-from os import linesep
 import pathlib
 from typing import Callable
 

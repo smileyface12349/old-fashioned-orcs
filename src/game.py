@@ -472,6 +472,8 @@ class EndingIncrementManager:
 
 
 class TimedTileToggler:
+    """Updates tiles in a delay."""
+
     def __init__(self, game):
         self.game = game
         self.time_delay = 0
@@ -481,6 +483,7 @@ class TimedTileToggler:
         self.tiles = []
 
     def update_from_map(self, layer_list):
+        """Updates tiles from map."""
         self.time_delay = 0
         self.time_max = 0
         self.objects.clear()
@@ -505,6 +508,7 @@ class TimedTileToggler:
                                 tile.remove(self.game.tiles, self.game.objects)
 
     def update(self, dt):
+        """Updates tiles."""
         if self.time_max:
             self.time_delay += dt
             if self.time_delay >= self.time_max:
@@ -580,7 +584,7 @@ class Game:
         self.gui.empty()
 
     def go_back(self):
-        """Cancel the last action."""
+        """Closes the level menu."""
         self.showing_gui = False
         self.gui.empty()
 
@@ -678,6 +682,7 @@ class Game:
         self.tile_timer.update_from_map(layers)
 
     def update_objects(self, *args, **kwargs):
+        """Updates objects of the game."""
         layer1 = self.tiles.get_sprites_from_layer(1)
         layer1_collisions = pygame.sprite.spritecollide(
             self.player, layer1, False, lambda spr1, spr2: spr1.rect.clip(spr2.rect).size >= (2, 2)

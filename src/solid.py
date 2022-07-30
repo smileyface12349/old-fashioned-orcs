@@ -259,10 +259,12 @@ class Switch(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def press(self):
+        """Changes the state of the switch."""
         self.pressed = True
         pygame.event.post(pygame.event.Event(SWITCH_PRESSED, id=self.id))
 
     def kill(self):
+        """Kills the switch."""
         global _switch_id
         super().kill()
         _switch_id -= 1
@@ -272,7 +274,7 @@ class Switch(pygame.sprite.Sprite):
         if not pygame.sprite.spritecollide(self.game.player, [self], False):
             self.image.set_alpha(255)
         else:
-            print("Transparent")
+            # print("Transparent")
             self.image.set_alpha(255 // 2)
         self.image = switch if not self.pressed else pressed_switch
         if (not self.pressed) and pygame.sprite.spritecollide(self, self.game.other_players, False):
@@ -280,39 +282,50 @@ class Switch(pygame.sprite.Sprite):
 
     @property
     def playerisup(self):
+        """Check players position from switch."""
         return self.game.player.rect.bottom <= self.rect.centery + 6
 
     @property
     def playerisup_strict(self):
+        """Check players position from switch."""
         return self.playerisup and not self.playerisleft and not self.playerisright
 
     @property
     def playerisleft(self):
+        """Check players position from switch."""
         return self.game.player.rect.right <= self.rect.x + 2
 
     @property
     def playerisleft_strict(self):
+        """Check players position from switch."""
         return self.playerisleft and not self.playerisup and not self.playerisdown
 
     @property
     def playerisright(self):
+        """Check players position from switch."""
         return self.game.player.rect.x >= self.rect.right - 2
 
     @property
     def playerisright_strict(self):
+        """Check players position from switch."""
         return self.playerisright and not self.playerisup and not self.playerisdown
 
     @property
     def playerisdown(self):
+        """Check players position from switch."""
         return self.game.player.rect.y >= self.rect.bottom - 2
 
     @property
     def playerisdown_strict(self):
+        """Check players position from switch."""
         return self.playerisdown and not self.playerisleft and not self.playerisright
 
 
 class TempSwitch(Switch):
+    """Temporary switch that resets."""
+
     def update(self, *args, **kwargs):
+        """Updates the state of the switch."""
         super().update(*args, **kwargs)
         if self.pressed and (
             not pygame.sprite.spritecollide(self, self.game.other_players, False)
@@ -321,11 +334,14 @@ class TempSwitch(Switch):
             self.unpress()
 
     def unpress(self):
+        """Unpresses the switch."""
         self.pressed = False
         pygame.event.post(pygame.event.Event(SWITCH_RELEASED, id=self.id))
 
 
 class SwitchBlock(Solid):
+    """Blocks that can be toggled by swiches."""
+
     def __init__(self, game, tile_pos, layer, ttype):
         super().__init__(game, tile_pos, layer)
         self.tile_type = ttype
