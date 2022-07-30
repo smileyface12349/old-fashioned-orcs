@@ -3,9 +3,11 @@ import json
 import socket
 import ssl
 import threading
+from asyncio.exceptions import CancelledError, IncompleteReadError
 from operator import itemgetter
 
 import websockets
+from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 
 from .cache import CacheManager  # relative import otherwise it doesn't work
 
@@ -100,6 +102,9 @@ class Client:
         except socket.gaierror:
             self.running = False
             print("Cannot connect to server. Try again later!")
+        except ConnectionClosedOK:
+            self.running = False
+            print("Server closed your connection.")
 
     async def _sync_players(self, response):
         """Update OtherPlayers from broadcasts!"""
@@ -163,6 +168,9 @@ class Client:
         except socket.gaierror:
             self.running = False
             print("Cannot connect to server. Try again later!")
+        except ConnectionClosedOK:
+            self.running = False
+            print("Server closed your connection.")
 
     def start(self):
         """Starts the listen/receive threads."""
@@ -188,10 +196,10 @@ class Client:
         """Thread for receiving broadcasts."""
         try:
             asyncio.run(self._main())
-        except TimeoutError or asyncio.exceptions.CancelledError:
+        except TimeoutError or CancelledError:
             print("Cannot connect to server. Try again later!")
             self.running = False
-        except websockets.exceptions.ConnectionClosedError or asyncio.exceptions.IncompleteReadError:
+        except ConnectionClosedError or IncompleteReadError:
             print("Connection closed.")
             self.running = False
 
@@ -199,9 +207,9 @@ class Client:
         """Main Thread, mostly for sending payloads to the server."""
         try:
             asyncio.run(self._broadcast())
-        except TimeoutError or asyncio.exceptions.CancelledError:
+        except TimeoutError or CancelledError:
             print("Cannot connect to server. Try again later!")
             self.running = False
-        except websockets.exceptions.ConnectionClosedError or asyncio.exceptions.IncompleteReadError:
+        except ConnectionClosedError or IncompleteReadError:
             print("Connection closed.")
             self.running = False
