@@ -17,6 +17,7 @@ crash = pygame.image.load(_resource_path("assets/crash.png")).convert_alpha()
 loading = pygame.image.load(_resource_path("assets/loading.png")).convert_alpha()
 disconnected = pygame.image.load(_resource_path("assets/connection_lost.png")).convert_alpha()
 title = solid._load_img("assets/title.png")
+title_team = solid._load_img("assets/title_team.png")
 
 game_crash = pygame.mixer.Sound(_resource_path("assets/game_crash.wav"))
 game_crash.set_volume(0.35)  # We don't want players to get their eardrums destroyed
@@ -125,7 +126,7 @@ class EventTrigger:
             dial = self.dialogues[self.dial_index]
             if isinstance(dial, str):
                 if dial not in ["crash", "credits"]:
-                    self.game.gui.add(gui.TextBox(dial))
+                    self.game.gui.add(gui.TextBox(self.game, dial))
                     self.dial_index += 1
                 else:
                     if not self.game.crashing:
@@ -134,7 +135,11 @@ class EventTrigger:
                 if "despawn_layer" not in dial and "crash" not in dial:
                     char = dial["character"]
                     self.game.gui.add(
-                        gui.TextBox(dial["text"], f"[{char if char not in ('player', 'you') else self.game.nickname}]")
+                        gui.TextBox(
+                            self.game,
+                            dial["text"],
+                            f"[{char if char not in ('player', 'you') else self.game.nickname}]",
+                        )
                     )
                     self.dial_index += 1
                 elif "crash" in dial:
@@ -157,6 +162,7 @@ class EventTrigger:
                 self.game.gui.add(gui.Button((48, 90), "Play", self.game.start))
                 self.game.gui.add(gui.Button((110, 90), "Reset", self.game.del_cache))
                 self.game.gui.add(gui.Button((80, 110), "Exit Game", self.game.quit))
+                self.game.level = 5
                 self.game.client.stop()
 
     def update(self, dt):
@@ -855,3 +861,8 @@ class Game:
     def render_title(screen):
         """Render the title on screen."""
         screen.blit(title, (19, 32))
+
+    @staticmethod
+    def render_title_team(screen):
+        """Render the title (with the team names)"""
+        screen.blit(title_team, (19, 10))

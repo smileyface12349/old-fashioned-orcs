@@ -88,7 +88,7 @@ while game.running:
                         game.gui.add(src.game.gui.Button((80, 110), "Exit Game", game.quit))
                         game.client.stop()
                         break
-                    elif event.key == pygame.K_f and game.level not in (6, 7):
+                    elif event.key == pygame.K_f and game.level not in (5, 6, 7):
                         game.showing_gui = True
                         game.gui.add(src.game.gui.Button((80, 55), "Skip this level", game.load_next))
                         game.gui.add(src.game.gui.Button((80, 80), "Keep playing", game.go_back))

@@ -355,7 +355,7 @@
     "credits": {
         "dialogue": {
             "start": [
-                "A Totally Generic Platformer",
+                "title",
                 {
                     "character": "By the",
                     "text": "Old-Fashioned Orcs"
@@ -370,19 +370,19 @@
                 },
                 {
                     "character": "Spacewiki",
-                    "text": "Had no original game ID\nCopypasted a lot\nProgrammed the so-called \"engine\""
+                    "text": "Had no original game ID\nSlept a lot\nProgrammed the so-called \"engine\""
                 },
                 {
                     "character": "Spacewiki",
-                    "text": "\"Ctrl-C and Ctrl-V were my best friends during this Code Jam!\""
+                    "text": "\"Zzzz..., zzzz... oh shit the player's already at the credits!\""
                 },
                 {
                     "character": "Nasty",
-                    "text": "Programmed the back end\nPractised his laziness"
+                    "text": "Programmed the server\nPractised his laziness"
                 },
                 {
                     "character": "Nasty",
-                    "text": "\"Why can't I do the front end? Also, I should get done quick so that I can go back to bed\""
+                    "text": "\"Too bad I didn't code it to start a restaurant as well...\""
                 },
                 {
                     "character": "Paulchen",
@@ -404,7 +404,7 @@
                     "character": "player",
                     "text": "\"When will this dang game end?\""
                 },
-                "There's another ending there, my lad. You want to test it? Gotta play the game from Level 5!"
+                "There's another ending there, my lad. You want to test it? Gotta play the game again!"
             ]
         }
     }
