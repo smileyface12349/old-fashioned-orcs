@@ -134,8 +134,9 @@ class TextBox(GUIItem):
     character_rect = pygame.Rect(16, 8, 128, 8)
     line_rects = tuple(pygame.Rect(8, y, 144, 16) for y in range(24, 121, 24))
 
-    def __init__(self, text: str, character=None):
+    def __init__(self, game, text: str, character=None):
         super().__init__()
+        self.game = game
         self.text = text.strip()
         self.character = character
         self.parts_list = []
@@ -147,11 +148,14 @@ class TextBox(GUIItem):
     def render(self):
         """Renders the text box."""
         self.image = text_box.copy()
-        lines_to_render = self.parts_list[self.part_index]
-        if self.character is not None:
-            self.font.render_to(self.image, self.character_rect, self.character)
-        for line, rect in zip(lines_to_render, self.line_rects):
-            self.font.render_to(self.image, rect, line)
+        if "title" not in self.text:
+            lines_to_render = self.parts_list[self.part_index]
+            if self.character is not None:
+                self.font.render_to(self.image, self.character_rect, self.character)
+            for line, rect in zip(lines_to_render, self.line_rects):
+                self.font.render_to(self.image, rect, line)
+        else:
+            self.game.render_title_team(self.image)
 
     def update(self, *args, **kwargs):
         """Updates the text box."""

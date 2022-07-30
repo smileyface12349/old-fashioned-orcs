@@ -355,7 +355,7 @@
     "credits": {
         "dialogue": {
             "start": [
-                "A Totally Generic Platformer",
+                "title",
                 {
                     "character": "By the",
                     "text": "Old-Fashioned Orcs"
