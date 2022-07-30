@@ -1,7 +1,7 @@
 ## "A Totally Generic Platformer"
 
 Hello there! This is our project for the summer code jam of Python Discord!
-"A Totally Generic Platformer" by Old-Fashioned Orcs, is an online multiplayer game written in Python with [`pygame`](http://pygame.org).
+"A Totally Generic Platformer" by Old-Fashioned Orcs, is an online multiplayer game written in Python with [`pygame`](https://github.com/pygame/pygame).
 The framework we chose to use for the client/server stuff is [`websockets`](https://github.com/aaugustin/websockets).
 Also, we must warn you, don't expect much more than what the title says. It's your generic, average platformer, duh.
 
