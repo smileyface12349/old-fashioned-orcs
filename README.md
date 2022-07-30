@@ -21,7 +21,7 @@ For a manual installation :
 python3 -m pip install -r dev-requirements.txt
 ```
 
-4. Then simply run the [__init__.py](__init__.py) file.
+4. Then simply run the [\_\_init\_\_.py](__init__.py) file.
 
 
 ## Controls
