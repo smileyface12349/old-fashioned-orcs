@@ -18,10 +18,6 @@ class GameAntiCheat:
             logging.info("Failed nickname check.")
             return True
 
-        if int(player.level) - int(event["level"]) > 1:
-            logging.info("Failed the level check.")
-            return True
-
         if not isinstance(event["position"], list):
             logging.info("Wrong position type.")
             return True
@@ -34,14 +30,18 @@ class GameAntiCheat:
             logging.info("Invalid position [negative]")
             return True
 
-        if not int(player.level) != int(event["level"]) and player in self.spawned:
-            # Skip position check when spawning and on level change.
-            if event["position"][0] - player.position[0] > 10:
-                logging.info("Invalid position [X-Axis]")
+        if player.banned is not None and player.level is not None:
+            if int(player.level) - int(event["level"]) > 1:
+                logging.info("Failed the level check.")
                 return True
-            if event["position"][1] - player.position[1] > 10:
-                logging.info("Invalid position [Y-Axis]")
-                return True
+            if not int(player.level) != int(event["level"]):
+                # Skip position check when spawning and on level change.
+                if event["position"][0] - player.position[0] > 50:
+                    logging.info("Invalid position [X-Axis]")
+                    return True
+                if event["position"][1] - player.position[1] > 50:
+                    logging.info("Invalid position [Y-Axis]")
+                    return True
 
         # Player/Game checks
         if player not in game.players:

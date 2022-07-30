@@ -58,9 +58,9 @@ async def join_game(player):
         await new_game(player)
 
 
-async def ping_pong(websocket, player):
+async def ping_pong(websocket):
     """Trying to keep broadcast alive."""
-    while websocket and not player.banned:
+    while websocket:
         t0 = time.perf_counter()
         pong_waiter = await websocket.ping()
         await pong_waiter
@@ -68,7 +68,7 @@ async def ping_pong(websocket, player):
         latency = f"{t1-t0:.2f}"
         message = json.dumps({"type": "ping", "latency": latency})
         await websocket.send(message)
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.5)
 
 
 async def broadcast_update(game):
@@ -164,7 +164,7 @@ async def handler(websocket):
                     break
 
             await websocket.send(json.dumps({"type": "broadcast"}))
-            await ping_pong(websocket, play)
+            await ping_pong(websocket)
 
     except websockets.exceptions.ConnectionClosedError:
         logging.info("Websocket closed with ConnectionClosedError")
