@@ -196,6 +196,12 @@ class Player(pygame.sprite.Sprite):
                 self.fall_delay = 0
                 self.jumping = False
                 self.falling = True
+            elif self.rect.y < 0:
+                self.rect.y = 0
+                self.y_velocity = 1
+                self.fall_delay = 0
+                self.jumping = False
+                self.falling = True
 
 
 class OtherPlayer(pygame.sprite.Sprite):

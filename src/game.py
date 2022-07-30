@@ -16,6 +16,7 @@ _resource_path = player._resource_path
 crash = pygame.image.load(_resource_path("assets/crash.png")).convert_alpha()
 loading = pygame.image.load(_resource_path("assets/loading.png")).convert_alpha()
 disconnected = pygame.image.load(_resource_path("assets/connection_lost.png")).convert_alpha()
+title = solid._load_img("assets/title.png")
 
 game_crash = pygame.mixer.Sound(_resource_path("assets/game_crash.wav"))
 game_crash.set_volume(0.35)  # We don't want players to get their eardrums destroyed
@@ -530,6 +531,7 @@ class Game:
         self.other_players = pygame.sprite.Group()
         self.objects = pygame.sprite.LayeredUpdates(self.player)
         self.crashing = False
+        self.showing_title = True
         self.inputting_nickname = False
         self.nickname = ""
         self.tmx_data: pytmx.TiledMap | None = None
@@ -537,9 +539,9 @@ class Game:
         self.level = 0
         self.camera = Camera(complex_camera, 160, 144)
         self.gui = pygame.sprite.Group(
-            gui.Button((80, 45), "Play", self.start),
-            gui.Button((80, 70), "Reset", self.del_cache),
-            gui.Button((80, 95), "Exit Game", self.quit),
+            gui.Button((48, 90), "Play", self.start),
+            gui.Button((110, 90), "Reset", self.del_cache),
+            gui.Button((80, 110), "Exit Game", self.quit),
         )
         self.running = True
         self.showing_gui = True
@@ -572,13 +574,14 @@ class Game:
         self.gui.empty()
 
     def go_back(self):
-        """Quit button event"""
+        """Cancel the last action."""
         self.showing_gui = False
         self.gui.empty()
 
     def start(self):
         """Start the game."""
         self.showing_gui = False
+        self.showing_title = False
         nick = client.cache.get_nickname()
         if nick:
             self.gui.empty()
@@ -669,14 +672,21 @@ class Game:
         self.tile_timer.update_from_map(layers)
 
     def update_objects(self, *args, **kwargs):
-        layer1_collisions = pygame.sprite.spritecollide(self.player, self.tiles.get_sprites_from_layer(1), False)
+        layer1 = self.tiles.get_sprites_from_layer(1)
+        layer1_collisions = pygame.sprite.spritecollide(
+            self.player, layer1, False, lambda spr1, spr2: spr1.rect.clip(spr2.rect).size >= (2, 2)
+        )
         if layer1_collisions:
             for sprite in layer1_collisions:
-                sprite.image.set_alpha(255 // 2)
+                if not isinstance(sprite, solid.NPC):
+                    sprite.image.set_alpha(255 // 2)
+            for sprite in layer1:
+                if sprite in layer1_collisions:
+                    continue
+                sprite.image.set_alpha(255)
         else:
-            for sprite in self.tiles.get_sprites_from_layer(1):
-                if sprite.image.get_alpha() < 255:
-                    sprite.image.set_alpha(255)
+            for sprite in layer1:
+                sprite.image.set_alpha(255)
         self.objects.update(*args, **kwargs)
 
     def draw_objects(self, screen):
@@ -783,7 +793,7 @@ class Game:
                 img = solid.cave_upper_corner_single
             case 40:
                 img = solid.invisible_solid  # can be used for some tiles that don't blend well with the collision.
-        tile.image = img
+        tile.image = img.copy()
         tile.tile_type = type
 
     def add_player(self, nickname, direction, pos=None):
@@ -819,3 +829,8 @@ class Game:
         text[1].centerx = 80
         text[1].y = 16
         screen.blit(*text)
+
+    @staticmethod
+    def render_title(screen):
+        """Render the title on screen."""
+        screen.blit(title, (19, 3))

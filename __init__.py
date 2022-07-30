@@ -22,11 +22,13 @@ clock = pygame.time.Clock()  # a framerate helper object.
 
 while game.running:
     # We generally use a while loop when making a game. Most of the game code should go here.
-    screen.fill("skyblue" if game.level in (0, 5) else "darkgray")
+    screen.fill("skyblue" if game.level in (0, 5, 6, 7) or game.showing_gui else "darkgray")
     dt = clock.tick(60)  # this ensures that the game cannot run higher that 60FPS. We also get a delta time in ms.
     if game.showing_gui:
         if game.inputting_nickname:
             game.render_ean_prompt(screen)
+        elif game.showing_title:
+            game.render_title(screen)
         game.gui.update(dt)
         game.gui.draw(screen)
     else:
@@ -79,18 +81,19 @@ while game.running:
                         game.player.jump()
                     elif event.key == pygame.K_ESCAPE:
                         game.showing_gui = True
+                        game.showing_title = True
                         src.game.game_crash.stop()
-                        game.gui.add(src.game.gui.Button((80, 45), "Play", game.start))
-                        game.gui.add(src.game.gui.Button((80, 70), "Reset", game.del_cache))
-                        game.gui.add(src.game.gui.Button((80, 95), "Exit Game", game.quit))
+                        game.gui.add(src.game.gui.Button((48, 90), "Play", game.start))
+                        game.gui.add(src.game.gui.Button((110, 90), "Reset", game.del_cache))
+                        game.gui.add(src.game.gui.Button((80, 110), "Exit Game", game.quit))
                         game.client.stop()
                         break
-                    elif event.key == pygame.K_f:
+                    elif event.key == pygame.K_f and game.level not in (6, 7):
                         game.showing_gui = True
                         game.gui.add(src.game.gui.Button((80, 55), "Skip this level", game.load_next))
                         game.gui.add(src.game.gui.Button((80, 80), "Keep playing", game.go_back))
                         break
-                    elif event.key == pygame.K_g:
+                    elif event.key == pygame.K_g and game.level not in (6, 7):
                         game.showing_gui = True
                         game.gui.add(src.game.gui.Button((80, 55), "Previous level", game.load_previous))
                         game.gui.add(src.game.gui.Button((80, 80), "Keep playing", game.go_back))
