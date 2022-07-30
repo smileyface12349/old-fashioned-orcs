@@ -125,9 +125,9 @@ while game.running:
                 i.fetch(event.text)
 
         elif event.type == pygame.KEYUP and not game.showing_gui:
-            if event.key == pygame.K_LEFT:
+            if event.key in [pygame.K_LEFT, pygame.K_a, pygame.K_q]:
                 game.player.moving_left = False
-            elif event.key == pygame.K_RIGHT:
+            elif event.key in [pygame.K_RIGHT, pygame.K_d]:
                 game.player.moving_right = False
 
 
