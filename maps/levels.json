@@ -212,10 +212,10 @@
     },
     "5": {
         "dialogue": {
-
+            "completion": ["Finished"]
         },
         "events": {
-
+            "completion": ["touch_player", "blue_cube", 0]
         }
     },
     "6": {
@@ -310,6 +310,7 @@
                 }
             ],
             "other_dude": [
+                "require:sushpish",
                 {
                     "text": "Hey! How's it going? That flag up there is mine, feel free to touch it as much as you like.",
                     "character": "Joe"
@@ -361,40 +362,49 @@
                 },
                 {
                     "character": "smileyface12349",
-                    "text": "Tells people what to do\nDesigns things\n \"The players are supposed to be able to complete the levels?\""
+                    "text": "Leads people\nDesigns things"
                 },
                 {
-                    "character": "Team Leader",
-                    "text": "smileyface12349"
+                    "character": "smileyface12349",
+                    "text": "\"The players are supposed to be able to complete the levels?\""
                 },
                 {
-                    "character": "Not Original Game Idea",
-                    "text": "Spacewiki"
+                    "character": "Spacewiki",
+                    "text": "Had no original game ID\nCopypasted a lot\nProgrammed the so-called \"engine\""
                 },
                 {
-                    "character": "Ctrl-C Pro, Engine Programmer",
-                    "text": "Spacewiki"
+                    "character": "Spacewiki",
+                    "text": "\"Ctrl-C and Ctrl-V were my best friends during this Code Jam!\""
                 },
                 {
-                    "character": "Lazy Backend Programmer",
-                    "text": "Nasty"
+                    "character": "Nasty",
+                    "text": "Programmed the back end\nPractised his laziness"
                 },
                 {
-                    "character": "Bad Artists",
-                    "text": "Paulchen and also Spacewiki"
+                    "character": "Nasty",
+                    "text": "\"Why can't I do the front end? Also, I should get done quick so that I can go back to bed\""
                 },
                 {
-                    "character": "Classic Level Design",
-                    "text": "smileyface12349 and Spacewiki"
+                    "character": "Paulchen",
+                    "text": "Drew things\n\"[intense scribbling noise] Boom, done in 3 seconds!\""
                 },
                 {
-                    "character": "Code Style Fix",
-                    "text": "Staubfinger"
+                    "character": "Staubfinger",
+                    "text": "Fixed bad writers' errors"
                 },
                 {
-                    "character": "Playtesting",
-                    "text": "smileyface12349, Spacewiki, Nasty, Paulchen, Staubfinger"
-                }
+                    "text": "\"[sigh] They have such a bad orthography...\"",
+                    "character": "Staubfinger"
+                },
+                {
+                    "character": "player",
+                    "text": "Played the game, duh"
+                },
+                {
+                    "character": "player",
+                    "text": "\"When will this dang game end?\""
+                },
+                "There's another ending there, my lad. You want to test it? Gotta play the game from Level 5!"
             ]
         }
     }

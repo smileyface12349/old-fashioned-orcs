@@ -159,7 +159,7 @@ class TextBox(GUIItem):
 
     def _init_part_list(self):
         """Divide the text into batches of 5 lines. PRIVATE USE ONLY!"""
-        words = self.text.split()
+        words = self.text.split(" ")
         line_length = 0
         line_list = []
         while words:
@@ -170,8 +170,13 @@ class TextBox(GUIItem):
                 if "\n" in words[0]:
                     sep_pos = words[0].find("\n")
                     insert = words[0].splitlines()
-                    sep_pos -= len(insert[0])
+                    sep_pos -= len(insert[0]) - 1
+                    other_items = words[1:]
                     words[: len(insert)] = insert
+                    try:
+                        words[len(insert) :] = other_items
+                    except Exception:
+                        words.extend(other_items)
                     sentence += " " + (" ".join(words[:sep_pos]))
                     words = words[sep_pos:]
                     break

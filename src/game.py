@@ -82,6 +82,7 @@ class EventTrigger:
         else:
             self._evts = None
         self.trigger_delay = 0
+        self.has_credits = False
         self._required_evt = None
         self.dial_index = 0
         self.trigger_max = (
@@ -102,6 +103,7 @@ class EventTrigger:
                 self.dialogues[
                     cred_pos : cred_pos + len(self.mgr.level_data["credits"]["dialogue"]["start"])
                 ] = self.mgr.level_data["credits"]["dialogue"]["start"]
+                self.has_credits = True
         except KeyError:
             self.dialogues = []
 
@@ -148,6 +150,14 @@ class EventTrigger:
         else:
             self.mgr.current_trigger = None
             self.game.gui.empty()
+            if self.has_credits:
+                self.game.showing_gui = True
+                self.game.showing_title = True
+                game_crash.stop()
+                self.game.gui.add(gui.Button((48, 90), "Play", self.game.start))
+                self.game.gui.add(gui.Button((110, 90), "Reset", self.game.del_cache))
+                self.game.gui.add(gui.Button((80, 110), "Exit Game", self.game.quit))
+                self.game.client.stop()
 
     def update(self, dt):
         """Can be used in cases where the current trigger should be enabled after a certain period of time."""
