@@ -162,6 +162,7 @@ class EventTrigger:
                 self.game.gui.add(gui.Button((48, 90), "Play", self.game.start))
                 self.game.gui.add(gui.Button((110, 90), "Reset", self.game.del_cache))
                 self.game.gui.add(gui.Button((80, 110), "Exit Game", self.game.quit))
+                self.game.level = 5
                 self.game.client.stop()
 
     def update(self, dt):
