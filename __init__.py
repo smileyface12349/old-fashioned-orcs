@@ -86,7 +86,15 @@ while game.running:
                         game.client.stop()
                         break
                     elif event.key == pygame.K_f:
-                        game.read_map(f"maps/level{game.level+1}.tmx")
+                        game.showing_gui = True
+                        game.gui.add(src.game.gui.Button((80, 55), "Skip this level", game.load_next))
+                        game.gui.add(src.game.gui.Button((80, 80), "Keep playing", game.go_back))
+                        break
+                    elif event.key == pygame.K_g:
+                        game.showing_gui = True
+                        game.gui.add(src.game.gui.Button((80, 55), "Previous level", game.load_previous))
+                        game.gui.add(src.game.gui.Button((80, 80), "Keep playing", game.go_back))
+                        break
                     elif event.key == pygame.K_r and game.crashing:
                         game.gui.empty()
                         game.read_map(f"maps/level{game.level}.tmx")

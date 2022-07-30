@@ -273,7 +273,7 @@ class Switch(pygame.sprite.Sprite):
             self.image.set_alpha(255)
         else:
             print("Transparent")
-            self.image.set_alpha(255//2)
+            self.image.set_alpha(255 // 2)
         self.image = switch if not self.pressed else pressed_switch
         if (not self.pressed) and pygame.sprite.spritecollide(self, self.game.other_players, False):
             self.press()
