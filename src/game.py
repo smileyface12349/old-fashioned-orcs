@@ -96,6 +96,12 @@ class EventTrigger:
                     if trigger.id == self.dialogues[0].removeprefix("require:")
                 )[0]
                 self.dialogues = self.dialogues[1:]
+            if "credits" in self.dialogues:
+                cred_pos = self.dialogues.index("credits")
+                self.dialogues.pop(cred_pos)
+                self.dialogues[
+                    cred_pos : cred_pos + len(self.mgr.level_data["credits"]["dialogue"]["start"])
+                ] = self.mgr.level_data["credits"]["dialogue"]["start"]
         except KeyError:
             self.dialogues = []
 
@@ -116,7 +122,7 @@ class EventTrigger:
         if self.dial_index < len(self.dialogues):
             dial = self.dialogues[self.dial_index]
             if isinstance(dial, str):
-                if dial != "crash":
+                if dial not in ["crash", "credits"]:
                     self.game.gui.add(gui.TextBox(dial))
                     self.dial_index += 1
                 else:
@@ -833,4 +839,4 @@ class Game:
     @staticmethod
     def render_title(screen):
         """Render the title on screen."""
-        screen.blit(title, (19, 3))
+        screen.blit(title, (19, 32))

@@ -1,4 +1,5 @@
 import os.path as path
+from os import linesep
 import pathlib
 from typing import Callable
 
@@ -166,6 +167,14 @@ class TextBox(GUIItem):
             sentence = ""
             while line_length <= 144:
                 if not words:
+                    break
+                if "\n" in words[0]:
+                    sep_pos = words[0].find("\n")
+                    insert = words[0].splitlines()
+                    sep_pos -= len(insert[0])
+                    words[: len(insert)] = insert
+                    sentence += " " + (" ".join(words[:sep_pos]))
+                    words = words[sep_pos:]
                     break
                 sentence += words[0] + " "
                 line_length = self.font.render(sentence.rstrip())[1].width

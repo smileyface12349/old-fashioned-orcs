@@ -206,7 +206,7 @@
         "events": {
             "right_area": ["right", 480, 0],
             "end": ["left", 96, 0],
-            "flag": ["touch", "flag", 0],
+            "flag": ["touch_player", "flag", 0],
             "both_pressure_plates": ["and", [["touch", ["button", 1], 0], ["touch", ["button", 2], 0]], 0]
         }
     },
@@ -320,7 +320,8 @@
                 {
                     "text": "Hey! That's not his flag! It's MY flag!",
                     "character": "Tony"
-                }
+                },
+                "credits"
             ]
         },
         "events": {
@@ -328,8 +329,8 @@
             "sushpish": ["left", 480, 3],
             "brick_wall": ["left", 98, 0],
             "brick_wall_delay": ["left", 368, 3],
-            "other_dude": ["and",[["touch", ["solid", 40], 0], ["right", 400, 0]], 0],
-            "flag": ["touch", "flag", 0]
+            "other_dude": ["and",[["touch_player", ["solid", 40], 0], ["right", 400, 0]], 0],
+            "flag": ["touch_player", "flag", 0]
 }
     },
     "7": {
@@ -347,12 +348,54 @@
         },
         "events": {
             "start": ["start", null, 0],
-            "flag": ["touch", "flag", 0]
+            "flag": ["touch_player", "flag", 0]
         }
     },
     "credits": {
         "dialogue": {
-            "start": []
+            "start": [
+                "A Totally Generic Platformer",
+                {
+                    "character": "By the",
+                    "text": "Old-Fashioned Orcs"
+                },
+                {
+                    "character": "smileyface12349",
+                    "text": "Tells people what to do\nDesigns things\n \"The players are supposed to be able to complete the levels?\""
+                },
+                {
+                    "character": "Team Leader",
+                    "text": "smileyface12349"
+                },
+                {
+                    "character": "Not Original Game Idea",
+                    "text": "Spacewiki"
+                },
+                {
+                    "character": "Ctrl-C Pro, Engine Programmer",
+                    "text": "Spacewiki"
+                },
+                {
+                    "character": "Lazy Backend Programmer",
+                    "text": "Nasty"
+                },
+                {
+                    "character": "Bad Artists",
+                    "text": "Paulchen and also Spacewiki"
+                },
+                {
+                    "character": "Classic Level Design",
+                    "text": "smileyface12349 and Spacewiki"
+                },
+                {
+                    "character": "Code Style Fix",
+                    "text": "Staubfinger"
+                },
+                {
+                    "character": "Playtesting",
+                    "text": "smileyface12349, Spacewiki, Nasty, Paulchen, Staubfinger"
+                }
+            ]
         }
     }
 }
