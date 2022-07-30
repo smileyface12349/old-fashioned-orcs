@@ -19,10 +19,10 @@ class GameDatabase:
         """This method saves player's progress using `unique_id`"""
         self.cur.execute(f"SELECT * FROM players WHERE unique_id = '{player.unique_id}'")
         list = [list for list in self.cur.fetchall()]
-        if not list:
+        if not list and player.level is not None:
             self.cur.execute("INSERT INTO players (unique_id,level) VALUES (?, ?)", (player.unique_id, player.level))
             self.con.commit()
-        else:
+        elif list:
             # Entry already in database.
             for i in list:
                 old_level = int(i[1])
