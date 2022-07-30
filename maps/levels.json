@@ -336,16 +336,8 @@
     },
     "7": {
         "dialogue": {
-            "start": [
-                {
-                    "text": "This flag seems like the only exit. But it's difficult to get to...",
-                    "character": "player"
-                },
-                "Ah well. I'm sure you'll find a way to get to it.",
-                "Anyways, a guy named Joe tells me that he allows you to get to that flag so go ahead!"
-            ],
-            "flag": ["Congratulations on finally reaching a flag you were allowed to touch!",
-            "crash"]
+            "flag": ["You really can't help but touch flags...",
+            "credits"]
         },
         "events": {
             "start": ["start", null, 0],
@@ -356,13 +348,10 @@
         "dialogue": {
             "start": [
                 "title",
-                {
-                    "character": "By the",
-                    "text": "Old-Fashioned Orcs"
-                },
+                "Created by...",
                 {
                     "character": "smileyface12349",
-                    "text": "Leads people\nDesigns things"
+                    "text": "Tells people what to do\nDesigns things"
                 },
                 {
                     "character": "smileyface12349",
@@ -374,7 +363,7 @@
                 },
                 {
                     "character": "Spacewiki",
-                    "text": "\"Zzzz..., zzzz... oh shit the player's already at the credits!\""
+                    "text": "\"Zzzz..., zzzz... oh wow the player's already at the credits!\""
                 },
                 {
                     "character": "Nasty",
@@ -386,14 +375,14 @@
                 },
                 {
                     "character": "Paulchen",
-                    "text": "Drew things\n\"[intense scribbling noise] Boom, done in 3 seconds!\""
+                    "text": "Drew some textures\n\"[intense scribbling noise] Boom, done!\""
                 },
                 {
                     "character": "Staubfinger",
-                    "text": "Fixed bad writers' errors"
+                    "text": "Made our code look good\nAttempted some music"
                 },
                 {
-                    "text": "\"[sigh] They have such a bad orthography...\"",
+                    "text": "\"[sigh] They have such a bad orthography...\"\n(No, I don't know what orthography means either)",
                     "character": "Staubfinger"
                 },
                 {
@@ -404,7 +393,8 @@
                     "character": "player",
                     "text": "\"When will this dang game end?\""
                 },
-                "There's another ending there, my lad. You want to test it? Gotta play the game again!"
+                "Thanks for playing!",
+                "[psst. next time i'd keep a lookout for other endings]"
             ]
         }
     }

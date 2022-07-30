@@ -42,12 +42,12 @@
     <property name="related_switch" type="int" value="1"/>
    </properties>
   </object>
-  <object id="2" name="increase_man1" x="451" y="419.5" width="10" height="10">
+  <object id="2" name="increase_man1" x="404" y="163.5" width="10" height="10">
    <properties>
     <property name="increment" type="int" value="3"/>
    </properties>
   </object>
-  <object id="3" name="increase_man2" x="405" y="165" width="8.5" height="7.5">
+  <object id="3" name="increase_man2" x="452.5" y="420.5" width="8.5" height="7.5">
    <properties>
     <property name="increment" type="int" value="2"/>
    </properties>
