@@ -1,30 +1,30 @@
 import random
 import uuid
 
-from fastapi import WebSocket
+from websockets.client import WebSocketClientProtocol
 
 
 class ConnectionManager:
     """It handles ALL players websockets"""
 
     def __init__(self):
-        self.active_connections: set[WebSocket] = set()
-        self.active_broadcasts: set[WebSocket] = set()
+        self.active_connections: set[WebSocketClientProtocol] = set()
+        self.active_broadcasts: set[WebSocketClientProtocol] = set()
         self.active_nicknames = []
 
-    async def add_main(self, websocket: WebSocket):
+    async def add_main(self, websocket: WebSocketClientProtocol):
         """Accepts a new Player's websocket and adds it to the list."""
         self.active_connections.add(websocket)
 
-    async def drop_main(self, websocket: WebSocket):
+    async def drop_main(self, websocket: WebSocketClientProtocol):
         """Handles proper disconnect of a Player and removes websocket from the list."""
         self.active_connections.remove(websocket)
 
-    async def add_broadcast(self, websocket: WebSocket):
+    async def add_broadcast(self, websocket: WebSocketClientProtocol):
         """Accepts a new Player's websocket and adds it to the list."""
         self.active_broadcasts.add(websocket)
 
-    async def drop_broadcast(self, websocket: WebSocket):
+    async def drop_broadcast(self, websocket: WebSocketClientProtocol):
         """Handles proper disconnect of a Player and removes websocket from the list."""
         self.active_broadcasts.remove(websocket)
 
