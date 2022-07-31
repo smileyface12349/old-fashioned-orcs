@@ -98,11 +98,11 @@ while game.running:
                         game.gui.add(src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off))
                         break
                     elif event.key == pygame.K_r and game.crashing:
+                        if game.sound:
+                            src.game.mixer.unpause()
                         game.gui.empty()
                         game.read_map(f"maps/level{game.level}.tmx")
                         src.game.game_crash.stop()
-                        if game.sound:
-                            src.game.mixer.unpause()
                         game.crashing = False
                 else:
                     if event.key in [pygame.K_RETURN, pygame.K_SPACE]:
