@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="6">
+<map version="1.9" tiledversion="1.9.0" orientation="orthogonal" renderorder="right-down" width="30" height="31" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="6">
  <tileset firstgid="1" source="../assets/Summer Code Jam 2022 - Old-Fashioned Orcs.tsx"/>
- <layer id="1" name="Collision" width="30" height="30">
+ <layer id="1" name="Collision" width="30" height="31">
   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,2147483664,0,15,0,0,15,0,15,15,15,15,15,15,15,15,15,
@@ -36,31 +37,32 @@
 </data>
  </layer>
  <objectgroup id="3" name="Switch Togglers">
-  <object id="1" name="switch_toggler1" x="118.667" y="148" width="3.66667" height="36.3333">
+  <object id="1" name="switch_toggler1" x="118.667" y="164" width="3.66667" height="36.3333">
    <properties>
     <property name="related_other_switch" type="int" value="0"/>
     <property name="related_switch" type="int" value="1"/>
    </properties>
   </object>
-  <object id="2" name="increase_man1" x="404" y="163.5" width="10" height="10">
+  <object id="2" name="increase_man1" x="404" y="179.5" width="10" height="10">
    <properties>
     <property name="increment" type="int" value="3"/>
    </properties>
   </object>
-  <object id="3" name="increase_man2" x="452.5" y="420.5" width="8.5" height="7.5">
+  <object id="3" name="increase_man2" x="452.5" y="436.5" width="8.5" height="7.5">
    <properties>
     <property name="increment" type="int" value="2"/>
    </properties>
   </object>
-  <object id="4" name="timer_config" x="120" y="469.5" width="33" height="5.5">
+  <object id="4" name="timer_config" x="120" y="485.5" width="33" height="5.5">
    <properties>
     <property name="max_delay" type="int" value="2500"/>
    </properties>
   </object>
-  <object id="5" name="tile_timer1" x="83.5" y="405" width="325" height="36"/>
+  <object id="5" name="tile_timer1" x="83.5" y="421" width="325" height="36"/>
  </objectgroup>
- <layer id="2" name="No Collision" width="30" height="30">
+ <layer id="2" name="No Collision" width="30" height="31">
   <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,4,4,0,4,0,0,0,0,0,0,0,0,0,
