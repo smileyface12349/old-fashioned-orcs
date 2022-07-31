@@ -3,6 +3,8 @@ import json
 import logging
 import ssl
 import time
+import pathlib
+import os.path as path
 
 import websockets
 from anticheat import GameAntiCheat
@@ -10,8 +12,15 @@ from database import GameDatabase
 from instances import GameManager, PlayerSession
 from manager import ConnectionManager
 
+
+def _resource_path(file: str):
+    """Return the absolute path for a file."""
+    pathobj = pathlib.Path(file).absolute()
+    return path.join(*pathobj.parts)
+
+
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-ssl_context.load_cert_chain("server-cert.pem", keyfile="server-key.pem")
+ssl_context.load_cert_chain(_resource_path("server-cert.pem"), keyfile=_resource_path("server-key.pem"))
 logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=logging.INFO)
 
 games = GameManager()
