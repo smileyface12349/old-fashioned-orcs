@@ -132,6 +132,11 @@ class EventTrigger:
         if self.dial_index < len(self.dialogues):
             dial = self.dialogues[self.dial_index]
             if isinstance(dial, str):
+                if dial == "title":
+                    mixer.fadeout(2)
+                    mixer.unload()
+                    mixer.load(_resource_path("assets/epic.mp3"))
+                    mixer.play(-1)
                 if dial not in ["crash", "credits"]:
                     self.game.gui.add(gui.TextBox(self.game, dial))
                     self.dial_index += 1
@@ -163,12 +168,14 @@ class EventTrigger:
             self.mgr.current_trigger = None
             self.game.gui.empty()
             if self.has_credits:
+                mixer.fadeout(3)
                 self.game.showing_gui = True
                 self.game.showing_title = True
                 game_crash.stop()
                 self.game.gui.add(gui.Button((48, 90), "Play", self.game.start))
                 self.game.gui.add(gui.Button((110, 90), "Reset", self.game.del_cache))
                 self.game.gui.add(gui.Button((80, 110), "Exit Game", self.game.quit))
+                self.game.gui.add(gui.EmojiButton((148, 10), "♬", self.game.sound_on_off))
                 self.game.level = 5
                 self.game.client.stop()
 

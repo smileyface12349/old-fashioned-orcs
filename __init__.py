@@ -102,7 +102,7 @@ while game.running:
                         game.gui.empty()
                         game.read_map(f"maps/level{game.level}.tmx")
                         src.game.game_crash.stop()
-                        if src.game.sound:
+                        if game.sound:
                             src.game.mixer.unpause()
                         game.crashing = False
                 else:
