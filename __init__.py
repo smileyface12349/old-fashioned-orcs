@@ -23,6 +23,7 @@ while game.running:
     # We generally use a while loop when making a game. Most of the game code should go here.
     screen.fill("skyblue" if game.level in (0, 5, 6, 7) or game.showing_gui else "darkgray")
     dt = clock.tick(60)  # this ensures that the game cannot run higher that 60FPS. We also get a delta time in ms.
+
     if game.showing_gui:
         if game.inputting_nickname:
             game.render_ean_prompt(screen)
@@ -46,9 +47,11 @@ while game.running:
         else:
             game.gui.update()
             game.gui.draw(screen)
+
     pygame.display.update()  # This function is called when everything render-related is done.
     # If you don't call this or pygame.display.flip, the screen won't show what you've drawn on it!
     # Events are how we manage player inputs (and others).
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             # This one is, as you may have guessed, used when the user clicks on the "Close" button.
@@ -56,6 +59,7 @@ while game.running:
             game.running = False
             src.game.mixer.unload()
             pygame.quit()
+
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             for btn in game.gui:
                 if isinstance(btn, src.game.gui.Button) and btn.rect.collidepoint(event.pos):
@@ -135,6 +139,7 @@ while game.running:
                         game.showing_gui = False
                         game.client.start()
                         break
+
         elif event.type in [pygame.TEXTEDITING, pygame.TEXTINPUT] and game.inputting_nickname:
             print(event.text)
             for i in game.gui:
@@ -152,6 +157,7 @@ if game.client.running:
         game.client.stop()
     except AttributeError:
         pass
+
 try:
     exit(0)
 except NameError:

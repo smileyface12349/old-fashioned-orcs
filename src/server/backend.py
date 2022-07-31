@@ -166,7 +166,6 @@ async def handler(websocket):
 
         # Check if websocket is main or broadcast.
         if event["type"] in ["init", "ready", "play"]:
-
             if event["type"] in ["init", "ready"]:
                 event = await manager.update(event)
                 assert event["unique_id"]
@@ -207,7 +206,6 @@ async def handler(websocket):
         # Drop websocket after figuring out its type
         if websocket in manager.active_broadcasts:
             await close_broadcast(websocket, event)
-
         elif websocket in manager.active_connections and player:
             await close_main(websocket, player)
 
