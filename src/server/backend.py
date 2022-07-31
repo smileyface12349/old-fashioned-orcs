@@ -1,12 +1,13 @@
 import asyncio
 import json
 import logging
+import os.path as path
+import pathlib
 import ssl
 import time
-import pathlib
-import os.path as path
 
 import websockets
+
 from anticheat import GameAntiCheat
 from database import GameDatabase
 from instances import GameManager, PlayerSession
