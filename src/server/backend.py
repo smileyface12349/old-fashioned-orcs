@@ -7,7 +7,6 @@ import ssl
 import time
 
 import websockets
-
 from anticheat import GameAntiCheat
 from database import GameDatabase
 from instances import GameManager, PlayerSession
