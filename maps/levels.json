@@ -10,6 +10,7 @@
                 "Wow! You reached the very shiny flag! Congratulations!"
             ],
             "flag_delay": [
+                "require:flag",
                 "What did you actually expect touching some random shiny flag to achieve?",
                 "Did you even check that you're allowed to touch it? Do you usually randomly walk up to flags and touch them?",
                 "What if it was my flag? Would you touch my flag without my permission?"
@@ -77,7 +78,7 @@
         "events": {
             "start": ["start", null, 0],
             "flag": ["touch_player", "flag", 0],
-            "flag_delay": ["touch_player", "flag", 2],
+            "flag_delay": ["left", 480, 2],
             "brick_wall": ["left", 98, 0],
             "brick_wall_delay": ["left", 368, 3],
             "through_brick_wall": ["left", 48, 0]
