@@ -229,10 +229,12 @@
     "5": {
         "dialogue": {
             "completion": [
-                "Wow! You are good!",
-                "I guess you really don't want to escape from all this",
-                "Irresistible blue cubes...",
-                "Congratulations! You win!",
+                "Congrats! You got the secret ending!",
+                "(I know it's not actually that secret)",
+                "(There's another one even more secret...)",
+                "[Fancy animation here]",
+                "[Tell the player how amazing they are here]",
+                "[I don't know what to put here so I'll just roll the credits]",
                 "credits"
             ]
         },
