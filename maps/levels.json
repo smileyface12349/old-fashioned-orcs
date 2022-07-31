@@ -213,10 +213,16 @@
     },
     "5": {
         "dialogue": {
-            "completion": ["Finished"]
+            "completion": [
+                "Wow! You managed to get here even though you can't see where you're going!",
+                "I guess you really don't want to escape from all this",
+                "Can't resist the blue cubes...",
+                "[You then continue on completing levels forever]",
+                "credits"
+            ]
         },
         "events": {
-            "completion": ["touch_player", "blue_cube", 0]
+            "completion": ["and", [["touch_player", "blue_cube", 0], ["left", 432, 0]], 0]
         }
     },
     "6": {
@@ -395,7 +401,7 @@
                     "text": "\"When will this dang game end?\""
                 },
                 "Thanks for playing!",
-                "[psst. next time i'd keep a lookout for other endings]"
+                "[psst. there might be some other endings...]"
             ]
         }
     }
