@@ -21,7 +21,7 @@ def _resource_path(file: str):
 
 
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-ssl_context.load_verify_locations(_resource_path("src/client/cert.pem"))
+ssl_context.load_verify_locations(_resource_path("assets/cert.pem"))
 cache = CacheManager()
 player_nickname = itemgetter("nickname")
 player_level = itemgetter("level")
