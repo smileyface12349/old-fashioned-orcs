@@ -12,7 +12,7 @@ from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 from .cache import CacheManager  # relative import otherwise it doesn't work
 
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-ssl_context.load_verify_locations("./src/client/cert.pem")
+ssl_context.load_verify_locations("src/client/cert.pem")
 cache = CacheManager()
 player_nickname = itemgetter("nickname")
 player_level = itemgetter("level")

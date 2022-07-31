@@ -15,7 +15,6 @@ import src.game  # noqa: E402
 
 # Screw PEP 8 for this one. We need this import to be here, as convert_alpha needs an open window
 
-
 game = src.game.Game()
 clock = pygame.time.Clock()  # a framerate helper object.
 
@@ -86,6 +85,7 @@ while game.running:
                         game.gui.add(src.game.gui.Button((48, 90), "Play", game.start))
                         game.gui.add(src.game.gui.Button((110, 90), "Reset", game.del_cache))
                         game.gui.add(src.game.gui.Button((80, 110), "Exit Game", game.quit))
+                        game.gui.add(src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off))
                         game.client.stop()
                         break
                     elif event.key == pygame.K_f and game.level not in (5, 6, 7):
@@ -102,6 +102,8 @@ while game.running:
                         game.gui.empty()
                         game.read_map(f"maps/level{game.level}.tmx")
                         src.game.game_crash.stop()
+                        if src.game.sound:
+                            src.game.mixer.unpause()
                         game.crashing = False
                 else:
                     if event.key in [pygame.K_RETURN, pygame.K_SPACE]:

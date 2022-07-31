@@ -92,6 +92,15 @@ class Button(GUIItem):
         self._img_list.append(img2)
 
 
+class EmojiButton(Button):
+    """A button that can render emojis."""
+
+    def __init__(self, pos: tuple[int, int], text: str, func: Callable):
+        self.font = pygame.freetype.Font(_resource_path("assets/emoji.ttf"), 12)
+        self.font.fgcolor = pygame.Color("black")
+        super().__init__(pos, text, func)
+
+
 class TextInput(GUIItem):
     """Nickname text input"""
 

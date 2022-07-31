@@ -19,8 +19,15 @@ disconnected = pygame.image.load(_resource_path("assets/connection_lost.png")).c
 title = solid._load_img("assets/title.png")
 title_team = solid._load_img("assets/title_team.png")
 
+mixer = pygame.mixer.music
+mixer.set_volume(0.2)
+mixer.load(_resource_path("assets/TheBuilder.mp3"))
+mixer.queue(_resource_path("assets/Sundays.mp3"), loops=-1)
+# mixer.queue(_resource_path("assets/ShoppingList.mp3"), loops=-1)
+# mixer.queue(_resource_path("assets/QuirkyDog.mp3"), loops=-1)
+
 game_crash = pygame.mixer.Sound(_resource_path("assets/game_crash.wav"))
-game_crash.set_volume(0.35)  # We don't want players to get their eardrums destroyed
+game_crash.set_volume(0.2)
 
 
 def complex_camera(camera, target_rect):
@@ -568,6 +575,7 @@ class Game:
             gui.Button((48, 90), "Play", self.start),
             gui.Button((110, 90), "Reset", self.del_cache),
             gui.Button((80, 110), "Exit Game", self.quit),
+            gui.EmojiButton((148, 10), "♬", self.sound_on_off),
         )
         self.running = True
         self.showing_gui = True
@@ -577,6 +585,8 @@ class Game:
         self.switcht_man = SwitchToggleManager(self)
         self.ending_man = EndingIncrementManager(self)
         self.tile_timer = TimedTileToggler(self)
+        self.sound = True
+        mixer.play()
 
     def quit(self):
         """Quit button event"""
@@ -584,6 +594,15 @@ class Game:
             self.client.stop()
         self.running = False
         pygame.quit()
+
+    def sound_on_off(self):
+        """ON/OFF for music."""
+        if self.sound:
+            mixer.pause()
+            self.sound = False
+        else:
+            mixer.unpause()
+            self.sound = True
 
     def load_next(self):
         """Load next map button event"""
@@ -629,6 +648,7 @@ class Game:
     def crash(self):
         """<<Crash>> the game."""
         self.crashing = True
+        mixer.pause()
         game_crash.play(-1)
 
     def read_map(self, directory):
