@@ -214,10 +214,10 @@
     "5": {
         "dialogue": {
             "completion": [
-                "Wow! You managed to get here even though you can't see where you're going!",
+                "Wow! You are good!",
                 "I guess you really don't want to escape from all this",
-                "Can't resist the blue cubes...",
-                "[You then continue on completing levels forever]",
+                "Irresistible blue cubes...",
+                "Congratulations! You win!",
                 "credits"
             ]
         },
@@ -343,7 +343,8 @@
     },
     "7": {
         "dialogue": {
-            "flag": ["You really can't help but touch flags...",
+            "flag": ["[sigh] You really can't help but touch flags...",
+                "Fine, you win. I can't keep making levels forever...",
             "credits"]
         },
         "events": {
