@@ -22,9 +22,6 @@ title_team = solid._load_img("assets/title_team.png")
 mixer = pygame.mixer.music
 mixer.set_volume(0.2)
 mixer.load(_resource_path("assets/TheBuilder.mp3"))
-mixer.queue(_resource_path("assets/Sundays.mp3"), loops=-1)
-# mixer.queue(_resource_path("assets/ShoppingList.mp3"), loops=-1)
-# mixer.queue(_resource_path("assets/QuirkyDog.mp3"), loops=-1)
 
 game_crash = pygame.mixer.Sound(_resource_path("assets/game_crash.wav"))
 game_crash.set_volume(0.2)
@@ -560,6 +557,16 @@ class TimedTileToggler:
 
 
 SPECIAL_LEVEL_MAPS = {"test": -1, "tutorial": 0}
+LEVEL_SONGS = {
+    0: "TheBuilder.mp3",
+    1: "Sundays.mp3",
+    2: "ShoppingList.mp3",
+    3: "QuirkyDog.mp3",
+    4: "Sundays.mp3",
+    5: "ShoppingList.mp3",
+    6: "TheBuilder.mp3",
+    7: "QuirkyDog.mp3",
+}
 
 
 class Game:
@@ -593,7 +600,7 @@ class Game:
         self.ending_man = EndingIncrementManager(self)
         self.tile_timer = TimedTileToggler(self)
         self.sound = True
-        mixer.play()
+        mixer.play(-1)
 
     def quit(self):
         """Quit button event"""
@@ -717,6 +724,12 @@ class Game:
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
         self.trigger_man.set_triggers(self.level)
+        # Change song
+        if self.sound:
+            mixer.fadeout(3)
+            mixer.unload()
+            mixer.load(f"assets/{LEVEL_SONGS[self.level]}")
+            mixer.play(-1)
         layers = self.tmx_data.layers
         self.switchd_man.update_from_map(layers)
         self.switchs_man.update_from_map(layers)
