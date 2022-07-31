@@ -679,6 +679,7 @@ class Game:
             sprite.kill()
         with open(_resource_path(directory)) as file:
             content = file.read()
+
         for layer in range(len(list(self.tmx_data.visible_tile_layers))):
             raw_tile_layer = list(
                 map(
@@ -724,12 +725,14 @@ class Game:
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
         self.trigger_man.set_triggers(self.level)
+
         # Change song
         if self.sound:
             mixer.fadeout(3)
             mixer.unload()
             mixer.load(f"assets/{LEVEL_SONGS[self.level]}")
             mixer.play(-1)
+
         layers = self.tmx_data.layers
         self.switchd_man.update_from_map(layers)
         self.switchs_man.update_from_map(layers)

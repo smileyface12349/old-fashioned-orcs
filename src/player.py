@@ -132,6 +132,7 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x -= 1
             self.x_velocity = int(not right_collisions)
             self.move_right()
+
         # We update the fall sensor's position to stay underneath the player.
         self.fall_sensor.midtop = self.rect.midbottom
         if not self.jumping:
