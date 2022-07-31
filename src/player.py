@@ -104,7 +104,7 @@ class Player(pygame.sprite.Sprite):
                 i = tile.increment
             except AttributeError:
                 i = 1
-            if path.isfile(f"maps/level{self.game.level+i}.tmx"):
+            if path.isfile(_resource_path(f"maps/level{self.game.level+i}.tmx")):
                 self.game.read_map(f"maps/level{self.game.level+i}.tmx")
         if self.moving_left:
             left_collisions = pygame.sprite.spritecollide(
