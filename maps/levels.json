@@ -127,8 +127,9 @@
                 }
             ],
             "first_dude_delay": [
+                "require:first_dude",
                 {
-                    "text": "Oh and if you need any hints, there's some in the README",
+                    "text": "Oh and if you need any hints for any of the levels, there's some in the README",
                     "character": "Bob"
                 },
                 {
@@ -154,7 +155,7 @@
         },
         "events": {
             "first_dude": ["touch_player", "npc1", 0],
-            "first_dude_delay": ["touch_player", "npc1", 3],
+            "first_dude_delay": ["right", 0, 3],
             "other_dude": ["touch_player", ["solid", 40], 0],
             "flag": ["touch_player", "flag", 0],
             "other_side": ["right", 576, 0],
