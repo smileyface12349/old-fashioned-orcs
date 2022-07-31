@@ -1,5 +1,12 @@
 import os
 import pickle
+import os.path as path
+import pathlib
+
+def _resource_path(file: str):
+    """Return the absolute path for a file."""
+    pathobj = pathlib.Path(file).absolute()
+    return path.join(*pathobj.parts)
 
 
 class CacheManager:
@@ -9,7 +16,7 @@ class CacheManager:
     async def load():
         """Loads cache file using pickle and returns it's contents."""
         try:
-            with open("cache.dmp", "rb") as f:
+            with open(_resource_path("cache.dmp"), "rb") as f:
                 payload = dict(pickle.load(f))
                 payload["type"] = "ready"
                 payload["direction"] = "r"
@@ -21,7 +28,7 @@ class CacheManager:
     def get_nickname():
         """Check if the user already has a nickname."""
         try:
-            with open("cache.dmp", "rb") as f:
+            with open(_resource_path("cache.dmp"), "rb") as f:
                 nick = dict(pickle.load(f))["nickname"]
             return nick if nick else None
         except FileNotFoundError:
@@ -30,7 +37,7 @@ class CacheManager:
     @staticmethod
     async def save(payload: dict):
         """Saves cache file using pickle."""
-        with open("cache.dmp", "wb") as f:
+        with open(_resource_path("cache.dmp"), "wb") as f:
             data = {"unique_id": payload["unique_id"], "nickname": payload["nickname"]}
             pickle.dump(data, f)
 
@@ -38,6 +45,6 @@ class CacheManager:
     def delete():
         """Deletes local cache for whatever reason."""
         try:
-            os.remove("cache.dmp")
+            os.remove(_resource_path("cache.dmp"))
         except OSError:
             pass
