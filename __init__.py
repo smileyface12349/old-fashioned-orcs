@@ -88,15 +88,14 @@ while game.running:
                         game.gui.add(src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off))
                         game.client.stop()
                         break
-                    elif event.key == pygame.K_f and game.level not in (5, 6, 7):
+                    elif event.key == pygame.K_f:
                         game.showing_gui = True
-                        game.gui.add(src.game.gui.Button((80, 55), "Skip this level", game.load_next))
-                        game.gui.add(src.game.gui.Button((80, 80), "Keep playing", game.go_back))
-                        break
-                    elif event.key == pygame.K_g and game.level not in (6, 7):
-                        game.showing_gui = True
-                        game.gui.add(src.game.gui.Button((80, 55), "Previous level", game.load_previous))
-                        game.gui.add(src.game.gui.Button((80, 80), "Keep playing", game.go_back))
+                        if game.level not in (5, 6, 7):
+                            game.gui.add(src.game.gui.Button((80, 40), "Skip this level", game.load_next))
+                        if game.level not in (6, 7):
+                            game.gui.add(src.game.gui.Button((80, 65), "Previous level", game.load_previous))
+                        game.gui.add(src.game.gui.Button((80, 90), "Keep playing", game.go_back))
+                        game.gui.add(src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off))
                         break
                     elif event.key == pygame.K_r and game.crashing:
                         game.gui.empty()
