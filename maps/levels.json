@@ -195,13 +195,13 @@
             ],
             "flag": ["crash"],
             "end": [
-                {"text": "Sorry, the magic blue square hasn't loaded in yet", "character": "Mr. Dev"},
-                {"text": "There's another one up there but you'll have to be really skilled to reach it", "character": "Mr. Dev"},
-                {"text": "You can try and get up there (requires very good coordination with your partner)...", "character": "Mr. Dev"},
-                {"text": " or just step on every pressure plate at random until it works. You never know!", "character": "Mr. Dev"}
+                {"text": "Are you sure you want to take the easy route?", "character": "Kim"},
+                {"text": "There's another blue square up there but you'll have to be really skilled to reach it", "character": "Kim"},
+                {"text": "Reaching that requires very good coordination with your partner", "character": "Kim"},
+                {"text": "(and don't forget to let your partner across)", "character": "Kim"}
             ],
             "both_pressure_plates": [
-                {"text": "Wow! It worked! There's a magic blue square here!", "character": "Mr. Dev"}
+                {"text": "Wow! It worked! (Literally nothing happened)", "character": "Kim"}
             ]
         },
         "events": {
