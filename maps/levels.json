@@ -136,7 +136,9 @@
             "other_side": [
                 "Wow you actually made it! Congratulations!",
                 "(or did you?)",
-                "Remember to let your friend through! (or not)",
+                "Remember to let your friend through! (or not)"
+            ],
+            "touch_cube": [
                 "Wow! You managed to touch some random blue cube in some random cave! Congratulations!"
             ]
         },
@@ -145,6 +147,7 @@
             "other_dude": ["touch_player", ["solid", 40], 0],
             "flag": ["touch_player", "flag", 0],
             "other_side": ["right", 576, 0],
+            "touch_cube": ["right", 592, 0],
             "completion": ["touch_player", "blue_cube", 0]
         },
         "fail": ["flag"]
