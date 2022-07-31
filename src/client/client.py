@@ -5,14 +5,21 @@ import ssl
 import threading
 from asyncio.exceptions import CancelledError, IncompleteReadError
 from operator import itemgetter
+import pathlib
+import os.path as path
 
 import websockets
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 
 from .cache import CacheManager  # relative import otherwise it doesn't work
 
+def _resource_path(file: str):
+    """Return the absolute path for a file."""
+    pathobj = pathlib.Path(file).absolute()
+    return path.join(*pathobj.parts)
+
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-ssl_context.load_verify_locations("src/client/cert.pem")
+ssl_context.load_verify_locations(_resource_path("src/client/cert.pem"))
 cache = CacheManager()
 player_nickname = itemgetter("nickname")
 player_level = itemgetter("level")
