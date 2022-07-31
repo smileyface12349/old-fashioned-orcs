@@ -21,7 +21,7 @@
 </data>
  </layer>
  <objectgroup id="3" name="Switch Togglers">
-  <object id="1" name="switch_toggler1" x="101.333" y="36" width="258.545" height="190.969" visible="0">
+  <object id="1" name="switch_toggler1" x="213.151" y="201.455" width="100.182" height="28.6059">
    <properties>
     <property name="related_other_switch" type="int" value="2"/>
     <property name="related_switch" type="int" value="1"/>
