@@ -126,6 +126,16 @@
                     "character": "Bob"
                 }
             ],
+            "first_dude_delay": [
+                {
+                    "text": "Oh and if you need any hints, there's some in the README",
+                    "character": "Bob"
+                },
+                {
+                    "text": "(I heard the developers don't like making the game too easy...)",
+                    "character": "Bob"
+                }
+            ],
             "other_dude": [{
                 "text": "Like my house?",
                 "character": "Gary"
@@ -144,6 +154,7 @@
         },
         "events": {
             "first_dude": ["touch_player", "npc1", 0],
+            "first_dude_delay": ["touch_player", "npc1", 3],
             "other_dude": ["touch_player", ["solid", 40], 0],
             "flag": ["touch_player", "flag", 0],
             "other_side": ["right", 576, 0],
