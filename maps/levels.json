@@ -197,8 +197,8 @@
             "end": [
                 {"text": "Are you sure you want to take the easy route?", "character": "Kim"},
                 {"text": "There's another blue square up there but you'll have to be really skilled to reach it", "character": "Kim"},
-                {"text": "Reaching that requires very good coordination with your partner", "character": "Kim"},
-                {"text": "(and don't forget to let your partner across)", "character": "Kim"}
+                {"text": "I've never ever seen anyone manage it", "character": "Kim"},
+                {"text": "(and as always, don't forget to let your partner across)", "character": "Kim"}
             ],
             "both_pressure_plates": [
                 {"text": "Wow! It worked! (Literally nothing happened)", "character": "Kim"}
