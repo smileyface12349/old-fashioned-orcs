@@ -54,6 +54,7 @@ while game.running:
             # This one is, as you may have guessed, used when the user clicks on the "Close" button.
             # Generally we just close the window when we get an event of that type.
             game.running = False
+            src.game.mixer.unload()
             pygame.quit()
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             for btn in game.gui:
@@ -81,7 +82,8 @@ while game.running:
                     elif event.key == pygame.K_ESCAPE:
                         game.showing_gui = True
                         game.showing_title = True
-                        src.game.game_crash.stop()
+                        if game.crashing:
+                            src.game.game_crash.stop()
                         game.gui.add(src.game.gui.Button((48, 90), "Play", game.start))
                         game.gui.add(src.game.gui.Button((110, 90), "Reset", game.del_cache))
                         game.gui.add(src.game.gui.Button((80, 110), "Exit Game", game.quit))
@@ -116,6 +118,7 @@ while game.running:
             else:
                 if event.key == pygame.K_ESCAPE:
                     game.running = False
+                    src.game.mixer.unload()
                     pygame.quit()
                 if game.inputting_nickname:
                     if event.key == pygame.K_BACKSPACE:
