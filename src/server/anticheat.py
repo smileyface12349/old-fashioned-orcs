@@ -39,22 +39,6 @@ class GameAntiCheat:
                 logging.info("Failed the level check.")
                 return True
 
-            # This can also be triggered when the game teleports the player
-            # In order to not ban the player we will keep track of how
-            # many position violations occurred
-            if not int(player.level) != int(event["level"]):
-                # Skip position check when spawning and on level change.
-                if abs(event["position"][0] - player.position[0]) > 20:
-                    player.violations += 1
-                    if player.violations > 15:
-                        logging.info("Too many 'Invalid position X'")
-                        return True
-                if abs(event["position"][1] - player.position[1]) > 20:
-                    player.violations += 1
-                    if player.violations > 15:
-                        logging.info("Too many 'Invalid position Y'")
-                        return True
-
         # Player/Game checks
         if player not in game.players:
             logging.info("Player not in game.")
