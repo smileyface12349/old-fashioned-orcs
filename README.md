@@ -27,7 +27,7 @@ python3 -m pip install -r dev-requirements.txt
 ## Controls
 
 - `←` and `→` to move right/left (WASD and ZQSD control schemes are supported as well).
-- `↑` or `Space Bar` to jump.
+- `↑` or `Space Bar` to jump (WASD and ZQSD supported here as well).
 - `R` if you experience a "pseudo-crash".
 - `F` for the pause menu (You can also skip levels from here).
 - `Return` or `Space Bar` for interactions.
