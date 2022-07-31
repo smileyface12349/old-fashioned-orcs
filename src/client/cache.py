@@ -1,7 +1,8 @@
 import os
-import pickle
 import os.path as path
 import pathlib
+import pickle
+
 
 def _resource_path(file: str):
     """Return the absolute path for a file."""
