@@ -29,7 +29,6 @@ python3 -m pip install -r dev-requirements.txt
 - `←` and `→` to move right/left (WASD and ZQSD control schemes are supported as well).
 - `↑` or `Space Bar` to jump.
 - `R` if you experience a "pseudo-crash".
-- `F` if you want to skip a level.
-- `G` if you want to go back a level.
+- `F` for the pause menu (You can also skip levels from here).
 - `Return` or `Space Bar` for interactions.
 - `ESC` key while playing will take you back to the menu, a second hit will exit the game.

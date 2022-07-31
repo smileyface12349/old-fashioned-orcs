@@ -92,7 +92,7 @@ while game.running:
                         game.showing_gui = True
                         if game.level not in (5, 6, 7):
                             game.gui.add(src.game.gui.Button((80, 40), "Skip this level", game.load_next))
-                        if game.level not in (6, 7):
+                        if game.level not in (0, 6, 7):
                             game.gui.add(src.game.gui.Button((80, 65), "Previous level", game.load_previous))
                         game.gui.add(src.game.gui.Button((80, 90), "Keep playing", game.go_back))
                         game.gui.add(src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off))
