@@ -84,6 +84,7 @@ async def join_with_code(player, code):
                 logging.info(e)
                 continue
     if not joined:
+        logging.info(f"Player tried to use code: {code} but failed.")
         await new_game(player)
 
 
