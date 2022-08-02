@@ -126,14 +126,14 @@ while game.running:
                                 if game.trigger_man.current_trigger is not None:
                                     game.trigger_man.current_trigger.update_evt()
             else:
-                if event.key == pygame.K_ESCAPE:
-                    game.running = False
-                    src.game.mixer.unload()
-                    pygame.quit()
-                if event.key == pygame.K_f and game.pause_menu:
+                if event.key in [pygame.K_f, pygame.K_ESCAPE] and game.pause_menu:
                     game.showing_gui = False
                     game.pause_menu = False
                     game.gui.empty()
+                elif event.key == pygame.K_ESCAPE:
+                    game.running = False
+                    src.game.mixer.unload()
+                    pygame.quit()
                 if game.inputting_nickname:
                     if event.key == pygame.K_BACKSPACE:
                         inpt = list(spr for spr in game.gui if isinstance(spr, src.game.gui.TextInput))[0]
