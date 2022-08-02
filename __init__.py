@@ -100,6 +100,7 @@ while game.running:
                         break
                     elif event.key == pygame.K_f:
                         game.showing_gui = True
+                        game.pause_menu = True
                         if game.level not in (5, 6, 7):
                             game.gui.add(src.game.gui.Button((80, 40), "Skip this level", game.load_next))
                         if game.level != 0:
@@ -129,6 +130,10 @@ while game.running:
                     game.running = False
                     src.game.mixer.unload()
                     pygame.quit()
+                if event.key == pygame.K_f and game.pause_menu:
+                    game.showing_gui = False
+                    game.pause_menu = False
+                    game.gui.empty()
                 if game.inputting_nickname:
                     if event.key == pygame.K_BACKSPACE:
                         inpt = list(spr for spr in game.gui if isinstance(spr, src.game.gui.TextInput))[0]

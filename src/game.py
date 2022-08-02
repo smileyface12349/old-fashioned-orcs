@@ -596,6 +596,7 @@ class Game:
         )
         self.running = True
         self.showing_gui = True
+        self.pause_menu = False
         self.trigger_man = EventTriggerManager(self)
         self.switchd_man = SwitchDestroyManager(self)
         self.switchs_man = SwitchSpawnManager(self)
