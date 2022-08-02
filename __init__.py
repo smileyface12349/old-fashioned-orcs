@@ -85,7 +85,7 @@ while game.running:
                         game.player.moving_right = True
                     elif event.key in [pygame.K_SPACE, pygame.K_UP, pygame.K_z, pygame.K_w]:
                         game.player.jump()
-                    elif event.key == pygame.K_ESCAPE:
+                    elif event.key == pygame.K_ESCAPE and not game.pause_menu:
                         game.showing_gui = True
                         game.showing_title = True
                         if game.crashing:
@@ -98,7 +98,7 @@ while game.running:
                         game.pin_code = None
                         game.client.stop()
                         break
-                    elif event.key == pygame.K_f:
+                    elif event.key == pygame.K_f and not game.crashing:
                         game.showing_gui = True
                         game.pause_menu = True
                         if game.level not in (5, 6, 7):
