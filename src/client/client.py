@@ -45,14 +45,13 @@ class Client:
             "position": list(self.game.player.rect.topleft),
             "level": self.game.level,
             "direction": self.game.player.direction,
-            "pin_code": self.game.pin_code,
             "nickname": self.game.nickname,
+            "pin_code": self.game.pin_code,
         }
 
     async def _hello(self, cache_data):
         """Typical client/server hello connection"""
         no_cache = True if not all(cache_data.values()) else False
-
         hi = json.dumps(cache_data)
         await self.websocket.send(hi)
         print(f"Client hello => {hi}")
@@ -79,6 +78,7 @@ class Client:
                 self.game.level = response["level"]
             else:
                 self.game.level = 0
+
             self.game.read_map(f"maps/level{self.game.level}.tmx")
             self.unique_id = cache_data["unique_id"]
             return cache_data
@@ -109,7 +109,7 @@ class Client:
                         await self._sync_players(response)
                     elif response["type"] == "ping":
                         print(f"Private Ping Broadcast => {response}")
-        except socket.gaierror:
+        except socket.gaierror or IndexError:
             self.running = False
             print("Cannot connect to server. Try again later!")
         except ConnectionClosedOK:
@@ -118,18 +118,19 @@ class Client:
 
     async def _sync_players(self, response):
         """Update OtherPlayers from broadcasts!"""
-        nicknames = []
+        nicknames_inlevel = list()
         for player in response["players"]:
             nick = player_nickname(player)
             level = player_level(player)
-            nicknames.append(nick)
+            if level == self.payload["level"]:
+                nicknames_inlevel.append(nick)
             if nick == self.payload["nickname"] or level != self.payload["level"]:
                 continue
             if not any(ply for ply in self.game.other_players if ply.nickname == nick):
                 self.game.add_player(nick, player["direction"], player["position"])
                 continue
             self.game.update_player(nick, player["direction"], player["position"])
-        self.game.check_who_left(nicknames)
+        self.game.check_who_left(nicknames_inlevel)
 
     async def _play(self, data):
         """Play loop"""
@@ -149,8 +150,8 @@ class Client:
                 # Wait for the check
                 response = await self.websocket.recv()
                 response = json.loads(response)
-                self.game.pin_code = response.get("pin_code")
                 print(f"Private Response => {response}")
+                self.game.pin_code = response["pin_code"]
         else:
             exit = json.dumps({"type": "exit"})
             await self.websocket.send(exit)
@@ -172,11 +173,12 @@ class Client:
                 "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
             ) as self.websocket:
                 # Send the first data to initialize the connection
+                cache_data["pin_code"] = self.game.pin_code
                 self.payload = await self._hello(cache_data)
                 # Now play the game
                 self.game.nickname = self.payload["nickname"]
                 await self._play(self.payload)
-        except socket.gaierror:
+        except socket.gaierror or IndexError:
             self.running = False
             print("Cannot connect to server. Try again later!")
         except ConnectionClosedOK:

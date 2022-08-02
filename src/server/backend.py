@@ -130,7 +130,9 @@ async def play_game(player, game):
 
             # Now that we trust the event, we update the server from the event
             player.position = event["position"]
-            player.level = event["level"]
+            if player.level != event["level"]:
+                player.level = event["level"]
+                await broadcast_update(game)
             player.direction = event["direction"]
             request_id = event["unique_id"]
 
@@ -187,18 +189,17 @@ async def handler(websocket):
         event = json.loads(event)
 
         # Check if websocket is main or broadcast.
-        if event["type"] in ["init", "ready", "play"]:
-            if event["type"] in ["init", "ready"]:
-                event = await manager.update(event)
-                assert event["unique_id"]
-                await manager.add_main(websocket)
-                # Create new player session
-                player = PlayerSession(websocket, event["unique_id"], event["nickname"])
-                players.add(player)
-                # Load progress of player, if any
-                player.level = await db.load(event["unique_id"])
-                event["level"] = player.level if player.level else 0
-                await websocket.send(json.dumps(event))
+        if event["type"] in ["init", "ready"]:
+            event = await manager.update(event)
+            assert event["unique_id"]
+            await manager.add_main(websocket)
+            # Create new player session
+            player = PlayerSession(websocket, event["unique_id"], event["nickname"])
+            players.add(player)
+            # Load progress of player, if any
+            player.level = await db.load(event["unique_id"])
+            event["level"] = player.level if player.level else 0
+            await websocket.send(json.dumps(event))
 
             if not games.active_games:
                 # Start a new game.
