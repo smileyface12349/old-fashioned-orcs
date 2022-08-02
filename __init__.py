@@ -88,6 +88,7 @@ while game.running:
                     elif event.key == pygame.K_ESCAPE:
                         game.showing_gui = True
                         game.showing_title = True
+                        game.pause_menu = False
                         if game.crashing:
                             src.game.game_crash.stop()
                         game.gui.add(src.game.gui.Button((48, 90), "Play", game.start))
