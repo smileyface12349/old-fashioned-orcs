@@ -40,7 +40,7 @@ class Client:
 
     async def _sync_engine(self):
         """Sync real game data to send back to the server!"""
-        data = {
+        return {
             "type": "play",
             "position": list(self.game.player.rect.topleft),
             "level": self.game.level,
@@ -48,7 +48,6 @@ class Client:
             "pin_code": self.game.pin_code,
             "nickname": self.game.nickname,
         }
-        return data
 
     async def _hello(self, cache_data):
         """Typical client/server hello connection"""

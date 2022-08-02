@@ -172,7 +172,7 @@ while game.running:
 
         elif event.type in [pygame.TEXTEDITING, pygame.TEXTINPUT]:
             if game.inputting_nickname or game.inputting_code:
-                print(event.text)
+                # print(event.text)
                 for i in game.gui:
                     i.fetch(event.text)
 
