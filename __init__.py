@@ -142,7 +142,10 @@ while game.running:
                     elif event.key == pygame.K_RETURN:
                         for i in game.gui:
                             if i.text:
-                                i.kill(next=True)
+                                if game.inputting_code:
+                                    i.kill(next=True)
+                                else:
+                                    i.kill()
                             else:
                                 break
                         game.inputting_nickname = False
