@@ -141,6 +141,7 @@ while game.running:
                             else:
                                 break
                         game.inputting_nickname = False
+                        i.text = ""
                         if not game.inputting_code:
                             game.showing_gui = False
                             game.client.start()
