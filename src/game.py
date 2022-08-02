@@ -670,6 +670,7 @@ class Game:
 
     def del_cache(self):
         """Delete local cache!"""
+        self.nickname = ""
         client.cache.delete()
 
     def show_input(self):

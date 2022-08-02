@@ -30,7 +30,7 @@ class CacheManager:
         try:
             with open(_resource_path("cache.dmp"), "rb") as f:
                 nick = dict(pickle.load(f))["nickname"]
-            return nick if nick else None
+            return nick if nick and not nick.startswith("Guest") else None
         except FileNotFoundError:
             return None
 

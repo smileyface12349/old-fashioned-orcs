@@ -174,7 +174,7 @@ class Client:
                 # Send the first data to initialize the connection
                 self.payload = await self._hello(cache_data)
                 # Now play the game
-                self.payload["nickname"] = self.game.nickname
+                self.game.nickname = self.payload["nickname"]
                 await self._play(self.payload)
         except socket.gaierror:
             self.running = False

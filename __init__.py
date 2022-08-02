@@ -118,13 +118,14 @@ while game.running:
                         game.crashing = False
                 else:
                     if event.key in [pygame.K_RETURN, pygame.K_SPACE]:
-                        for tbox in game.gui:
-                            if len(tbox.parts_list) > 1 and tbox.part_index < len(tbox.parts_list):
-                                tbox.part_index += 1
-                            else:
-                                tbox.kill()
-                                if game.trigger_man.current_trigger is not None:
-                                    game.trigger_man.current_trigger.update_evt()
+                        if not game.inputting_code and not game.inputting_nickname:
+                            for tbox in game.gui:
+                                if len(tbox.parts_list) > 1 and tbox.part_index < len(tbox.parts_list):
+                                    tbox.part_index += 1
+                                else:
+                                    tbox.kill()
+                                    if game.trigger_man.current_trigger is not None:
+                                        game.trigger_man.current_trigger.update_evt()
             else:
                 if event.key in [pygame.K_f, pygame.K_ESCAPE] and game.pause_menu:
                     game.showing_gui = False
@@ -152,6 +153,7 @@ while game.running:
                         i.text = ""
                         if not game.inputting_code:
                             game.showing_gui = False
+                            game.gui.empty()
                             game.client.start()
                             break
                 elif game.inputting_code:
