@@ -20,9 +20,8 @@ class CacheManager:
             with open(_resource_path("cache.dmp"), "rb") as f:
                 payload = dict(pickle.load(f))
                 payload["type"] = "ready"
-                payload["direction"] = "r"
         except FileNotFoundError:
-            payload = {"type": "init", "unique_id": "", "nickname": "", "direction": "r"}
+            payload = {"type": "init", "unique_id": "", "nickname": ""}
         return payload
 
     @staticmethod

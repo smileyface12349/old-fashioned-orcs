@@ -16,3 +16,4 @@ pygame~=2.1.2
 PyTMX~=3.31
 Pillow~=9.2.0
 websockets~=10.3
+pyperclip~=1.8.2

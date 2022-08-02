@@ -120,12 +120,22 @@ class TextInput(GUIItem):
         self.text += text
         self.update()
 
-    def kill(self):
-        """Kills the input box."""
-        super().kill()
-        pygame.key.stop_text_input()
+    def kill(self, next=False):
+        """Kills the nickname box."""
+        if not next:
+            super().kill()
+            pygame.key.stop_text_input()
         self.game.nickname = self.text
         self.game.inputting_nickname = False
+
+    def kill_code(self, next=False):
+        """Kills the code box."""
+        if not next:
+            super().kill()
+            pygame.key.stop_text_input()
+        pygame.key.stop_text_input()
+        self.game.pin_code = self.text
+        self.game.inputting_code = False
 
     def update(self, *args, **kwargs):
         """Updates the input box."""

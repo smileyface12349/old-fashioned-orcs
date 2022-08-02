@@ -2,6 +2,7 @@ import json
 import os
 
 import pygame
+import pyperclip
 import pytmx
 
 import src.client.client as client
@@ -580,6 +581,7 @@ class Game:
         self.crashing = False
         self.showing_title = True
         self.inputting_nickname = False
+        self.inputting_code = False
         self.nickname = ""
         self.tmx_data: pytmx.TiledMap | None = None
         self.client = client.Client(self)
@@ -590,6 +592,7 @@ class Game:
             gui.Button((110, 90), "Reset", self.del_cache),
             gui.Button((80, 110), "Exit Game", self.quit),
             gui.EmojiButton((148, 10), "♬", self.sound_on_off),
+            gui.EmojiButton((12, 10), "👥", self.join_with_code),
         )
         self.running = True
         self.showing_gui = True
@@ -600,6 +603,7 @@ class Game:
         self.ending_man = EndingIncrementManager(self)
         self.tile_timer = TimedTileToggler(self)
         self.sound = True
+        self.pin_code = None
         mixer.play(-1)
 
     def quit(self):
@@ -647,6 +651,21 @@ class Game:
             self.client.start()
         else:
             self.show_input()
+
+    def join_with_code(self):
+        """Start the game."""
+        self.showing_title = False
+        nick = client.cache.get_nickname()
+        if not nick:
+            self.show_input()
+
+        self.gui.empty()
+        self.inputting_code = True
+        self.gui.add(gui.TextInput(self))
+
+    def copy_code(self):
+        """Copies the game join pin."""
+        pyperclip.copy(self.pin_code)
 
     def del_cache(self):
         """Delete local cache!"""
@@ -893,9 +912,9 @@ class Game:
                 ply.kill()
 
     @staticmethod
-    def render_ean_prompt(screen):
-        """Render the "Enter a Nickname" message on screen."""
-        text = gui.GUIItem.font.render("Enter a nickname", fgcolor=pygame.Color("black"))
+    def render_ean_prompt(screen, msg):
+        """Render the message on screen input."""
+        text = gui.GUIItem.font.render(msg, fgcolor=pygame.Color("black"))
         text[1].centerx = 80
         text[1].y = 16
         screen.blit(*text)

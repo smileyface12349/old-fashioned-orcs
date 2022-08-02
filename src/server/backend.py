@@ -53,7 +53,27 @@ async def join_game(player):
     # Find the game.
     joined = False
     for game in games.active_games:
-        if len(game.players) <= 4:
+        if not len(game.players) >= 2:
+            try:
+                await game.add_player(player)
+                await asyncio.sleep(1)
+                await broadcast_update(game)
+                joined = True
+                await play_game(player, game)
+            except KeyError as e:
+                logging.info(e)
+                continue
+    if not joined:
+        await new_game(player)
+
+
+async def join_with_code(player, code):
+    """Handle connections from other players, joining an existing game."""
+    # Find the game.
+    joined = False
+    for game in games.active_games:
+        if game.join_pin == code:
+            logging.info(f"Player joined using code: {code}")
             try:
                 await game.add_player(player)
                 await asyncio.sleep(1)
@@ -103,7 +123,8 @@ async def play_game(player, game):
                 await close_broadcast(player.broadcast, event)
                 break
 
-            # Echo the payload back to let client know we got it.
+            # Echo the payload back to let client know we got it but add the pin_code for the game.
+            event["pin_code"] = game.join_pin
             await player.websocket.send(json.dumps(event))
 
             # Now that we trust the event, we update the server from the event
@@ -182,8 +203,10 @@ async def handler(websocket):
                 # Start a new game.
                 logging.info("Creating New Game!")
                 await new_game(player)
+            elif games.active_games and event["pin_code"]:
+                await join_with_code(player, event["pin_code"])
             else:
-                logging.info("Player will join an existing game!")
+                logging.info("Player will join a random existing game!")
                 await join_game(player)
 
         elif event["type"] == "broadcast":
@@ -212,7 +235,7 @@ async def handler(websocket):
 
 async def main():
     """Main function that starts the server."""
-    async with websockets.serve(handler, "0.0.0.0", 8001, ssl=ssl_context, ping_interval=None, close_timeout=1):
+    async with websockets.serve(handler, "0.0.0.0", 8000, ssl=ssl_context, ping_interval=None, close_timeout=1):
         await asyncio.Future()  # run forever
 
 

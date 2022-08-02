@@ -26,7 +26,9 @@ while game.running:
 
     if game.showing_gui:
         if game.inputting_nickname:
-            game.render_ean_prompt(screen)
+            game.render_ean_prompt(screen, "Enter nickname: ")
+        elif game.inputting_code:
+            game.render_ean_prompt(screen, "Enter code: ")
         elif game.showing_title:
             game.render_title(screen)
         game.gui.update(dt)
@@ -92,6 +94,8 @@ while game.running:
                         game.gui.add(src.game.gui.Button((110, 90), "Reset", game.del_cache))
                         game.gui.add(src.game.gui.Button((80, 110), "Exit Game", game.quit))
                         game.gui.add(src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off))
+                        game.gui.add(src.game.gui.EmojiButton((12, 10), "👥", game.join_with_code))
+                        game.pin_code = None
                         game.client.stop()
                         break
                     elif event.key == pygame.K_f:
@@ -102,6 +106,7 @@ while game.running:
                             game.gui.add(src.game.gui.Button((80, 65), "Previous level", game.load_previous))
                         game.gui.add(src.game.gui.Button((80, 90), "Keep playing", game.go_back))
                         game.gui.add(src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off))
+                        game.gui.add(src.game.gui.Button((20, 10), str(game.pin_code), game.copy_code))
                         break
                     elif event.key == pygame.K_r and game.crashing:
                         if game.sound:
@@ -132,18 +137,35 @@ while game.running:
                     elif event.key == pygame.K_RETURN:
                         for i in game.gui:
                             if i.text:
-                                i.kill()
+                                i.kill(next=True)
                             else:
                                 break
                         game.inputting_nickname = False
+                        if not game.inputting_code:
+                            game.showing_gui = False
+                            game.client.start()
+                            break
+                elif game.inputting_code:
+                    if event.key == pygame.K_BACKSPACE:
+                        inpt = list(spr for spr in game.gui if isinstance(spr, src.game.gui.TextInput))[0]
+                        if inpt.text:
+                            inpt.text = inpt.text[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        for i in game.gui:
+                            if i.text:
+                                i.kill_code()
+                            else:
+                                break
+                        game.inputting_code = False
                         game.showing_gui = False
                         game.client.start()
                         break
 
-        elif event.type in [pygame.TEXTEDITING, pygame.TEXTINPUT] and game.inputting_nickname:
-            print(event.text)
-            for i in game.gui:
-                i.fetch(event.text)
+        elif event.type in [pygame.TEXTEDITING, pygame.TEXTINPUT]:
+            if game.inputting_nickname or game.inputting_code:
+                print(event.text)
+                for i in game.gui:
+                    i.fetch(event.text)
 
         elif event.type == pygame.KEYUP and not game.showing_gui:
             if event.key in [pygame.K_LEFT, pygame.K_a, pygame.K_q]:

@@ -1,5 +1,6 @@
 import logging
 import uuid
+from random import randint
 
 
 class PlayerSession:
@@ -28,8 +29,9 @@ class PlayerSession:
 class GameInstance:
     """Logical Game Instance"""
 
-    def __init__(self, game_id):
+    def __init__(self, game_id, join_pin):
         self.id = game_id
+        self.join_pin = join_pin
         self.players = []
         self.sockets = []
         self.nicknames = []
@@ -62,11 +64,17 @@ class GameManager:
 
     def __init__(self):
         self.active_games = []
+        self.pins = []
 
     async def create(self):
         """Creates a logical new game."""
         game_id = uuid.uuid4().hex
-        new_game = GameInstance(game_id)
+        while True:
+            join_pin = str(randint(999, 9999))
+            if join_pin not in self.pins:
+                self.pins.append(join_pin)
+                break
+        new_game = GameInstance(game_id, join_pin)
         self.active_games.append(new_game)
         logging.info(f"Created game with id: {new_game.id}")
         return new_game
@@ -79,7 +87,8 @@ class GameManager:
         """Auto-checks for empty games."""
         for game in self.active_games:
             if len(game.players) == 0:
-                logging.info(f"Deleting empty game with id: {game.id}")
+                logging.info(f"Deleting empty game => ID: {game.id} | CODE: {game.join_pin}")
+                self.pins.remove(game.join_pin)
                 self.active_games.remove(game)
 
     async def remove_player(self, player):

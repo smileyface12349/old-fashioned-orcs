@@ -45,6 +45,8 @@ class Client:
             "position": list(self.game.player.rect.topleft),
             "level": self.game.level,
             "direction": self.game.player.direction,
+            "pin_code": self.game.pin_code,
+            "nickname": self.game.nickname,
         }
         return data
 
@@ -88,7 +90,7 @@ class Client:
         # Wait for the response/update and process it
         try:
             async with websockets.connect(
-                "wss://oldfashionedorcs.servegame.com:8001/", close_timeout=1, ssl=ssl_context
+                "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
             ) as self.broadcast:
                 while self.running:
                     # Make sure main thread actually initialized
@@ -148,6 +150,7 @@ class Client:
                 # Wait for the check
                 response = await self.websocket.recv()
                 response = json.loads(response)
+                self.game.pin_code = response.get("pin_code")
                 print(f"Private Response => {response}")
         else:
             exit = json.dumps({"type": "exit"})
@@ -167,7 +170,7 @@ class Client:
 
         try:
             async with websockets.connect(
-                "wss://oldfashionedorcs.servegame.com:8001/", close_timeout=1, ssl=ssl_context
+                "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
             ) as self.websocket:
                 # Send the first data to initialize the connection
                 self.payload = await self._hello(cache_data)
