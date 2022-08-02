@@ -1,3 +1,4 @@
+import asyncio
 import random
 import uuid
 
@@ -22,11 +23,16 @@ class ConnectionManager:
 
     async def add_broadcast(self, websocket: WebSocketServerProtocol):
         """Accepts a new Player's websocket and adds it to the list."""
-        self.active_broadcasts.add(websocket)
+        while websocket is None:
+            await asyncio.sleep(0.1)
+        else:
+            print("Websocket is not None")
+            self.active_broadcasts.add(websocket)
 
     async def drop_broadcast(self, websocket: WebSocketServerProtocol):
         """Handles proper disconnect of a Player and removes websocket from the list."""
-        self.active_broadcasts.remove(websocket)
+        if websocket is not None:
+            self.active_broadcasts.remove(websocket)
 
     async def update(self, payload):
         """Receives JSON payload from a websocket and updates client's unique_id if required."""
