@@ -4,6 +4,7 @@ import logging
 import os.path as path
 import pathlib
 import ssl
+import sys
 import time
 
 import websockets
@@ -27,15 +28,6 @@ games = GameManager()
 manager = ConnectionManager()
 db = GameDatabase()
 anticheat = GameAntiCheat()
-
-
-async def error(websocket, message):
-    """Sends an error message over the socket."""
-    event = {
-        "type": "error",
-        "message": message,
-    }
-    await websocket.send(json.dumps(event))
 
 
 async def new_game(player):
@@ -102,9 +94,9 @@ async def ping_pong(websocket):
 
 async def broadcast_update(game):
     """Send an "update" event to everyone in the current game."""
-    event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
+    _event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
     _players = [p.broadcast for p in game.iter_players() if p.broadcast is not None]
-    websockets.broadcast(_players, json.dumps(event))
+    websockets.broadcast(_players, json.dumps(_event))
 
 
 async def play_game(player, game):
@@ -214,12 +206,12 @@ async def handler(websocket):
         elif event["type"] == "broadcast":
             await websocket.send(json.dumps({"type": "broadcast"}))
             await manager.add_broadcast(websocket)
-            for play in players.copy():
-                if play.unique_id == event["unique_id"]:
+            for pl in players.copy():
+                if pl.unique_id == event["unique_id"]:
                     while True:
                         if isinstance(websocket, websockets.legacy.server.WebSocketServerProtocol):
                             logging.info("Attached websocket")
-                            play.attach_broadcast(websocket)
+                            pl.attach_broadcast(websocket)
                             await ping_pong(websocket)
                             break
                         else:
@@ -239,11 +231,16 @@ async def handler(websocket):
             await close_broadcast(websocket, event["unique_id"])
 
 
-async def main():
+async def main(PORT):
     """Main function that starts the server."""
-    async with websockets.serve(handler, "0.0.0.0", 8000, ssl=ssl_context, ping_interval=None, close_timeout=1):
+    async with websockets.serve(handler, "0.0.0.0", PORT, ssl=ssl_context, ping_interval=None, close_timeout=1):
         await asyncio.Future()  # run forever
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        PORT = sys.argv[1]
+    except IndexError:
+        PORT = 8000
+        logging.info("Port not specified. Using default (8000).")
+    asyncio.run(main(PORT))
