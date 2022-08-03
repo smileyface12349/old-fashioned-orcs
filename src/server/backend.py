@@ -145,7 +145,6 @@ async def play_game(player, game):
             websockets.broadcast(other_players, json.dumps(event))
         elif event["type"] == "exit":
             logging.info(f"Player {player.nickname} left.")
-            await close_broadcast(player.broadcast, request_id)
 
 
 async def close_main(websocket, player):
