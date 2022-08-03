@@ -83,7 +83,7 @@ You have a shovel now. What does a shovel do?
 
 <details>
 <summary>Hint 1</summary>
-![Where to go](https://cdn.discordapp.com/attachments/391970589251731456/1004399803729457202/unknown.png)
+<img alt="image" src="screenshots/secret_path.png" width="160" height="144">
 </details>
 
 <details>
