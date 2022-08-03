@@ -76,7 +76,7 @@ class GameManager:
                 break
         new_game = GameInstance(game_id, join_pin)
         self.active_games.append(new_game)
-        logging.info(f"Created game with id: {new_game.id}")
+        logging.info(f"Created game => ID: {new_game.id} | CODE: {join_pin}")
         return new_game
 
     async def delete(self, game: GameInstance):

@@ -110,11 +110,11 @@ class Client:
                     elif response["type"] == "ping":
                         print(f"Private Ping Broadcast => {response}")
         except socket.gaierror or IndexError:
-            self.running = False
             print("Cannot connect to server. Try again later!")
         except ConnectionClosedOK:
-            self.running = False
             print("Server closed your connection.")
+        finally:
+            self.running = False
 
     async def _sync_players(self, response):
         """Update OtherPlayers from broadcasts!"""
@@ -179,11 +179,11 @@ class Client:
                 self.game.nickname = self.payload["nickname"]
                 await self._play(self.payload)
         except socket.gaierror or IndexError:
-            self.running = False
             print("Cannot connect to server. Try again later!")
         except ConnectionClosedOK:
-            self.running = False
             print("Server closed your connection.")
+        finally:
+            self.running = False
 
     def start(self):
         """Starts the listen/receive threads."""
