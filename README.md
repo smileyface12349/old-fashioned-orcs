@@ -113,9 +113,12 @@ You need some good platforming skills to get this ending! There's also a seconda
 
 #### Secret Ending
 
-Did you notice any blue boxes on the way to the cave ending?
-
 <details>
 <summary>Hint 1</summary>
+Did you notice any blue boxes on the way to the cave ending?
+</details>
+
+<details>
+<summary>Hint 2</summary>
 You really think I'm going to tell you how to do it? It wouldn't exactly be a secret ending then!
 </details>
