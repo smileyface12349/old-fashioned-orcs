@@ -1,4 +1,14 @@
 import sqlite3
+import uuid
+
+
+def is_valid(uuid_to_test):
+    """Checks validity of the uuid hex."""
+    try:
+        uuid.UUID(str(uuid_to_test))
+        return True
+    except ValueError:
+        return False
 
 
 class GameDatabase:
@@ -17,6 +27,9 @@ class GameDatabase:
 
     async def save(self, player):
         """This method saves player's progress using `unique_id`"""
+        if not is_valid(player.unique_id):
+            return None
+
         self.cur.execute(f"SELECT * FROM players WHERE unique_id = '{player.unique_id}'")
         list = [list for list in self.cur.fetchall()]
         if not list and player.level is not None:
@@ -35,6 +48,9 @@ class GameDatabase:
 
     async def load(self, unique_id):
         """This method load player's level using `unique_id`"""
+        if not is_valid(unique_id):
+            unique_id = ""
+
         self.cur.execute(f"SELECT level FROM players WHERE unique_id = '{unique_id}'")
         list = [list for list in self.cur.fetchall()]
         for i in list:
