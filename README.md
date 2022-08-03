@@ -48,9 +48,7 @@ python3 -m pip install -r dev-requirements.txt
 
 WOW THIS GAME IS SO COOL
 
-<img alt="image" src="screenshots/0.jpg" width="160" height="144"> <img alt="image" src="screenshots/1.jpg" width="160" height="144"> <img alt="image" src="screenshots/2.jpg" width="160" height="144"> <img alt="image" src="screenshots/2B.jpg" width="160" height="144">
-<br>
-<img alt="image" src="screenshots/3.jpg" width="160" height="144"> <img alt="image" src="screenshots/4.jpg" width="160" height="144"> <img alt="image" src="screenshots/5.jpg" width="160" height="144"> <img alt="image" src="screenshots/5B.jpg" width="160" height="144"> 
+<img alt="image" src="screenshots/0.jpg" width="160" height="144"> <img alt="image" src="screenshots/1.jpg" width="160" height="144"> <img alt="image" src="screenshots/2.jpg" width="160" height="144"> <img alt="image" src="screenshots/2B.jpg" width="160" height="144"><br><img alt="image" src="screenshots/3.jpg" width="160" height="144"> <img alt="image" src="screenshots/4.jpg" width="160" height="144"> <img alt="image" src="screenshots/5.jpg" width="160" height="144"> <img alt="image" src="screenshots/5B.jpg" width="160" height="144">
 
 ## Hints
 
