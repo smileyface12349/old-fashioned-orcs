@@ -3,7 +3,7 @@
 "A Totally Generic Platformer" is a totally generic platformer. It's just a generic, average platformer with nothing special. You have been warned.
 
 ## A Code Jam
-This game was created as part of the Python Discord Summer Code Jam 2022! In this competition, individuals are randomly allocated 4 other teammates and given a week to make something that fits a theme. 
+This game was created as part of the Python Discord Summer Code Jam 2022. In this competition, individuals are randomly allocated 4 other teammates and given just over a week to make something that fits a theme. 
 
 This year, the theme was "It's not a bug, it's a feature". 
 
@@ -121,3 +121,12 @@ Did you notice any blue boxes on the way to the cave ending?
 <summary>Hint 1</summary>
 You really think I'm going to tell you how to do it? It wouldn't exactly be a secret ending then!
 </details>
+
+## The Old-Fashioned Orcs
+
+"A Totally Generic Platformer" was created by:
+ - smileyface12349
+ - Spacewiki
+ - Nasty
+ - Paulchen
+ - Staubfinger
