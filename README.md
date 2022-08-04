@@ -3,13 +3,15 @@
 "A Totally Generic Platformer" is a totally generic platformer. It's just a generic, average platformer with nothing special. You have been warned.
 
 ## A Code Jam
-This game was created as part of the Python Discord Summer Code Jam 2022! Find out more about the competition [here](https://www.pythondiscord.com/events/code-jams/9/).
+This game was created as part of the Python Discord Summer Code Jam 2022. In this competition, individuals are randomly allocated 4 other teammates and given just over a week to make something that fits a theme. 
 
-This year, the theme was "It's not a bug, it's a feature"
+This year, the theme was "It's not a bug, it's a feature". 
 
 Submissions also had to incorporate WebSockets, using one of [these frameworks](https://www.pythondiscord.com/events/code-jams/9/frameworks/). We chose to use [`websockets`](https://github.com/aaugustin/websockets) to facilitate multiplayer.
 
 The game was written in Python (obviously, it's a Python code jam...) using [`pygame`](https://github.com/pygame/pygame).
+
+Find out more about the competition [here](https://www.pythondiscord.com/events/code-jams/9/).
 
 ## Installation
 
@@ -48,7 +50,7 @@ python3 -m pip install -r dev-requirements.txt
 
 WOW THIS GAME IS SO COOL
 
-[Some cool screenshots of the game here]
+<img alt="image" src="screenshots/0.jpg" width="160" height="144"> <img alt="image" src="screenshots/1.jpg" width="160" height="144"> <img alt="image" src="screenshots/2.jpg" width="160" height="144"> <img alt="image" src="screenshots/2B.jpg" width="160" height="144"><br><img alt="image" src="screenshots/3.jpg" width="160" height="144"> <img alt="image" src="screenshots/4.jpg" width="160" height="144"> <img alt="image" src="screenshots/5.jpg" width="160" height="144"> <img alt="image" src="screenshots/5B.jpg" width="160" height="144">
 
 ## Hints
 
@@ -83,7 +85,7 @@ You have a shovel now. What does a shovel do?
 
 <details>
 <summary>Hint 1</summary>
-![Where to go](https://cdn.discordapp.com/attachments/391970589251731456/1004399803729457202/unknown.png)
+<img alt="image" src="screenshots/secret_path.png" width="160" height="144">
 </details>
 
 <details>
@@ -122,3 +124,12 @@ Did you notice any blue boxes on the way to the cave ending?
 <summary>Hint 2</summary>
 You really think I'm going to tell you how to do it? It wouldn't exactly be a secret ending then!
 </details>
+
+## The Old-Fashioned Orcs
+
+"A Totally Generic Platformer" was created by:
+ - smileyface12349
+ - Spacewiki
+ - Nasty
+ - Paulchen
+ - Staubfinger
