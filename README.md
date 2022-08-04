@@ -3,13 +3,15 @@
 "A Totally Generic Platformer" is a totally generic platformer. It's just a generic, average platformer with nothing special. You have been warned.
 
 ## A Code Jam
-This game was created as part of the Python Discord Summer Code Jam 2022! Find out more about the competition [here](https://www.pythondiscord.com/events/code-jams/9/).
+This game was created as part of the Python Discord Summer Code Jam 2022! In this competition, individuals are randomly allocated 4 other teammates and given a week to make something that fits a theme. 
 
-This year, the theme was "It's not a bug, it's a feature"
+This year, the theme was "It's not a bug, it's a feature". 
 
 Submissions also had to incorporate WebSockets, using one of [these frameworks](https://www.pythondiscord.com/events/code-jams/9/frameworks/). We chose to use [`websockets`](https://github.com/aaugustin/websockets) to facilitate multiplayer.
 
 The game was written in Python (obviously, it's a Python code jam...) using [`pygame`](https://github.com/pygame/pygame).
+
+Find out more about the competition [here](https://www.pythondiscord.com/events/code-jams/9/).
 
 ## Installation
 
