@@ -1,4 +1,4 @@
-## "A Totally Generic Platformer"
+## A Totally Generic Platformer
 
 "A Totally Generic Platformer" is a totally generic platformer. It's just a generic, average platformer with nothing special. You have been warned.
 
