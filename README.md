@@ -5,7 +5,7 @@
 ## A Code Jam
 This game was created as part of the Python Discord Summer Code Jam 2022. In this competition, individuals are randomly allocated 4 other teammates and given just over a week to make something that fits a theme.
 
-This year, the theme was "It's not a bug, it's a feature". 
+This year, the theme was "It's not a bug, it's a feature".
 
 Submissions also had to incorporate WebSockets, using one of [these frameworks](https://www.pythondiscord.com/events/code-jams/9/frameworks/). We chose to use [`websockets`](https://github.com/aaugustin/websockets) to facilitate multiplayer.
 
