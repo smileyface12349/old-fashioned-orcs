@@ -34,6 +34,14 @@ class GameAntiCheat:
             logging.info("Invalid position [negative].")
             return True
 
+        if event["velocity"][0] < 0 or event["velocity"][0] > 1:
+            logging.info("Invalid velocity [x].")
+            return True
+
+        if event["velocity"][1] < 0 or event["velocity"][1] > 6:
+            logging.info("Invalid velocity [y].")
+            return True
+
         if player.banned is not None and player.level is not None:
             if int(player.level) - int(event["level"]) > 1:
                 logging.info("Failed the level check.")
