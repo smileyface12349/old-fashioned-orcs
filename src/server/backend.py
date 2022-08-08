@@ -225,8 +225,8 @@ async def handler(websocket):
             seconds = 0
             while not players:
                 logging.info("Waiting for player init.")
-                await asyncio.sleep(.25)
-                seconds += .25
+                await asyncio.sleep(0.25)
+                seconds += 0.25
                 if seconds >= 3:
                     break
             else:
