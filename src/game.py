@@ -177,9 +177,10 @@ class EventTrigger:
                 self.game.showing_gui = True
                 self.game.showing_title = True
                 game_crash.stop()
-                self.game.gui.add(gui.Button((48, 90), "Play", self.game.start))
-                self.game.gui.add(gui.Button((110, 90), "Reset", self.game.del_cache))
-                self.game.gui.add(gui.Button((80, 110), "Exit Game", self.game.quit))
+                self.game.gui.add(gui.Button((52, 90), "Online", self.game.start))
+                self.game.gui.add(gui.Button((107, 80), "Private", self.game.start_private))
+                self.game.gui.add(gui.Button((80, 110), "Reset", self.game.del_cache))
+                self.game.gui.add(gui.Button((80, 130), "Exit Game", self.game.quit))
                 self.game.gui.add(
                     gui.EmojiButton((148, 10), "♬", self.game.sound_on_off)
                 )
@@ -656,9 +657,10 @@ class Game:
         self.level = 0
         self.camera = Camera(complex_camera, 160, 144)
         self.gui = pygame.sprite.Group(
-            gui.Button((48, 90), "Play", self.start),
-            gui.Button((110, 90), "Reset", self.del_cache),
-            gui.Button((80, 110), "Exit Game", self.quit),
+            gui.Button((52, 90), "Online", self.start),
+            gui.Button((107, 90), "Private", self.start_private),
+            gui.Button((80, 110), "Reset", self.del_cache),
+            gui.Button((80, 130), "Exit Game", self.quit),
             gui.EmojiButton((148, 10), "♬", self.sound_on_off),
             gui.EmojiButton((12, 10), "👥", self.join_with_code),
         )
@@ -673,6 +675,7 @@ class Game:
         self.tile_timer = TimedTileToggler(self)
         self.sound = True
         self.pin_code = None
+        self.private = False
         mixer.play(-1)
 
     def quit(self):
@@ -722,6 +725,11 @@ class Game:
             self.client.start()
         else:
             self.show_input()
+
+    def start_private(self):
+        """Start a private game."""
+        self.private = True
+        self.start()
 
     def join_with_code(self):
         """Start the game."""

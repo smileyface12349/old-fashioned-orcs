@@ -12,7 +12,6 @@ class PlayerSession:
         self.unique_id = unique_id
         self.nickname = nickname
         self.banned = None
-        self.violations = 0
         self.level = -1
         self.position = [0, 0]
         self.direction = "r"
@@ -34,9 +33,10 @@ class PlayerSession:
 class GameInstance:
     """Logical Game Instance"""
 
-    def __init__(self, game_id, join_pin):
+    def __init__(self, game_id, join_pin, private):
         self.id = game_id
         self.join_pin = join_pin
+        self.private = private
         self.players = []
         self.sockets = []
         self.nicknames = []
@@ -71,7 +71,7 @@ class GameManager:
         self.active_games = []
         self.pins = []
 
-    async def create(self):
+    async def create(self, private: bool = False):
         """Creates a logical new game."""
         game_id = uuid.uuid4().hex
         while True:
@@ -79,7 +79,7 @@ class GameManager:
             if join_pin not in self.pins:
                 self.pins.append(join_pin)
                 break
-        new_game = GameInstance(game_id, join_pin)
+        new_game = GameInstance(game_id, join_pin, private=private)
         self.active_games.append(new_game)
         logging.info(f"Created game => ID: {new_game.id} | CODE: {join_pin}")
         return new_game

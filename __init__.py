@@ -106,12 +106,15 @@ while game.running:
                         game.pause_menu = False
                         if game.crashing:
                             src.game.game_crash.stop()
-                        game.gui.add(src.game.gui.Button((48, 90), "Play", game.start))
+                        game.gui.add(src.game.gui.Button((52, 90), "Online", game.start))
                         game.gui.add(
-                            src.game.gui.Button((110, 90), "Reset", game.del_cache)
+                            src.game.gui.Button((107, 90), "Private", game.start_private)
                         )
                         game.gui.add(
-                            src.game.gui.Button((80, 110), "Exit Game", game.quit)
+                            src.game.gui.Button((80, 110), "Reset", game.del_cache)
+                        )
+                        game.gui.add(
+                            src.game.gui.Button((80, 130), "Exit Game", game.quit)
                         )
                         game.gui.add(
                             src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off)

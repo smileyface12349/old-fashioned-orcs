@@ -186,6 +186,7 @@ class Client:
             ) as self.websocket:
                 # Send the first data to initialize the connection
                 cache_data["pin_code"] = self.game.pin_code
+                cache_data["private"] = True if self.game.private else False
                 self.payload = await self._hello(cache_data)
                 # Now play the game
                 self.game.nickname = self.payload["nickname"]

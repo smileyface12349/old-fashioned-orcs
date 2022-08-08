@@ -34,9 +34,9 @@ db = GameDatabase()
 anticheat = GameAntiCheat()
 
 
-async def new_game(player):
+async def new_game(player, private: bool = False):
     """Handles a connection from the first player: start a new game."""
-    game = await games.create()  # Initialize a game
+    game = await games.create(private=private)  # Initialize a game
     await game.add_player(player)
 
     # Receive and process moves from the first player.
@@ -48,7 +48,7 @@ async def join_game(player):
     # Find the game.
     joined = False
     for game in games.active_games:
-        if not len(game.players) >= 2:
+        if not len(game.players) >= 2 and not game.private:
             try:
                 await game.add_player(player)
                 await asyncio.sleep(1)
@@ -207,8 +207,10 @@ async def handler(websocket):
             await websocket.send(json.dumps(event))
 
             await games.clear()
-            if not games.active_games:
-                # Start a new game.
+            if event["private"] == True:
+                logging.info("Creating Private Game!")
+                await new_game(player, private=True)
+            elif not games.active_games:
                 logging.info("Creating New Game!")
                 await new_game(player)
             elif games.active_games and event["pin_code"]:
