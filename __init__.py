@@ -174,7 +174,7 @@ while game.running:
                     game.pause_menu = False
                     game.gui.empty()
                     break
-                if event.key == pygame.K_ESCAPE:
+                elif event.key == pygame.K_ESCAPE:
                     game.running = False
                     src.game.mixer.unload()
                     pygame.quit()

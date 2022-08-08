@@ -45,6 +45,7 @@ class Client:
             "position": list(self.game.player.rect.topleft),
             "level": self.game.level,
             "direction": self.game.player.direction,
+            "velocity": [self.game.player.x_velocity, self.game.player.y_velocity],
             "nickname": self.game.nickname,
             "pin_code": self.game.pin_code,
         }
