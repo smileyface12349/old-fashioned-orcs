@@ -178,7 +178,9 @@ class EventTrigger:
                 self.game.showing_title = True
                 game_crash.stop()
                 self.game.gui.add(gui.Button((52, 90), "Online", self.game.start))
-                self.game.gui.add(gui.Button((107, 80), "Private", self.game.start_private))
+                self.game.gui.add(
+                    gui.Button((107, 80), "Private", self.game.start_private)
+                )
                 self.game.gui.add(gui.Button((80, 110), "Reset", self.game.del_cache))
                 self.game.gui.add(gui.Button((80, 130), "Exit Game", self.game.quit))
                 self.game.gui.add(
