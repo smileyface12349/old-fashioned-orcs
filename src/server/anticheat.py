@@ -8,7 +8,8 @@ class GameAntiCheat:
         pass
     
     @staticmethod
-    def check_if_list(lst):
+    def __check_if_list(lst):
+        """Checks for weird/bad position/velocity lists"""
         if not isinstance(lst, list):
             logging.info("Wrong type.")
             return False
@@ -28,10 +29,10 @@ class GameAntiCheat:
             logging.info("Failed nickname check.")
             return True
 
-        if not self.check_if_list(event["position"]):
+        if not self.__check_if_list(event["position"]):
             return True
 
-        if not self.check_if_list(event["velocity"]):
+        if not self.__check_if_list(event["velocity"]):
             return True
 
         if event["direction"] not in ["r", "l"]:
