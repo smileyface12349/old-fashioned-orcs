@@ -123,6 +123,7 @@ while game.running:
                             src.game.gui.EmojiButton((12, 10), "👥", game.join_with_code)
                         )
                         game.pin_code = None
+                        game.private = False
                         game.client.stop()
                         break
                     elif event.key == pygame.K_f and not game.crashing:
