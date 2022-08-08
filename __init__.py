@@ -173,7 +173,6 @@ while game.running:
                     game.showing_gui = False
                     game.pause_menu = False
                     game.gui.empty()
-                    break
                 elif event.key == pygame.K_ESCAPE:
                     game.running = False
                     src.game.mixer.unload()
@@ -225,7 +224,6 @@ while game.running:
 
         elif event.type in [pygame.TEXTEDITING, pygame.TEXTINPUT]:
             if game.inputting_nickname or game.inputting_code:
-                # print(event.text)
                 for i in game.gui:
                     i.fetch(event.text)
 

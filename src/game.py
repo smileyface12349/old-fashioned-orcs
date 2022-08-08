@@ -696,6 +696,7 @@ class Game:
         if os.path.isfile(f"maps/level{self.level+1}.tmx"):
             self.read_map(f"maps/level{self.level+1}.tmx")
         self.showing_gui = False
+        self.pause_menu = False
         self.gui.empty()
 
     def load_previous(self):
@@ -703,6 +704,7 @@ class Game:
         if os.path.isfile(f"maps/level{self.level-1}.tmx"):
             self.read_map(f"maps/level{self.level-1}.tmx")
         self.showing_gui = False
+        self.pause_menu = False
         self.gui.empty()
 
     def go_back(self):
