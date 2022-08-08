@@ -32,6 +32,7 @@ games = GameManager()
 manager = ConnectionManager()
 db = GameDatabase()
 anticheat = GameAntiCheat()
+players = set()
 
 
 async def new_game(player, private: bool = False):
@@ -83,16 +84,16 @@ async def join_with_code(player, code):
         await new_game(player)
 
 
-async def ping_pong(websocket):
+async def ping_pong(ws):
     """Trying to keep broadcast alive."""
-    while websocket in manager.active_broadcasts:
+    while ws is not None:
         t0 = time.perf_counter()
-        pong_waiter = await websocket.ping()
+        pong_waiter = await ws.ping()
         await pong_waiter
         t1 = time.perf_counter()
         latency = f"{t1-t0:.2f}"
         message = json.dumps({"type": "ping", "latency": latency})
-        await websocket.send(message)
+        await ws.send(message)
         await asyncio.sleep(0.5)
 
 
@@ -163,9 +164,6 @@ async def close_main(websocket, player):
     await manager.drop_main(websocket)
 
 
-players = set()
-
-
 async def close_broadcast(websocket, request_id):
     """Close broadcast websocket properly."""
     for play in players.copy():
@@ -224,16 +222,9 @@ async def handler(websocket):
             await manager.add_broadcast(websocket)
             for pl in players.copy():
                 if pl.unique_id == event["unique_id"]:
-                    while True:
-                        if isinstance(
-                            websocket, websockets.legacy.server.WebSocketServerProtocol
-                        ):
-                            logging.info("Attached websocket")
-                            pl.attach_broadcast(websocket)
-                            await ping_pong(websocket)
-                            break
-                        else:
-                            await asyncio.sleep(0.2)
+                    logging.info("Attached websocket")
+                    pl.broadcast = websocket
+                    await ping_pong(pl.broadcast)
 
     except websockets.exceptions.ConnectionClosedError:
         logging.info("Websocket closed with ConnectionClosedError")
@@ -243,10 +234,9 @@ async def handler(websocket):
 
     finally:
         # Drop websocket after figuring out its type
-        if websocket in manager.active_connections and player:
+        if websocket and player:
             await close_main(websocket, player)
-        elif websocket in manager.active_broadcasts:
-            await close_broadcast(websocket, event["unique_id"])
+            await close_broadcast(player.broadcast, player.unique_id)
 
 
 async def main(PORT):

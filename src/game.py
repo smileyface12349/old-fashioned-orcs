@@ -676,9 +676,20 @@ class Game:
         self.ending_man = EndingIncrementManager(self)
         self.tile_timer = TimedTileToggler(self)
         self.sound = True
-        self.pin_code = None
+        self.pin_code = ""
         self.private = False
         mixer.play(-1)
+
+    def reset_everything(self):
+        """Reset everything!"""
+        self.showing_gui = True
+        self.showing_title = True
+        self.pause_menu = False
+        self.pin_code = ""
+        self.private = False
+        self.other_players.empty()
+        self.tiles = pygame.sprite.LayeredUpdates()
+        self.objects = pygame.sprite.LayeredUpdates(self.player)
 
     def quit(self):
         """Quit button event"""

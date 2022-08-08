@@ -25,10 +25,6 @@ class PlayerSession:
             "direction": self.direction,
         }
 
-    def attach_broadcast(self, websocket):
-        """Adds second websocket in Player"""
-        self.broadcast = websocket
-
 
 class GameInstance:
     """Logical Game Instance"""

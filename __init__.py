@@ -101,11 +101,10 @@ while game.running:
                     ]:
                         game.player.jump()
                     elif event.key == pygame.K_ESCAPE and not game.pause_menu:
-                        game.showing_gui = True
-                        game.showing_title = True
-                        game.pause_menu = False
                         if game.crashing:
                             src.game.game_crash.stop()
+                        game.reset_everything()
+                        game.client.stop()
                         game.gui.add(src.game.gui.Button((52, 90), "Online", game.start))
                         game.gui.add(
                             src.game.gui.Button((107, 90), "Private", game.start_private)
@@ -122,9 +121,6 @@ while game.running:
                         game.gui.add(
                             src.game.gui.EmojiButton((12, 10), "👥", game.join_with_code)
                         )
-                        game.pin_code = None
-                        game.private = False
-                        game.client.stop()
                         break
                     elif event.key == pygame.K_f and not game.crashing:
                         game.showing_gui = True
