@@ -218,13 +218,29 @@ class OtherPlayer(pygame.sprite.Sprite):
             self.player_right,
             player_right,
             pygame.Color("#4A4AFF"),
-            set_color=pygame.Color(random.choice([
-                "yellow", "orange", "green", "cyan", "slateblue1",
-                "darkviolet", "aquamarine", "aliceblue", "antiquewhite",
-                "aquamarine4", "brown1", "darkorchid1", "mediumspringgreen",
-                "snow", "springgreen"
-            ])),
-            inverse_set=True)
+            set_color=pygame.Color(
+                random.choice(
+                    [
+                        "yellow",
+                        "orange",
+                        "green",
+                        "cyan",
+                        "slateblue1",
+                        "darkviolet",
+                        "aquamarine",
+                        "aliceblue",
+                        "antiquewhite",
+                        "aquamarine4",
+                        "brown1",
+                        "darkorchid1",
+                        "mediumspringgreen",
+                        "snow",
+                        "springgreen",
+                    ]
+                )
+            ),
+            inverse_set=True,
+        )
         self.player_left = pygame.transform.flip(self.player_right, True, False)
 
     def update(self, *args, **kwargs):
