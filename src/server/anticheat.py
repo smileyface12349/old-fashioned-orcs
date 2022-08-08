@@ -6,7 +6,7 @@ class GameAntiCheat:
 
     def __init__(self):
         pass
-    
+
     @staticmethod
     def __check_if_list(lst):
         """Checks for weird/bad position/velocity lists"""
