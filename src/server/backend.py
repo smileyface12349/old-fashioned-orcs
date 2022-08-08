@@ -86,7 +86,7 @@ async def join_with_code(player, code):
 
 async def ping_pong(ws):
     """Trying to keep broadcast alive."""
-    while ws is not None:
+    while ws:
         t0 = time.perf_counter()
         pong_waiter = await ws.ping()
         await pong_waiter
@@ -166,6 +166,7 @@ async def close_main(websocket, player):
 
 async def close_broadcast(websocket, request_id):
     """Close broadcast websocket properly."""
+    global players
     for play in players.copy():
         if play.unique_id == request_id:
             players.remove(play)
@@ -185,6 +186,7 @@ async def handler(websocket):
     }
     :param payload: json object
     """
+    global players
     try:
         player = None
         logging.info(f"New WebSocket => {websocket.remote_address}")
@@ -220,11 +222,19 @@ async def handler(websocket):
         elif event["type"] == "broadcast":
             await websocket.send(json.dumps({"type": "broadcast"}))
             await manager.add_broadcast(websocket)
-            for pl in players.copy():
-                if pl.unique_id == event["unique_id"]:
-                    logging.info("Attached websocket")
-                    pl.broadcast = websocket
-                    await ping_pong(pl.broadcast)
+            seconds = 0
+            while not players:
+                logging.info("Waiting for player init.")
+                await asyncio.sleep(.25)
+                seconds += .25
+                if seconds >= 3:
+                    break
+            else:
+                for pl in players.copy():
+                    if pl.unique_id == event["unique_id"]:
+                        logging.info("Attached websocket")
+                        pl.broadcast = websocket
+                        await ping_pong(pl.broadcast)
 
     except websockets.exceptions.ConnectionClosedError:
         logging.info("Websocket closed with ConnectionClosedError")
