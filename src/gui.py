@@ -15,8 +15,12 @@ def _resource_path(file: str):
 
 
 button = pygame.image.load(_resource_path("assets/button.png")).convert_alpha()
-button_clicked = pygame.image.load(_resource_path("assets/button_clicked.png")).convert_alpha()
-nickname_input = pygame.image.load(_resource_path("assets/nickname_input.png")).convert_alpha()
+button_clicked = pygame.image.load(
+    _resource_path("assets/button_clicked.png")
+).convert_alpha()
+nickname_input = pygame.image.load(
+    _resource_path("assets/nickname_input.png")
+).convert_alpha()
 text_box = pygame.image.load(_resource_path("assets/textbox.png")).convert_alpha()
 
 
@@ -47,7 +51,9 @@ class Button(GUIItem):
     @property
     def clicked(self):
         """Return if the button is currently clicked."""
-        return pygame.mouse.get_pressed()[0] and self.rect.collidepoint(pygame.mouse.get_pos())
+        return pygame.mouse.get_pressed()[0] and self.rect.collidepoint(
+            pygame.mouse.get_pos()
+        )
 
     def click(self):
         """Actually activate the button press."""
@@ -61,7 +67,9 @@ class Button(GUIItem):
         img2 = img.copy()
         for _ in range(2):
             img.blit(button, (0, 0), area=pygame.Rect(0, 0, 4, button.get_height()))
-            img2.blit(button_clicked, (0, 0), area=pygame.Rect(0, 0, 4, button.get_height()))
+            img2.blit(
+                button_clicked, (0, 0), area=pygame.Rect(0, 0, 4, button.get_height())
+            )
             if not _:
                 img = pygame.transform.flip(img, True, False).convert_alpha()
                 img2 = pygame.transform.flip(img2, True, False).convert_alpha()

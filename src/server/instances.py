@@ -19,7 +19,12 @@ class PlayerSession:
 
     def data(self):
         """Returns all public data for a Player (position, nickname, level)"""
-        return {"nickname": self.nickname, "position": self.position, "level": self.level, "direction": self.direction}
+        return {
+            "nickname": self.nickname,
+            "position": self.position,
+            "level": self.level,
+            "direction": self.direction,
+        }
 
     def attach_broadcast(self, websocket):
         """Adds second websocket in Player"""
@@ -87,7 +92,9 @@ class GameManager:
         """Auto-checks for empty games."""
         for game in self.active_games:
             if len(game.players) == 0:
-                logging.info(f"Deleting empty game => ID: {game.id} | CODE: {game.join_pin}")
+                logging.info(
+                    f"Deleting empty game => ID: {game.id} | CODE: {game.join_pin}"
+                )
                 self.pins.remove(game.join_pin)
                 self.active_games.remove(game)
 

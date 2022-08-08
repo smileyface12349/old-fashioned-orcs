@@ -21,8 +21,12 @@ def _resource_path(file: str):
 
 
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-ssl_context.load_cert_chain(_resource_path("server-cert.pem"), keyfile=_resource_path("server-key.pem"))
-logging.basicConfig(format="%(asctime)s - %(filename)s - %(message)s", level=logging.INFO)
+ssl_context.load_cert_chain(
+    _resource_path("server-cert.pem"), keyfile=_resource_path("server-key.pem")
+)
+logging.basicConfig(
+    format="%(asctime)s - %(filename)s - %(message)s", level=logging.INFO
+)
 
 games = GameManager()
 manager = ConnectionManager()
@@ -94,7 +98,11 @@ async def ping_pong(websocket):
 
 async def broadcast_update(game):
     """Send an "update" event to everyone in the current game."""
-    _event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
+    _event = {
+        "type": "update",
+        "game_id": game.id,
+        "players": [p.data() for p in game.players],
+    }
     _players = [p.broadcast for p in game.iter_players() if p.broadcast is not None]
     websockets.broadcast(_players, json.dumps(_event))
 
@@ -127,12 +135,18 @@ async def play_game(player, game):
             player.direction = event["direction"]
             request_id = event["unique_id"]
 
-            event = {"type": "update", "game_id": game.id, "players": [p.data() for p in game.players]}
+            event = {
+                "type": "update",
+                "game_id": game.id,
+                "players": [p.data() for p in game.players],
+            }
             # Send the "update" event to everyone in the current level but exclude the current player!
             other_players = [
                 p.broadcast
                 for p in game.iter_players()
-                if p.unique_id != request_id and p.broadcast is not None and p.level == player.level
+                if p.unique_id != request_id
+                and p.broadcast is not None
+                and p.level == player.level
             ]
             websockets.broadcast(other_players, json.dumps(event))
         elif event["type"] == "exit":
@@ -209,7 +223,9 @@ async def handler(websocket):
             for pl in players.copy():
                 if pl.unique_id == event["unique_id"]:
                     while True:
-                        if isinstance(websocket, websockets.legacy.server.WebSocketServerProtocol):
+                        if isinstance(
+                            websocket, websockets.legacy.server.WebSocketServerProtocol
+                        ):
                             logging.info("Attached websocket")
                             pl.attach_broadcast(websocket)
                             await ping_pong(websocket)
@@ -233,7 +249,9 @@ async def handler(websocket):
 
 async def main(PORT):
     """Main function that starts the server."""
-    async with websockets.serve(handler, "0.0.0.0", PORT, ssl=ssl_context, ping_interval=None, close_timeout=1):
+    async with websockets.serve(
+        handler, "0.0.0.0", PORT, ssl=ssl_context, ping_interval=None, close_timeout=1
+    ):
         await asyncio.Future()  # run forever
 
 

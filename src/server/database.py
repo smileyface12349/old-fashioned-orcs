@@ -33,16 +33,22 @@ class GameDatabase:
         self.cur.execute(f"SELECT * FROM players WHERE unique_id = '{player.unique_id}'")
         list = [list for list in self.cur.fetchall()]
         if not list and player.level is not None:
-            self.cur.execute("INSERT INTO players (unique_id,level) VALUES (?, ?)", (player.unique_id, player.level))
+            self.cur.execute(
+                "INSERT INTO players (unique_id,level) VALUES (?, ?)",
+                (player.unique_id, player.level),
+            )
             self.con.commit()
         elif list:
             # Entry already in database.
             for i in list:
                 old_level = int(i[1])
             if old_level < player.level:
-                self.cur.execute(f"DELETE FROM players WHERE unique_id IN ('{player.unique_id}')")
                 self.cur.execute(
-                    "INSERT INTO players (unique_id,level) VALUES (?, ?)", (player.unique_id, player.level)
+                    f"DELETE FROM players WHERE unique_id IN ('{player.unique_id}')"
+                )
+                self.cur.execute(
+                    "INSERT INTO players (unique_id,level) VALUES (?, ?)",
+                    (player.unique_id, player.level),
                 )
                 self.con.commit()
 
@@ -58,7 +64,9 @@ class GameDatabase:
 
     async def delete(self, player):
         """This method resets player's level using `unique_id`"""
-        self.cur.execute(f"DELETE FROM players WHERE unique_id IN ('{player.unique_id}')")
+        self.cur.execute(
+            f"DELETE FROM players WHERE unique_id IN ('{player.unique_id}')"
+        )
         self.con.commit()
 
     async def show_all(self):

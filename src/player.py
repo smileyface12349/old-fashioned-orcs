@@ -84,20 +84,23 @@ class Player(pygame.sprite.Sprite):
         solids_on_same_layer = [
             tile
             for tile in tiles_on_same_layer
-            if tile.__class__.__name__ in ("Solid", "NPC", "Switch", "TempSwitch", "SwitchBlock")
+            if tile.__class__.__name__
+            in ("Solid", "NPC", "Switch", "TempSwitch", "SwitchBlock")
         ]
         if pygame.sprite.spritecollide(
             self,
             tiles_on_same_layer,
             False,
-            lambda spr1, spr2: spr2.__class__.__name__ == "BuggyThingy" and pygame.sprite.collide_mask(spr1, spr2),
+            lambda spr1, spr2: spr2.__class__.__name__ == "BuggyThingy"
+            and pygame.sprite.collide_mask(spr1, spr2),
         ):
             self.game.crash()
         for tile in pygame.sprite.spritecollide(
             self,
             tiles_on_same_layer,
             False,
-            lambda spr1, spr2: spr2.__class__.__name__ == "Ending" and pygame.sprite.collide_mask(spr1, spr2),
+            lambda spr1, spr2: spr2.__class__.__name__ == "Ending"
+            and pygame.sprite.collide_mask(spr1, spr2),
         ):
             # Go to next level
             try:
@@ -165,7 +168,9 @@ class Player(pygame.sprite.Sprite):
 
                 if collisions:
                     self.rect.bottom = (
-                        collisions[0].rect.y + 1 if collisions[0].rect.height == 16 else collisions[0].rect.centery - 2
+                        collisions[0].rect.y + 1
+                        if collisions[0].rect.height == 16
+                        else collisions[0].rect.centery - 2
                     )
                     for switch in filter(
                         lambda switch: "Switch" in switch.__class__.__name__
@@ -190,7 +195,8 @@ class Player(pygame.sprite.Sprite):
                 self,
                 solids_on_same_layer,
                 False,
-                lambda spr1, spr2: spr2.playerisdown_strict and spr1.rect.colliderect(spr2.rect),
+                lambda spr1, spr2: spr2.playerisdown_strict
+                and spr1.rect.colliderect(spr2.rect),
             )
             if collisions:
                 self.rect.y = collisions[0].rect.bottom

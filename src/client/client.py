@@ -89,7 +89,9 @@ class Client:
         # Wait for the response/update and process it
         try:
             async with websockets.connect(
-                "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
+                "wss://oldfashionedorcs.servegame.com:8000/",
+                close_timeout=1,
+                ssl=ssl_context,
             ) as self.broadcast:
                 while self.running:
                     # Make sure main thread actually initialized
@@ -99,7 +101,11 @@ class Client:
                     # First payload on this websocket needs to include unique_id
                     # So that the server can identify it and assign the socket to the same player
                     if not init:
-                        await self.broadcast.send(json.dumps({"type": "broadcast", "unique_id": self.unique_id}))
+                        await self.broadcast.send(
+                            json.dumps(
+                                {"type": "broadcast", "unique_id": self.unique_id}
+                            )
+                        )
                         init = True
                     # Now that we have initiliased, wait for actual updates/pings!
                     response = await self.broadcast.recv()
@@ -140,7 +146,10 @@ class Client:
             self.payload.update(data)
 
             # When moving & on spawn inform the server!
-            if self.payload["position"] != history["position"] or self.payload["level"] != history["level"]:
+            if (
+                self.payload["position"] != history["position"]
+                or self.payload["level"] != history["level"]
+            ):
                 # Update history dict
                 history["position"] = self.payload["position"]
                 history["level"] = self.payload["level"]
@@ -170,7 +179,9 @@ class Client:
 
         try:
             async with websockets.connect(
-                "wss://oldfashionedorcs.servegame.com:8000/", close_timeout=1, ssl=ssl_context
+                "wss://oldfashionedorcs.servegame.com:8000/",
+                close_timeout=1,
+                ssl=ssl_context,
             ) as self.websocket:
                 # Send the first data to initialize the connection
                 cache_data["pin_code"] = self.game.pin_code

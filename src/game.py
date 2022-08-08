@@ -16,7 +16,9 @@ _resource_path = player._resource_path
 
 crash = pygame.image.load(_resource_path("assets/crash.png")).convert_alpha()
 loading = pygame.image.load(_resource_path("assets/loading.png")).convert_alpha()
-disconnected = pygame.image.load(_resource_path("assets/connection_lost.png")).convert_alpha()
+disconnected = pygame.image.load(
+    _resource_path("assets/connection_lost.png")
+).convert_alpha()
 title = solid._load_img("assets/title.png")
 title_team = solid._load_img("assets/title_team.png")
 
@@ -84,7 +86,9 @@ class EventTrigger:
         self.trigger_duration_reached = False
         self.type = arg_list[0]
         if self.type == "and":
-            self._evts = list(map(lambda tgr: EventTrigger(self.mgr, "", tgr), self.arg_list[1]))
+            self._evts = list(
+                map(lambda tgr: EventTrigger(self.mgr, "", tgr), self.arg_list[1])
+            )
         else:
             self._evts = None
         self.trigger_delay = 0
@@ -107,7 +111,8 @@ class EventTrigger:
                 cred_pos = self.dialogues.index("credits")
                 self.dialogues.pop(cred_pos)
                 self.dialogues[
-                    cred_pos : cred_pos + len(self.mgr.level_data["credits"]["dialogue"]["start"])
+                    cred_pos : cred_pos
+                    + len(self.mgr.level_data["credits"]["dialogue"]["start"])
                 ] = self.mgr.level_data["credits"]["dialogue"]["start"]
                 self.has_credits = True
         except KeyError:
@@ -155,7 +160,9 @@ class EventTrigger:
                 elif "crash" in dial:
                     self.game.crash()
                 else:
-                    despawn_layer = self.game.tiles.get_sprites_from_layer(dial["despawn_layer"])
+                    despawn_layer = self.game.tiles.get_sprites_from_layer(
+                        dial["despawn_layer"]
+                    )
                     for spr in despawn_layer:
                         if spr.tile_pos == tuple(dial["coords"]):
                             spr.kill()
@@ -173,7 +180,9 @@ class EventTrigger:
                 self.game.gui.add(gui.Button((48, 90), "Play", self.game.start))
                 self.game.gui.add(gui.Button((110, 90), "Reset", self.game.del_cache))
                 self.game.gui.add(gui.Button((80, 110), "Exit Game", self.game.quit))
-                self.game.gui.add(gui.EmojiButton((148, 10), "♬", self.game.sound_on_off))
+                self.game.gui.add(
+                    gui.EmojiButton((148, 10), "♬", self.game.sound_on_off)
+                )
                 self.game.level = 5
                 self.game.client.stop()
 
@@ -209,9 +218,13 @@ class EventTrigger:
                     val = bool(
                         pygame.sprite.spritecollide(
                             self.game.player,
-                            tiles_on_same_layer if "button" not in self.arg_list[1] else self.game.tiles,
+                            tiles_on_same_layer
+                            if "button" not in self.arg_list[1]
+                            else self.game.tiles,
                             False,
-                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1]])
+                            lambda spr1, spr2: isinstance(
+                                spr2, TYPE_MAPPINGS[self.arg_list[1]]
+                            )
                             and pygame.sprite.collide_mask(spr1, spr2),
                         )
                     )
@@ -219,9 +232,13 @@ class EventTrigger:
                     val = bool(
                         pygame.sprite.spritecollide(
                             self.game.player,
-                            tiles_on_same_layer if "button" not in self.arg_list[1][0] else self.game.tiles,
+                            tiles_on_same_layer
+                            if "button" not in self.arg_list[1][0]
+                            else self.game.tiles,
                             False,
-                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1][0]])
+                            lambda spr1, spr2: isinstance(
+                                spr2, TYPE_MAPPINGS[self.arg_list[1][0]]
+                            )
                             and (
                                 (spr2.tile_type == self.arg_list[1][1])
                                 if self.arg_list[1][0] == "solid"
@@ -236,18 +253,26 @@ class EventTrigger:
                     val = bool(
                         pygame.sprite.spritecollide(
                             self.game.player,
-                            tiles_on_same_layer if "button" not in self.arg_list[1] else self.game.tiles,
+                            tiles_on_same_layer
+                            if "button" not in self.arg_list[1]
+                            else self.game.tiles,
                             False,
-                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1]])
+                            lambda spr1, spr2: isinstance(
+                                spr2, TYPE_MAPPINGS[self.arg_list[1]]
+                            )
                             and pygame.sprite.collide_mask(spr1, spr2),
                         )
                     ) or bool(
                         pygame.sprite.groupcollide(
                             self.game.other_players,
-                            tiles_on_same_layer if "button" not in self.arg_list[1] else self.game.tiles,
+                            tiles_on_same_layer
+                            if "button" not in self.arg_list[1]
+                            else self.game.tiles,
                             False,
                             False,
-                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1]])
+                            lambda spr1, spr2: isinstance(
+                                spr2, TYPE_MAPPINGS[self.arg_list[1]]
+                            )
                             and pygame.sprite.collide_mask(spr1, spr2),
                         )
                     )
@@ -255,9 +280,13 @@ class EventTrigger:
                     val = bool(
                         pygame.sprite.spritecollide(
                             self.game.player,
-                            tiles_on_same_layer if "button" not in self.arg_list[1][0] else self.game.tiles,
+                            tiles_on_same_layer
+                            if "button" not in self.arg_list[1][0]
+                            else self.game.tiles,
                             False,
-                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1][0]])
+                            lambda spr1, spr2: isinstance(
+                                spr2, TYPE_MAPPINGS[self.arg_list[1][0]]
+                            )
                             and (
                                 (spr2.tile_type == self.arg_list[1][1])
                                 if self.arg_list[1][0] == "solid"
@@ -268,10 +297,14 @@ class EventTrigger:
                     ) or bool(
                         pygame.sprite.groupcollide(
                             self.game.other_players,
-                            tiles_on_same_layer if "button" not in self.arg_list[1][0] else self.game.tiles,
+                            tiles_on_same_layer
+                            if "button" not in self.arg_list[1][0]
+                            else self.game.tiles,
                             False,
                             False,
-                            lambda spr1, spr2: isinstance(spr2, TYPE_MAPPINGS[self.arg_list[1][0]])
+                            lambda spr1, spr2: isinstance(
+                                spr2, TYPE_MAPPINGS[self.arg_list[1][0]]
+                            )
                             and pygame.sprite.collide_mask(spr1, spr2)
                             and (
                                 (spr2.tile_type == self.arg_list[1][1])
@@ -286,7 +319,11 @@ class EventTrigger:
                 val = self.game.player.rect.right >= self.arg_list[1]
             case "and":
                 val = all(evt.trigger_condition() for evt in self._evts)
-        return val and not self.triggered and (self._required_evt is None or self._required_evt.triggered)
+        return (
+            val
+            and not self.triggered
+            and (self._required_evt is None or self._required_evt.triggered)
+        )
 
 
 class EventTriggerManager:
@@ -342,7 +379,10 @@ class SwitchDestroyManager:
         """Destroy all the tiles associated with this switch."""
         if switch in self.objects:
             for obj in self.objects[switch]:
-                for tile in filter(lambda tile: tile.rect.colliderect(obj), self.game.tiles.get_sprites_from_layer(0)):
+                for tile in filter(
+                    lambda tile: tile.rect.colliderect(obj),
+                    self.game.tiles.get_sprites_from_layer(0),
+                ):
                     tile.kill()
 
     def update_from_map(self, layer_list):
@@ -357,9 +397,13 @@ class SwitchDestroyManager:
                     if "related_switch" in obj.properties and "destroyer" in obj.name:
                         args = map(round, (obj.x, obj.y, obj.width, obj.height))
                         if obj.properties["related_switch"] not in self.objects:
-                            self.objects[obj.properties["related_switch"]] = [pygame.Rect(*args)]
+                            self.objects[obj.properties["related_switch"]] = [
+                                pygame.Rect(*args)
+                            ]
                         else:
-                            self.objects[obj.properties["related_switch"]].append(pygame.Rect(*args))
+                            self.objects[obj.properties["related_switch"]].append(
+                                pygame.Rect(*args)
+                            )
 
 
 class SwitchSpawnManager:
@@ -399,10 +443,14 @@ class SwitchSpawnManager:
                             ]
                             for tile in tile_gen:
                                 tile.kill()
-                            self.related_tiles[obj.properties["related_switch"]] = pygame.sprite.Group(*tile_gen)
+                            self.related_tiles[
+                                obj.properties["related_switch"]
+                            ] = pygame.sprite.Group(*tile_gen)
                         else:
                             new_rect = pygame.Rect(*args)
-                            self.objects[obj.properties["related_switch"]].append(new_rect)
+                            self.objects[obj.properties["related_switch"]].append(
+                                new_rect
+                            )
                             tile_gen = [
                                 tile
                                 for tile in self.game.tiles.get_sprites_from_layer(0)
@@ -410,7 +458,9 @@ class SwitchSpawnManager:
                             ]
                             for tile in tile_gen:
                                 tile.kill()
-                            self.related_tiles[obj.properties["related_switch"]].add(*tile_gen)
+                            self.related_tiles[obj.properties["related_switch"]].add(
+                                *tile_gen
+                            )
 
 
 class SwitchToggleManager:
@@ -433,13 +483,18 @@ class SwitchToggleManager:
                     if props is not None and obj.name is not None:
                         if "toggler" in obj.name and "related_switch" in props:
                             switch = props["related_switch"]
-                            switch2 = props["related_other_switch"] if "related_other_switch" in props else None
+                            switch2 = (
+                                props["related_other_switch"]
+                                if "related_other_switch" in props
+                                else None
+                            )
                             args = map(round, (obj.x, obj.y, obj.width, obj.height))
                             new_rect = pygame.Rect(*args)
                             tile_gen = [
                                 tile
                                 for tile in self.game.tiles.get_sprites_from_layer(0)
-                                if isinstance(tile, solid.SwitchBlock) and new_rect.colliderect(tile.rect)
+                                if isinstance(tile, solid.SwitchBlock)
+                                and new_rect.colliderect(tile.rect)
                             ]
                             for tile in tile_gen:
                                 if tile.tile_type - 1:
@@ -449,14 +504,18 @@ class SwitchToggleManager:
                                 self.switch_blocks[switch].add(*tile_gen)
                             else:
                                 self.objects[switch] = [new_rect]
-                                self.switch_blocks[switch] = pygame.sprite.Group(*tile_gen)
+                                self.switch_blocks[switch] = pygame.sprite.Group(
+                                    *tile_gen
+                                )
                             if switch2 is not None:
                                 if switch2 in self.switch_blocks:
                                     self.objects[switch2].append(new_rect)
                                     self.switch_blocks[switch2].add(*tile_gen)
                                 else:
                                     self.objects[switch2] = [new_rect]
-                                    self.switch_blocks[switch2] = pygame.sprite.Group(*tile_gen)
+                                    self.switch_blocks[switch2] = pygame.sprite.Group(
+                                        *tile_gen
+                                    )
 
     def toggle(self, switch: int, status: bool):
         """Toggle the switch blocks."""
@@ -491,9 +550,15 @@ class EndingIncrementManager:
                 for obj in layer:
                     props = obj.properties
                     if "increase" in obj.name and "increment" in props:
-                        new_rect = pygame.Rect(*map(round, (obj.x, obj.y, obj.width, obj.height)))
+                        new_rect = pygame.Rect(
+                            *map(round, (obj.x, obj.y, obj.width, obj.height))
+                        )
                         increment = props["increment"]
-                        tile = list(tile for tile in self.game.tiles if tile.rect.colliderect(new_rect))[0]
+                        tile = list(
+                            tile
+                            for tile in self.game.tiles
+                            if tile.rect.colliderect(new_rect)
+                        )[0]
                         print(tile)
                         self.objects.append((new_rect, increment))
                         tile.increment = increment
@@ -523,12 +588,15 @@ class TimedTileToggler:
                     if "timer_config" in obj.name:
                         self.time_max = obj.properties["max_delay"]
                     elif "timer" in obj.name:
-                        new_rect = pygame.Rect(*map(round, (obj.x, obj.y, obj.width, obj.height)))
+                        new_rect = pygame.Rect(
+                            *map(round, (obj.x, obj.y, obj.width, obj.height))
+                        )
                         self.objects.append(new_rect)
                         tile_gen = [
                             tile
                             for tile in self.game.tiles.get_sprites_from_layer(0)
-                            if isinstance(tile, solid.SwitchBlock) and tile.rect.colliderect(new_rect)
+                            if isinstance(tile, solid.SwitchBlock)
+                            and tile.rect.colliderect(new_rect)
                         ]
                         self.tiles.extend(tile_gen)
                         for tile in tile_gen:
@@ -692,7 +760,9 @@ class Game:
         # Said maps use tilesets, stored in TSX files (which are also based on the XML format).
         self.tmx_data = pytmx.TiledMap(_resource_path(directory))
         if any(key for key in SPECIAL_LEVEL_MAPS if key in directory):
-            self.level = SPECIAL_LEVEL_MAPS[list(key for key in SPECIAL_LEVEL_MAPS if key in directory)[0]]
+            self.level = SPECIAL_LEVEL_MAPS[
+                list(key for key in SPECIAL_LEVEL_MAPS if key in directory)[0]
+            ]
         else:
             self.level = int(directory.removeprefix("maps/level").removesuffix(".tmx"))
         self.camera.change_settings(self.tmx_data.width * 16, self.tmx_data.height * 16)
@@ -704,8 +774,12 @@ class Game:
         for layer in range(len(list(self.tmx_data.visible_tile_layers))):
             raw_tile_layer = list(
                 map(
-                    lambda string: string.split(",")[:-1] if string.count(",") == 16 else string.split(","),
-                    content.split("""<data encoding="csv">""")[1 + layer].split("</data>")[0].splitlines(),
+                    lambda string: string.split(",")[:-1]
+                    if string.count(",") == 16
+                    else string.split(","),
+                    content.split("""<data encoding="csv">""")[1 + layer]
+                    .split("</data>")[0]
+                    .splitlines(),
                 )
             )[1:]
             for tile_y in range(self.tmx_data.height):
@@ -719,7 +793,9 @@ class Game:
                         self.player.rect.topleft = (tile_x * 16, tile_y * 16)
                         continue
                     if tile["tile"] == "npc":
-                        self.tiles.add(solid.NPC(self, (tile_x, tile_y), layer), layer=layer)
+                        self.tiles.add(
+                            solid.NPC(self, (tile_x, tile_y), layer), layer=layer
+                        )
                         continue
                     tile_id = tile["id"]
                     if tile_id not in [1, 20, 22, 25, 48, 49, 50]:
@@ -737,12 +813,21 @@ class Game:
                         # Switch (can be pressed by the player)
                         self.tiles.add(solid.Switch(self, (tile_x, tile_y)), layer=layer)
                     elif tile_id == 48:
-                        self.tiles.add(solid.TempSwitch(self, (tile_x, tile_y)), layer=layer)
+                        self.tiles.add(
+                            solid.TempSwitch(self, (tile_x, tile_y)), layer=layer
+                        )
                     elif tile_id in [49, 50]:
-                        self.tiles.add(solid.SwitchBlock(self, (tile_x, tile_y), layer, tile_id - 48), layer=layer)
+                        self.tiles.add(
+                            solid.SwitchBlock(
+                                self, (tile_x, tile_y), layer, tile_id - 48
+                            ),
+                            layer=layer,
+                        )
                     else:
                         # "Glitchy" tile (starts a pseudo-crash upon contact)
-                        self.tiles.add(solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer)
+                        self.tiles.add(
+                            solid.BuggyThingy(self, (tile_x, tile_y), layer), layer=layer
+                        )
         for sprite in self.tiles:
             self.objects.add(sprite, layer=self.tiles.get_layer_of_sprite(sprite))
         self.trigger_man.set_triggers(self.level)
@@ -765,7 +850,10 @@ class Game:
         """Updates objects of the game."""
         layer1 = self.tiles.get_sprites_from_layer(1)
         layer1_collisions = pygame.sprite.spritecollide(
-            self.player, layer1, False, lambda spr1, spr2: spr1.rect.clip(spr2.rect).size >= (2, 2)
+            self.player,
+            layer1,
+            False,
+            lambda spr1, spr2: spr1.rect.clip(spr2.rect).size >= (2, 2),
         )
         if layer1_collisions:
             for sprite in layer1_collisions:
@@ -817,7 +905,11 @@ class Game:
             case 5:
                 img = solid.deep_gd
             case 6:
-                img = solid.inward_bottom_corner_r if not flipped else solid.inward_bottom_corner_l
+                img = (
+                    solid.inward_bottom_corner_r
+                    if not flipped
+                    else solid.inward_bottom_corner_l
+                )
             case 7:
                 img = solid.inward_bottom_corner_single
             case 8:
@@ -851,17 +943,29 @@ class Game:
             case 23:
                 img = solid.cave_bottom_gd
             case 24:
-                img = solid.cave_bottom_corner_r if not flipped else solid.cave_bottom_corner_l
+                img = (
+                    solid.cave_bottom_corner_r
+                    if not flipped
+                    else solid.cave_bottom_corner_l
+                )
             case 25:
                 img = solid.cave_bottom_corner_dual
             case 26:
                 img = solid.cave_bottom_corner_single
             case 27:
-                img = solid.cave_inward_bottom_corner_r if not flipped else solid.cave_inward_bottom_corner_l
+                img = (
+                    solid.cave_inward_bottom_corner_r
+                    if not flipped
+                    else solid.cave_inward_bottom_corner_l
+                )
             case 28:
                 img = solid.cave_inward_bottom_corner_single
             case 29:
-                img = solid.cave_inward_corner_r if not flipped else solid.cave_inward_corner_l
+                img = (
+                    solid.cave_inward_corner_r
+                    if not flipped
+                    else solid.cave_inward_corner_l
+                )
             case 30:
                 img = solid.cave_inward_corner_single
             case 31:
@@ -879,11 +983,17 @@ class Game:
             case 37:
                 img = solid.cave_normal_gd
             case 38:
-                img = solid.cave_upper_corner_r if not flipped else solid.cave_upper_corner_l
+                img = (
+                    solid.cave_upper_corner_r
+                    if not flipped
+                    else solid.cave_upper_corner_l
+                )
             case 39:
                 img = solid.cave_upper_corner_single
             case 40:
-                img = solid.invisible_solid  # can be used for some tiles that don't blend well with the collision.
+                img = (
+                    solid.invisible_solid
+                )  # can be used for some tiles that don't blend well with the collision.
         tile.image = img.copy()
         tile.tile_type = type
 
@@ -900,7 +1010,11 @@ class Game:
         """Update players movement"""
         if pos is None:
             pos = [0, 0]
-        if not any(other_player for other_player in self.other_players if other_player.nickname == nickname):
+        if not any(
+            other_player
+            for other_player in self.other_players
+            if other_player.nickname == nickname
+        ):
             raise Exception(f"invalid player : {nickname}")
         for other_player in self.other_players:
             if other_player.nickname == nickname:

@@ -1,7 +1,9 @@
 import pygame
 
 if pygame.vernum[0] < 2:
-    raise RuntimeError("Your version of Pygame is too old. Please install pygame 2.0.0 or higher to run the game")
+    raise RuntimeError(
+        "Your version of Pygame is too old. Please install pygame 2.0.0 or higher to run the game"
+    )
 
 pygame.init()  # ensuring that everything we need will be initialised before starting
 
@@ -21,8 +23,12 @@ clock = pygame.time.Clock()  # a framerate helper object.
 
 while game.running:
     # We generally use a while loop when making a game. Most of the game code should go here.
-    screen.fill("skyblue" if game.level in (0, 5, 6, 7) or game.showing_gui else "darkgray")
-    dt = clock.tick(60)  # this ensures that the game cannot run higher that 60FPS. We also get a delta time in ms.
+    screen.fill(
+        "skyblue" if game.level in (0, 5, 6, 7) or game.showing_gui else "darkgray"
+    )
+    dt = clock.tick(
+        60
+    )  # this ensures that the game cannot run higher that 60FPS. We also get a delta time in ms.
 
     if game.showing_gui:
         if game.inputting_nickname:
@@ -37,7 +43,9 @@ while game.running:
         if not game.gui and not game.crashing:
             if game.tiles:
                 game.tile_timer.update(dt)
-                game.update_objects(dt)  # Auto update for every sprite, if the game has not "crashed"
+                game.update_objects(
+                    dt
+                )  # Auto update for every sprite, if the game has not "crashed"
                 game.draw_objects(screen)  # We draw everything here
             else:
                 screen.blit(src.game.loading, (0, 0))
@@ -64,7 +72,9 @@ while game.running:
 
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             for btn in game.gui:
-                if isinstance(btn, src.game.gui.Button) and btn.rect.collidepoint(event.pos):
+                if isinstance(btn, src.game.gui.Button) and btn.rect.collidepoint(
+                    event.pos
+                ):
                     btn.click()
 
         elif event.type == src.game.solid.SWITCH_PRESSED:
@@ -83,7 +93,12 @@ while game.running:
                         game.player.moving_left = True
                     elif event.key in [pygame.K_RIGHT, pygame.K_d]:
                         game.player.moving_right = True
-                    elif event.key in [pygame.K_SPACE, pygame.K_UP, pygame.K_z, pygame.K_w]:
+                    elif event.key in [
+                        pygame.K_SPACE,
+                        pygame.K_UP,
+                        pygame.K_z,
+                        pygame.K_w,
+                    ]:
                         game.player.jump()
                     elif event.key == pygame.K_ESCAPE and not game.pause_menu:
                         game.showing_gui = True
@@ -92,10 +107,18 @@ while game.running:
                         if game.crashing:
                             src.game.game_crash.stop()
                         game.gui.add(src.game.gui.Button((48, 90), "Play", game.start))
-                        game.gui.add(src.game.gui.Button((110, 90), "Reset", game.del_cache))
-                        game.gui.add(src.game.gui.Button((80, 110), "Exit Game", game.quit))
-                        game.gui.add(src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off))
-                        game.gui.add(src.game.gui.EmojiButton((12, 10), "👥", game.join_with_code))
+                        game.gui.add(
+                            src.game.gui.Button((110, 90), "Reset", game.del_cache)
+                        )
+                        game.gui.add(
+                            src.game.gui.Button((80, 110), "Exit Game", game.quit)
+                        )
+                        game.gui.add(
+                            src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off)
+                        )
+                        game.gui.add(
+                            src.game.gui.EmojiButton((12, 10), "👥", game.join_with_code)
+                        )
                         game.pin_code = None
                         game.client.stop()
                         break
@@ -103,12 +126,28 @@ while game.running:
                         game.showing_gui = True
                         game.pause_menu = True
                         if game.level not in (5, 6, 7):
-                            game.gui.add(src.game.gui.Button((80, 40), "Skip this level", game.load_next))
+                            game.gui.add(
+                                src.game.gui.Button(
+                                    (80, 40), "Skip this level", game.load_next
+                                )
+                            )
                         if game.level != 0:
-                            game.gui.add(src.game.gui.Button((80, 65), "Previous level", game.load_previous))
-                        game.gui.add(src.game.gui.Button((80, 90), "Keep playing", game.go_back))
-                        game.gui.add(src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off))
-                        game.gui.add(src.game.gui.Button((20, 10), str(game.pin_code), game.copy_code))
+                            game.gui.add(
+                                src.game.gui.Button(
+                                    (80, 65), "Previous level", game.load_previous
+                                )
+                            )
+                        game.gui.add(
+                            src.game.gui.Button((80, 90), "Keep playing", game.go_back)
+                        )
+                        game.gui.add(
+                            src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off)
+                        )
+                        game.gui.add(
+                            src.game.gui.Button(
+                                (20, 10), str(game.pin_code), game.copy_code
+                            )
+                        )
                         break
                     elif event.key == pygame.K_r and game.crashing:
                         if game.sound:
@@ -121,7 +160,9 @@ while game.running:
                     if event.key in [pygame.K_RETURN, pygame.K_SPACE]:
                         if not game.inputting_code and not game.inputting_nickname:
                             for tbox in game.gui:
-                                if len(tbox.parts_list) > 1 and tbox.part_index < len(tbox.parts_list):
+                                if len(tbox.parts_list) > 1 and tbox.part_index < len(
+                                    tbox.parts_list
+                                ):
                                     tbox.part_index += 1
                                 else:
                                     tbox.kill()
@@ -139,7 +180,11 @@ while game.running:
                     pygame.quit()
                 if game.inputting_nickname:
                     if event.key == pygame.K_BACKSPACE:
-                        inpt = list(spr for spr in game.gui if isinstance(spr, src.game.gui.TextInput))[0]
+                        inpt = list(
+                            spr
+                            for spr in game.gui
+                            if isinstance(spr, src.game.gui.TextInput)
+                        )[0]
                         if inpt.text:
                             inpt.text = inpt.text[:-1]
                     elif event.key == pygame.K_RETURN:
@@ -160,7 +205,11 @@ while game.running:
                             break
                 elif game.inputting_code:
                     if event.key == pygame.K_BACKSPACE:
-                        inpt = list(spr for spr in game.gui if isinstance(spr, src.game.gui.TextInput))[0]
+                        inpt = list(
+                            spr
+                            for spr in game.gui
+                            if isinstance(spr, src.game.gui.TextInput)
+                        )[0]
                         if inpt.text:
                             inpt.text = inpt.text[:-1]
                     elif event.key == pygame.K_RETURN:

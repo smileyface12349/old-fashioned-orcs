@@ -67,8 +67,12 @@ cave_bottom_corner_l = pygame.transform.flip(cave_bottom_corner_r, True, False)
 cave_bottom_corner_dual = _load_img("assets/cave_bottom_corner_dual.png")
 cave_bottom_corner_single = _load_img("assets/cave_bottom_corner_single.png")
 cave_inward_bottom_corner_r = _load_img("assets/cave_inward_bottom_corner.png")
-cave_inward_bottom_corner_l = pygame.transform.flip(cave_inward_bottom_corner_r, True, False)
-cave_inward_bottom_corner_single = _load_img("assets/cave_inward_bottom_corner_single.png")
+cave_inward_bottom_corner_l = pygame.transform.flip(
+    cave_inward_bottom_corner_r, True, False
+)
+cave_inward_bottom_corner_single = _load_img(
+    "assets/cave_inward_bottom_corner_single.png"
+)
 cave_inward_corner_r = _load_img("assets/cave_inward_corner.png")
 cave_inward_corner_l = pygame.transform.flip(cave_inward_corner_r, True, False)
 cave_inward_corner_single = _load_img("assets/cave_inward_corner_single.png")
@@ -108,13 +112,23 @@ class Solid(pygame.sprite.Sprite):
         self.tile_pos = tile_pos
         # We'll only need to multiply these coords by 16 to have the real position
         self._image = normal_gd
-        self.rect = self.image.get_rect(topleft=tuple(map(lambda x: x * 16, self.tile_pos)))
+        self.rect = self.image.get_rect(
+            topleft=tuple(map(lambda x: x * 16, self.tile_pos))
+        )
         # Rectangles used for autotiling
         self.checks = (
-            pygame.Rect(self.rect.x - 16, self.rect.y - 16, self.rect.width * 3, 16),  # top
-            pygame.Rect(self.rect.x - 16, self.rect.bottom, self.rect.width * 3, 16),  # bottom
-            pygame.Rect(self.rect.x - 16, self.rect.y - 16, 16, self.rect.height * 3),  # left
-            pygame.Rect(self.rect.right, self.rect.y - 16, 16, self.rect.height * 3),  # right
+            pygame.Rect(
+                self.rect.x - 16, self.rect.y - 16, self.rect.width * 3, 16
+            ),  # top
+            pygame.Rect(
+                self.rect.x - 16, self.rect.bottom, self.rect.width * 3, 16
+            ),  # bottom
+            pygame.Rect(
+                self.rect.x - 16, self.rect.y - 16, 16, self.rect.height * 3
+            ),  # left
+            pygame.Rect(
+                self.rect.right, self.rect.y - 16, 16, self.rect.height * 3
+            ),  # right
         )
 
     @property
@@ -128,7 +142,9 @@ class Solid(pygame.sprite.Sprite):
         self._image = value
         self.mask = pygame.mask.from_surface(value)
         if self.image == invisible_solid:
-            self.image.set_alpha(0)  # we do this to make sure the player doesn't notice anything odd
+            self.image.set_alpha(
+                0
+            )  # we do this to make sure the player doesn't notice anything odd
 
     # Basic player-locating properties, used for collisions
     @property
@@ -189,7 +205,9 @@ class Ending(pygame.sprite.Sprite):
         super().__init__()
         self.tile_pos = tile_pos
         self.image = _load_img("assets/end.png")
-        self.rect = self.image.get_rect(topleft=tuple(item * 16 for item in self.tile_pos))
+        self.rect = self.image.get_rect(
+            topleft=tuple(item * 16 for item in self.tile_pos)
+        )
         self.mask = pygame.mask.from_surface(self.image)
 
 
@@ -202,7 +220,9 @@ class ShinyFlag(pygame.sprite.Sprite):
         self.frame = 1
         self.frame_delay = 0
         self.image = shiny_flag[self.frame - 1]
-        self.rect = self.image.get_rect(topleft=tuple(item * 16 for item in self.tile_pos))
+        self.rect = self.image.get_rect(
+            topleft=tuple(item * 16 for item in self.tile_pos)
+        )
 
     def update(self, dt):
         """Update the Shiny flag"""
@@ -255,7 +275,9 @@ class Switch(pygame.sprite.Sprite):
         self.tile_pos = tile_pos
         self.image = switch
         self.pressed = False
-        self.rect = self.image.get_rect(topleft=(self.tile_pos[0] * 16, (self.tile_pos[1] + 0.5) * 16))
+        self.rect = self.image.get_rect(
+            topleft=(self.tile_pos[0] * 16, (self.tile_pos[1] + 0.5) * 16)
+        )
         self.mask = pygame.mask.from_surface(self.image)
 
     def press(self):
@@ -277,7 +299,9 @@ class Switch(pygame.sprite.Sprite):
             # print("Transparent")
             self.image.set_alpha(255 // 2)
         self.image = switch if not self.pressed else pressed_switch
-        if (not self.pressed) and pygame.sprite.spritecollide(self, self.game.other_players, False):
+        if (not self.pressed) and pygame.sprite.spritecollide(
+            self, self.game.other_players, False
+        ):
             self.press()
 
     @property
