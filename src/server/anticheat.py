@@ -6,6 +6,16 @@ class GameAntiCheat:
 
     def __init__(self):
         pass
+    
+    @staticmethod
+    def check_if_list(lst):
+        if not isinstance(lst, list):
+            logging.info("Wrong type.")
+            return False
+        if len(lst) != 2:
+            logging.info("Wrong list size.")
+            return False
+        return True
 
     async def ensure(self, event, player, game):
         """Checks an event for strange activity."""
@@ -18,12 +28,10 @@ class GameAntiCheat:
             logging.info("Failed nickname check.")
             return True
 
-        if not isinstance(event["position"], list):
-            logging.info("Wrong position type.")
+        if not self.check_if_list(event["position"]):
             return True
 
-        if len(event["position"]) != 2:
-            logging.info("Positions list length is not 2.")
+        if not self.check_if_list(event["velocity"]):
             return True
 
         if event["direction"] not in ["r", "l"]:
