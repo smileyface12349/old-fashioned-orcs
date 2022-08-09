@@ -1025,7 +1025,7 @@ class Game:
         """Adds a player that joined the game online."""
         if pos is None:
             pos = [0, 0]
-        if nickname in self.other_players_colours.keys():
+        if nickname in self.other_players_colours:
             new_player = player.OtherPlayer(
                 nickname, direction, self.other_players_colours[nickname]
             )
