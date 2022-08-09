@@ -648,6 +648,7 @@ class Game:
         self.player = player.Player(self)
         self.tiles = pygame.sprite.LayeredUpdates()
         self.other_players = pygame.sprite.Group()
+        self.other_players_colours = {}
         self.objects = pygame.sprite.LayeredUpdates(self.player)
         self.crashing = False
         self.showing_title = True
@@ -1024,7 +1025,15 @@ class Game:
         """Adds a player that joined the game online."""
         if pos is None:
             pos = [0, 0]
-        new_player = player.OtherPlayer(nickname, direction)
+        if nickname in self.other_players_colours.keys():
+            new_player = player.OtherPlayer(
+                nickname, 
+                direction, 
+                self.other_players_colours[nickname]
+            )
+        else:
+            new_player = player.OtherPlayer(nickname, direction)
+            self.other_players_colours[nickname] = new_player.color
         self.other_players.add(new_player)
         self.objects.add(new_player, layer=0)
         new_player.rect.topleft = tuple(pos)

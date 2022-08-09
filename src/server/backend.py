@@ -222,6 +222,7 @@ async def handler(websocket):
         elif event["type"] == "broadcast":
             await websocket.send(json.dumps({"type": "broadcast"}))
             await manager.add_broadcast(websocket)
+            await asyncio.sleep(0.25)
             seconds = 0
             while not players:
                 logging.info("Waiting for player init.")

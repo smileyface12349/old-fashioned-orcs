@@ -207,10 +207,32 @@ class Player(pygame.sprite.Sprite):
 class OtherPlayer(pygame.sprite.Sprite):
     """Another player, using another session."""
 
-    def __init__(self, nickname, direction):
+    def __init__(self, nickname, direction, color: str = ""):
         super().__init__()
         self.nickname = nickname
         self.image = player_right
+        if not color:
+            self.color = random.choice(
+                [
+                    "yellow",
+                    "orange",
+                    "green",
+                    "cyan",
+                    "slateblue1",
+                    "darkviolet",
+                    "aquamarine",
+                    "aliceblue",
+                    "antiquewhite",
+                    "aquamarine4",
+                    "brown1",
+                    "darkorchid1",
+                    "mediumspringgreen",
+                    "snow",
+                    "springgreen",
+                ]
+            )
+        else:
+            self.color = color
         self.direction = direction
         self.rect = self.image.get_rect()
         self.player_right = player_right.copy()
@@ -218,27 +240,7 @@ class OtherPlayer(pygame.sprite.Sprite):
             self.player_right,
             player_right,
             pygame.Color("#4A4AFF"),
-            set_color=pygame.Color(
-                random.choice(
-                    [
-                        "yellow",
-                        "orange",
-                        "green",
-                        "cyan",
-                        "slateblue1",
-                        "darkviolet",
-                        "aquamarine",
-                        "aliceblue",
-                        "antiquewhite",
-                        "aquamarine4",
-                        "brown1",
-                        "darkorchid1",
-                        "mediumspringgreen",
-                        "snow",
-                        "springgreen",
-                    ]
-                )
-            ),
+            set_color=pygame.Color(self.color),
             inverse_set=True,
         )
         self.player_left = pygame.transform.flip(self.player_right, True, False)
