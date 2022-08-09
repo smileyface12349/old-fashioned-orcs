@@ -1027,9 +1027,7 @@ class Game:
             pos = [0, 0]
         if nickname in self.other_players_colours.keys():
             new_player = player.OtherPlayer(
-                nickname, 
-                direction, 
-                self.other_players_colours[nickname]
+                nickname, direction, self.other_players_colours[nickname]
             )
         else:
             new_player = player.OtherPlayer(nickname, direction)
