@@ -48,11 +48,9 @@ python3 -m pip install -r dev-requirements.txt
 
 ## Gameplay
 
-Part of the submission involved producing a short video about the project.
+Part of the submission involved producing a short video about the project. You can find that [here](https://youtu.be/XqSp7hhTTG4).
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/XqSp7hhTTG4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-Here's some random screenshots of the game, in case you're interested...
+There's some random screenshots of the game, in case you're interested...
 
 <img alt="image" src="screenshots/0.jpg" width="160" height="144"> <img alt="image" src="screenshots/1.jpg" width="160" height="144"> <img alt="image" src="screenshots/2.jpg" width="160" height="144"> <img alt="image" src="screenshots/2B.jpg" width="160" height="144"><br><img alt="image" src="screenshots/3.jpg" width="160" height="144"> <img alt="image" src="screenshots/4.jpg" width="160" height="144"> <img alt="image" src="screenshots/5.jpg" width="160" height="144"> <img alt="image" src="screenshots/5B.jpg" width="160" height="144">
 
