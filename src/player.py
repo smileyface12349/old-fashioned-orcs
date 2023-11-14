@@ -111,7 +111,7 @@ class Player(pygame.sprite.Sprite):
                 and pygame.sprite.collide_mask(spr1, spr2),
             )
             if left_collisions:
-                self.rect.x += 1
+                self.rect.x = left_collisions[0].rect.right
             self.x_velocity = int(not left_collisions)
             self.move_left()
         if self.moving_right:
@@ -124,7 +124,7 @@ class Player(pygame.sprite.Sprite):
                 and pygame.sprite.collide_mask(spr1, spr2),
             )
             if right_collisions:
-                self.rect.x -= 1
+                self.rect.right=right_collisions[0].rect.x
             self.x_velocity = int(not right_collisions)
             self.move_right()
 
@@ -141,7 +141,7 @@ class Player(pygame.sprite.Sprite):
                 )
             ):
                 self.falling = True
-                self.y_velocity = 1
+                self.y_velocity = 0
             elif self.falling:
                 self.fall_delay += dt
                 if self.fall_delay >= 18:
@@ -175,14 +175,15 @@ class Player(pygame.sprite.Sprite):
                     self.fall_delay = 1
         else:
             self.fall_delay += dt
-            if self.fall_delay >= 18:
-                self.fall_delay = 0
-                self.rect.y -= self.y_velocity
-                if self.y_velocity:
+            if self.y_velocity:
+                if self.fall_delay >= 18:
+                    self.fall_delay = 0
+                    self.rect.y -= self.y_velocity
                     self.y_velocity -= 1
-                else:
-                    self.jumping = False
-                    self.falling = True
+            elif self.fall_delay>=100:
+                self.fall_delay=0
+                self.jumping=False
+                self.falling=True
             collisions = pygame.sprite.spritecollide(
                 self,
                 solids_on_same_layer,
@@ -192,10 +193,8 @@ class Player(pygame.sprite.Sprite):
             )
             if collisions:
                 self.rect.y = collisions[0].rect.bottom
-                self.y_velocity = 1
+                self.y_velocity = 0
                 self.fall_delay = 0
-                self.jumping = False
-                self.falling = True
             elif self.rect.y < 0:
                 self.rect.y = 0
                 self.y_velocity = 1

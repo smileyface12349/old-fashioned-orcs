@@ -641,6 +641,37 @@ LEVEL_SONGS = {
 }
 
 
+class collide_circle_ratio_single:
+    __slots__=("ratio",)
+    # Same thing as pygame.sprite.collide_circle_ratio, but applies only to the first sprite.
+    def __init__(self, ratio):
+        self.ratio = ratio
+
+    def __call__(self, left, right):
+        ratio = self.ratio
+        left_rect = left.rect
+        right_rect = right.rect
+        x_distance = left_rect.centerx - right_rect.centerx
+        y_distance = left_rect.centery - right_rect.centery
+        dist = x_distance**2 + y_distance**2
+        try:
+            leftradius = left.radius
+        except AttributeError:
+            leftradius = 0.5 * ((left_rect.width**2 + left_rect.height**2) ** 0.5)
+            # store the radius on the sprite for next time
+            left.radius = leftradius
+        leftradius *= ratio
+        try:
+            rightradius = right.radius
+        except AttributeError:
+            rightradius = 0.5 * (
+                (right_rect.width**2 + right_rect.height**2) ** 0.5
+            )
+            # store the radius on the sprite for next time
+            right.radius = rightradius
+        return dist <= (leftradius + rightradius) ** 2
+
+
 class Game:
     """The Game"""
 
@@ -877,7 +908,7 @@ class Game:
             self.player,
             layer1,
             False,
-            lambda spr1, spr2: spr1.rect.clip(spr2.rect).size >= (2, 2),
+            (lambda spr1, spr2: spr1.rect.clip(spr2.rect).size >= (2, 2), collide_circle_ratio_single(2.25))[bool(self.level)],
         )
         if layer1_collisions:
             for sprite in layer1_collisions:

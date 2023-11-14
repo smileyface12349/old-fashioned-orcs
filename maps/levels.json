@@ -2,9 +2,9 @@
 	"0": {
         "dialogue": {
             "start": [
-                "Welcome to a totally generic platformer",
-                "This is the tutorial, where I tell you how to play the game",
-                "But if you've played platformers before I'm sure you'll figure it out"
+                "Welcome to a totally generic platformer!",
+                "This is the tutorial, where I tell you how to play the game.",
+                "But if you've played platformers before I'm sure you'll figure it out!"
             ],
             "flag": [
                 "Wow! You reached the very shiny flag! Congratulations!"
@@ -21,7 +21,7 @@
                     "character": "player"
                 },
                 {
-                    "text": "Ugh. Tourists again",
+                    "text": "Ugh. Tourists again!",
                     "character": "Tony"
                 },
                 {
@@ -36,11 +36,11 @@
                     "character": "Tony"
                 },
                 {
-                    "text": "[sigh] It's like talking to a brick wall",
+                    "text": "[sigh] It's like talking to a brick wall...",
                     "character": "Tony"
                 },
                 {
-                    "text": "I can't seem to pick it up",
+                    "text": "I can't seem to pick it up.",
                     "character": "player"
                 },
                 {
@@ -52,7 +52,7 @@
                     "character": "player"
                 },
                 {
-                    "text": "Eh, you'll find a way. Let me grab that shovel",
+                    "text": "Eh, you'll find a way. Let me grab that shovel.",
                     "character": "Tony"
                 },
                 {
@@ -102,19 +102,19 @@
                     "character": "player"
                 },
                 {
-                    "text": "Sorry if that came across as rude",
+                    "text": "Sorry if that came across as rude.",
                     "character": "Bob"
                 },
                 {
-                    "text": "I guess it's a bit weird if someone randomly comes up to you and asks you if you have any friends",
+                    "text": "I guess it's a bit weird if someone randomly comes up to you and asks you if you have any friends...",
                     "character": "Bob"
                 },
                 {
-                    "text": "However it is an important question. It wasn't meant to be rude",
+                    "text": "However it is an important question. It wasn't meant to be rude.",
                     "character": "Bob"
                 },
                 {
-                    "text": "This is a multiplayer game, so some levels are not possible alone",
+                    "text": "This is a multiplayer game, so some levels are not possible alone.",
                     "character": "Bob"
                 },
                 {
@@ -122,14 +122,14 @@
                     "character": "Bob"
                 },
                 {
-                    "text": "Press F if you have no friends (NOTE: Does not generate friends, just skips level)",
+                    "text": "Press F if you have no friends. (NOTE: Does not generate friends, just skips level)",
                     "character": "Bob"
                 }
             ],
             "first_dude_delay": [
                 "require:first_dude",
                 {
-                    "text": "Oh and if you need any hints for any of the levels, there's some in the README",
+                    "text": "Oh and if you need any hints for any of the levels, there's some in the README.",
                     "character": "Bob"
                 },
                 {
@@ -142,12 +142,12 @@
                 "character": "Gary"
             }],
             "flag": [
-                "GET YOUR DIRTY HANDS OFF MY FLAG"
+                "GET YOUR DIRTY HANDS OFF MY FLAG!"
             ],
             "other_side": [
-                "Wow you actually made it! Congratulations!",
-                "(or did you?)",
-                "Remember to let your friend through! (or not)"
+                "Wow, you actually made it! Congratulations!",
+                "(Or did you?)",
+                "Remember to let your friend through! (Or not...)"
             ],
             "touch_cube": [
                 "Wow! You managed to touch some random blue cube in some random cave! Congratulations!"
@@ -205,7 +205,7 @@
     "4": {
         "dialogue": {
             "right_area": [
-                "Wow you managed to go through a wall. Don't think you're outsmarting me...",
+                "Wow, you managed to go through a wall. Don't think you're outsmarting me...",
                 "Are you assuming this pressure plate actually does something?"
             ],
             "flag": ["crash"],
@@ -245,9 +245,9 @@
     "6": {
         "dialogue": {
             "start": [
-                "Welcome to a totally generic platformer",
-                "This is the tutorial, where I tell you how to play the game",
-                "But if you've played platformers before I'm sure you'll figure it out"
+                "Welcome to a totally generic platformer!",
+                "This is the tutorial, where I tell you how to play the game.",
+                "But if you've played platformers before I'm sure you'll figure it out!"
             ],
             "sushpish": [
                 "require:start",
@@ -262,7 +262,7 @@
                     "character": "player"
                 },
                 {
-                    "text": "Ugh. Tourists again",
+                    "text": "Ugh. Tourists again!",
                     "character": "Tony"
                 },
                 {
@@ -289,7 +289,7 @@
                     "character": "Tony"
                 },
                 {
-                    "text": "[sigh] It's like talking to a brick wall",
+                    "text": "[sigh] It's like talking to a brick wall...",
                     "character": "Tony"
                 },
                 {
@@ -305,7 +305,7 @@
                     "character": "player"
                 },
                 {
-                    "text": "Eh, you'll find a way. Let me grab that shovel",
+                    "text": "Eh, you'll find a way. Let me grab that shovel.",
                     "character": "Tony"
                 },
                 {
