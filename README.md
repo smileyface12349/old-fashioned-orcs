@@ -34,37 +34,7 @@ cd where/you/want/it/old-fashioned-orcs
 python3 -m pip install -r dev-requirements.txt
 ```
 
-4. Find the hosts file in your computer (see paths in the table below) and add the following lines at the end of the file:
-```text
-127.0.0.1      oldfashionedorcs.servegame.com
-::1 oldfashionedorcs.servegame.com
-```
-<table>
-    <tr>
-        <th>
-            OS
-        </th>
-        <th>
-            Windows 10+
-        </th>
-        <th>
-            Unix-based systems
-        </th>
-    </tr>
-    <tr>
-        <td>
-            Path
-        </td>
-        <td>
-            C:\Windows\System32\drivers\etc\hosts
-        </td>
-        <td>
-            /etc/hosts
-        </td>
-    </tr>
-</table>
-
-5. Then simply run in this order the [server/backend.py](server/backend.py) and the [\_\_init\_\_.py](__init__.py) file.
+4. Then simply run in this order the [server/backend.py](server/backend.py) and the [\_\_init\_\_.py](__init__.py) file.
 
 
 ## Controls

@@ -33,8 +33,6 @@ while game.running:
     if game.showing_gui:
         if game.inputting_nickname:
             game.render_ean_prompt(screen, "Enter nickname: ")
-        elif game.inputting_code:
-            game.render_ean_prompt(screen, "Enter code: ")
         elif game.showing_title:
             game.render_title(screen)
         game.gui.update(dt)
@@ -49,8 +47,6 @@ while game.running:
                 game.draw_objects(screen)  # We draw everything here
             else:
                 screen.blit(src.game.loading, (0, 0))
-            if not game.client.running:
-                screen.blit(src.game.disconnected, (0, 0))
             game.trigger_man.check_triggers(dt)
         elif game.crashing:
             screen.blit(src.game.crash, (0, 0))
@@ -104,28 +100,18 @@ while game.running:
                         if game.crashing:
                             src.game.game_crash.stop()
                         game.reset_everything()
-                        game.client.stop()
-                        game.gui.add(src.game.gui.Button((52, 90), "Online", game.start))
-                        game.gui.add(
-                            src.game.gui.Button((107, 90), "Private", game.start_private)
-                        )
-                        game.gui.add(
-                            src.game.gui.Button((80, 110), "Reset", game.del_cache)
-                        )
+                        game.gui.add(src.game.gui.Button((80, 90), "Start", game.start))
                         game.gui.add(
                             src.game.gui.Button((80, 130), "Exit Game", game.quit)
                         )
                         game.gui.add(
                             src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off)
                         )
-                        game.gui.add(
-                            src.game.gui.EmojiButton((12, 10), "👥", game.join_with_code)
-                        )
                         break
                     elif event.key == pygame.K_f and not game.crashing:
                         game.showing_gui = True
                         game.pause_menu = True
-                        if game.level not in (5, 6, 7):
+                        if game.level < 5:
                             game.gui.add(
                                 src.game.gui.Button(
                                     (80, 40), "Skip this level", game.load_next
@@ -142,11 +128,6 @@ while game.running:
                         )
                         game.gui.add(
                             src.game.gui.EmojiButton((148, 10), "♬", game.sound_on_off)
-                        )
-                        game.gui.add(
-                            src.game.gui.Button(
-                                (20, 10), str(game.pin_code), game.copy_code
-                            )
                         )
                         break
                     elif event.key == pygame.K_r and game.crashing:
@@ -199,8 +180,8 @@ while game.running:
                         i.text = ""
                         if not game.inputting_code:
                             game.showing_gui = False
+                            game.read_map(f"maps/level{game.level}.tmx")
                             game.gui.empty()
-                            game.client.start()
                             break
                 elif game.inputting_code:
                     if event.key == pygame.K_BACKSPACE:
@@ -219,7 +200,6 @@ while game.running:
                                 break
                         game.inputting_code = False
                         game.showing_gui = False
-                        game.client.start()
                         break
 
         elif event.type in [pygame.TEXTEDITING, pygame.TEXTINPUT]:
@@ -234,11 +214,11 @@ while game.running:
                 game.player.moving_right = False
 
 
-if game.client.running:
-    try:
-        game.client.stop()
-    except AttributeError:
-        pass
+# if game.client.running:
+#     try:
+#         game.client.stop()
+#     except AttributeError:
+#         pass
 
 try:
     exit(0)

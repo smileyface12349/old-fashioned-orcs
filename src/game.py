@@ -5,7 +5,6 @@ import pygame
 import pyperclip
 import pytmx
 
-import src.client.client as client
 import src.gui as gui
 import src.player as player
 import src.solid as solid
@@ -187,7 +186,7 @@ class EventTrigger:
                     gui.EmojiButton((148, 10), "♬", self.game.sound_on_off)
                 )
                 self.game.level = 5
-                self.game.client.stop()
+                # self.game.client.stop()
 
     def update(self, dt):
         """Can be used in cases where the current trigger should be enabled after a certain period of time."""
@@ -687,16 +686,16 @@ class Game:
         self.inputting_code = False
         self.nickname = ""
         self.tmx_data: pytmx.TiledMap | None = None
-        self.client = client.Client(self)
+        # self.client = client.Client(self)
         self.level = 0
         self.camera = Camera(complex_camera, 160, 144)
         self.gui = pygame.sprite.Group(
-            gui.Button((52, 90), "Online", self.start),
-            gui.Button((107, 90), "Private", self.start_private),
-            gui.Button((80, 110), "Reset", self.del_cache),
+            gui.Button((80, 90), "Run", self.start),
+            # gui.Button((107, 90), "Private", self.start_private),
+            # gui.Button((80, 110), "Reset", self.del_cache),
             gui.Button((80, 130), "Exit Game", self.quit),
             gui.EmojiButton((148, 10), "♬", self.sound_on_off),
-            gui.EmojiButton((12, 10), "👥", self.join_with_code),
+            # gui.EmojiButton((12, 10), "👥", self.join_with_code),
         )
         self.running = True
         self.showing_gui = True
@@ -725,8 +724,8 @@ class Game:
 
     def quit(self):
         """Quit button event"""
-        if self.client.running:
-            self.client.stop()
+        # if self.client.running:
+        #     self.client.stop()
         self.running = False
         pygame.quit()
 
@@ -764,37 +763,12 @@ class Game:
         """Start the game."""
         self.showing_gui = False
         self.showing_title = False
-        nick = client.cache.get_nickname()
-        if nick:
-            self.gui.empty()
-            self.client.start()
-        else:
-            self.show_input()
+        self.show_input()
 
     def start_private(self):
         """Start a private game."""
         self.private = True
         self.start()
-
-    def join_with_code(self):
-        """Start the game."""
-        self.showing_title = False
-        nick = client.cache.get_nickname()
-        if not nick:
-            self.show_input()
-
-        self.gui.empty()
-        self.inputting_code = True
-        self.gui.add(gui.TextInput(self))
-
-    def copy_code(self):
-        """Copies the game join pin."""
-        pyperclip.copy(self.pin_code)
-
-    def del_cache(self):
-        """Delete local cache!"""
-        self.nickname = ""
-        client.cache.delete()
 
     def show_input(self):
         """Show the nickname text input."""
@@ -1051,42 +1025,6 @@ class Game:
                 )  # can be used for some tiles that don't blend well with the collision.
         tile.image = img.copy()
         tile.tile_type = type
-
-    def add_player(self, nickname, direction, pos=None):
-        """Adds a player that joined the game online."""
-        if pos is None:
-            pos = [0, 0]
-        if nickname in self.other_players_colours:
-            new_player = player.OtherPlayer(
-                nickname, direction, self.other_players_colours[nickname]
-            )
-        else:
-            new_player = player.OtherPlayer(nickname, direction)
-            self.other_players_colours[nickname] = new_player.color
-        self.other_players.add(new_player)
-        self.objects.add(new_player, layer=0)
-        new_player.rect.topleft = tuple(pos)
-
-    def update_player(self, nickname, direction, pos=None):
-        """Update players movement"""
-        if pos is None:
-            pos = [0, 0]
-        if not any(
-            other_player
-            for other_player in self.other_players
-            if other_player.nickname == nickname
-        ):
-            raise Exception(f"invalid player : {nickname}")
-        for other_player in self.other_players:
-            if other_player.nickname == nickname:
-                other_player.rect.topleft = tuple(pos)
-                other_player.direction = direction
-
-    def check_who_left(self, active_nicknames):
-        """Check who left!"""
-        for ply in self.other_players:
-            if ply.nickname not in active_nicknames:
-                ply.kill()
 
     @staticmethod
     def render_ean_prompt(screen, msg):
