@@ -176,15 +176,11 @@ class EventTrigger:
                 self.game.showing_gui = True
                 self.game.showing_title = True
                 game_crash.stop()
-                self.game.gui.add(gui.Button((52, 90), "Online", self.game.start))
-                self.game.gui.add(
-                    gui.Button((107, 80), "Private", self.game.start_private)
-                )
-                self.game.gui.add(gui.Button((80, 110), "Reset", self.game.del_cache))
-                self.game.gui.add(gui.Button((80, 130), "Exit Game", self.game.quit))
-                self.game.gui.add(
-                    gui.EmojiButton((148, 10), "♬", self.game.sound_on_off)
-                )
+                self.game.gui.add(gui.Button((80, 90), "Run", self.start),
+                # gui.Button((107, 90), "Private", self.start_private),
+                # gui.Button((80, 110), "Reset", self.del_cache),
+                gui.Button((80, 130), "Exit Game", self.quit),
+                gui.EmojiButton((148, 10), "♬", self.sound_on_off))
                 self.game.level = 5
                 # self.game.client.stop()
 
